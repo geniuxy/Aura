@@ -3,3 +3,16 @@
 
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
 
+#include "DebugHelper.h"
+
+void UAuraAbilitySystemComponent::AbilityActorInfoSet()
+{
+	OnGameplayEffectAppliedDelegateToSelf.AddUObject(this, &UAuraAbilitySystemComponent::EffectApplied);
+}
+
+void UAuraAbilitySystemComponent::EffectApplied(UAbilitySystemComponent* AbilitySystemComponent,
+                                                const FGameplayEffectSpec& GameplayEffectSpec,
+                                                FActiveGameplayEffectHandle ActiveGameplayEffectHandle)
+{
+	Debug::Print("Effect Applied!");
+}
