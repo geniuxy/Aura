@@ -30,5 +30,14 @@ namespace AuraGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attributes_Primary_Resilience, "Attributes.Primary.Resilience",
 	                               "角色的韧性属性，影响角色的防御能力和受到的伤害减免。");
 
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Message_HealthPotion, "Message.HealthPotion",
+	                               "一次性恢复一定量的生命值。使用后立即增加生命值，效果为一次性。");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Message_ManaPotion, "Message.ManaPotion",
+	                               "一次性恢复一定量的法力值。使用后立即增加法力值，效果为一次性。");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Message_HealthCrystal, "Message.HealthCrystal",
+	                               "持续恢复生命值。使用后将在一段时间内持续恢复生命值，效果为持续性。");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Message_ManaCrystal, "Message.ManaCrystal",
+	                               "持续恢复法力值。使用后将在一段时间内持续恢复法力值，效果为持续性。");
+
 	/** Game Data tags **/
 }
