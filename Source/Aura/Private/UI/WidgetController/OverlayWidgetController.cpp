@@ -40,9 +40,17 @@ void UOverlayWidgetController::BindCallbacksToDependencies()
 		{
 			for (const FGameplayTag& AssetTag : AssetTagsContainer)
 			{
-				Debug::Print(FString::Printf(TEXT("Asset GE Tag: %s"), *AssetTag.ToString()));
-
-				GetDataTableRowByTag<FUIWidgetRow>(MessageWidgetDataTable, AssetTag);
+				// For example, say that Tag = Message.HealthPotion
+				// "Message.HealthPotion".MatchesTag("Message") will return True,
+				// "Message".MatchesTag("Message.HealthPotion") will return False
+				FGameplayTag MessageTag = FGameplayTag::RequestGameplayTag(FName("Message"));
+				if (AssetTag.MatchesTag(MessageTag))
+				{
+					Debug::Print(FString::Printf(TEXT("Asset GE Tag: %s"), *AssetTag.ToString()));
+					
+					const FUIWidgetRow* Row = GetDataTableRowByTag<FUIWidgetRow>(MessageWidgetDataTable, AssetTag);
+					MessageWidgetRowDelegate.Broadcast(*Row);
+				}
 			}
 		}
 	);
