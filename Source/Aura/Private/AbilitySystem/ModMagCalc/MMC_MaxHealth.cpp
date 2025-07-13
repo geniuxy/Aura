@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "AbilitySystem/MMC_MaxHealth.h"
+#include "AbilitySystem/ModMagCalc/MMC_MaxHealth.h"
 
 #include "AbilitySystem/AuraAttributeSet.h"
 #include "Interaction/CombatInterface.h"
