@@ -30,6 +30,23 @@ namespace AuraGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attributes_Primary_Resilience, "Attributes.Primary.Resilience",
 	                               "角色的韧性属性，影响角色的防御能力和受到的伤害减免。");
 
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attributes_Secondary_Armor, "Attributes.Secondary.Armor",
+	                               "角色的护甲属性");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attributes_Secondary_ArmorPenetration, "Attributes.Secondary.ArmorPenetration",
+	                               "造成伤害时，无视目标护甲的数值。");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attributes_Secondary_BlockChance, "Attributes.Secondary.BlockChance",
+	                               "格挡几率：触发后按格挡值减少所受伤害。");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attributes_Secondary_CriticalHitChance, "Attributes.Secondary.CriticalHitChance",
+	                               "暴击几率：造成伤害时触发暴击的概率。");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attributes_Secondary_CriticalHitDamage, "Attributes.Secondary.CriticalHitDamage",
+	                               "暴击伤害：触发暴击时，额外造成的伤害倍率。");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attributes_Secondary_CriticalHitResistance, "Attributes.Secondary.CriticalHitResistance",
+	                               "暴击抗性：降低被暴击的概率及暴击伤害倍率。");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attributes_Secondary_HealthRegeneration, "Attributes.Secondary.HealthRegeneration",
+	                               "生命恢复：单位时间自动回复的生命值。");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attributes_Secondary_ManaRegeneration, "Attributes.Secondary.ManaRegeneration",
+	                               "法力恢复：单位时间自动回复的法力值。");
+
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Message_HealthPotion, "Message.HealthPotion",
 	                               "一次性恢复一定量的生命值。使用后立即增加生命值，效果为一次性。");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Message_ManaPotion, "Message.ManaPotion",
