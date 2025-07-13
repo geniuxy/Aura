@@ -13,14 +13,6 @@ namespace AuraGameplayTags
 	/** Enemy Tags**/
 
 	/** Shared Tags**/
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attributes_Vital_Health, "Attributes.Vital.Health",
-	                               "角色当前的生命值，表示角色的生存能力，当生命值为0时角色死亡。");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attributes_Vital_MaxHealth, "Attributes.Vital.MaxHealth",
-	                               "角色的最大生命值，决定了角色能够承受的最大伤害量。");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attributes_Vital_Mana, "Attributes.Vital.Mana",
-	                               "角色当前的法力值，用于施展技能和法术，法力值耗尽时无法使用消耗法力的技能。");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attributes_Vital_MaxMana, "Attributes.Vital.MaxMana",
-	                               "角色的最大法力值，决定了角色能够存储的最大法力量。");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attributes_Primary_Strength, "Attributes.Primary.Strength",
 	                               "角色的力量属性，影响物理攻击的伤害和角色的负重能力。");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attributes_Primary_Intelligence, "Attributes.Primary.Intelligence",
@@ -46,6 +38,15 @@ namespace AuraGameplayTags
 	                               "生命恢复：单位时间自动回复的生命值。");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attributes_Secondary_ManaRegeneration, "Attributes.Secondary.ManaRegeneration",
 	                               "法力恢复：单位时间自动回复的法力值。");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attributes_Secondary_MaxHealth, "Attributes.Secondary.MaxHealth",
+	                               "角色的最大生命值，决定了角色能够承受的最大伤害量。");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attributes_Secondary_MaxMana, "Attributes.Secondary.MaxMana",
+	                               "角色的最大法力值，决定了角色能够存储的最大法力量。");
+
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attributes_Vital_Health, "Attributes.Vital.Health",
+	                               "角色当前的生命值，表示角色的生存能力，当生命值为0时角色死亡。");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attributes_Vital_Mana, "Attributes.Vital.Mana",
+	                               "角色当前的法力值，用于施展技能和法术，法力值耗尽时无法使用消耗法力的技能。");
 
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Message_HealthPotion, "Message.HealthPotion",
 	                               "一次性恢复一定量的生命值。使用后立即增加生命值，效果为一次性。");

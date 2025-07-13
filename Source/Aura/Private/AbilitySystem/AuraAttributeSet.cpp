@@ -49,20 +49,10 @@ void UAuraAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, 
 	if (Attribute == GetHealthAttribute())
 	{
 		NewValue = FMath::Clamp(NewValue, 0.f, GetMaxHealth());
-		Debug::Print("Health", GetHealth());
-	}
-	if (Attribute == GetMaxHealthAttribute())
-	{
-		Debug::Print("Max Health", GetMaxHealth());
 	}
 	if (Attribute == GetManaAttribute())
 	{
 		NewValue = FMath::Clamp(NewValue, 0.f, GetMaxMana());
-		Debug::Print("Mana", GetMana());
-	}
-	if (Attribute == GetMaxManaAttribute())
-	{
-		Debug::Print("Max Mana", GetMaxMana());
 	}
 }
 
