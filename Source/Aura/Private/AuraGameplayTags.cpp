@@ -18,7 +18,7 @@ namespace AuraGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attributes_Primary_Intelligence, "Attributes.Primary.Intelligence",
 	                               "角色的智力属性，影响魔法技能的效果和法力值的恢复速度。");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attributes_Primary_Vigor, "Attributes.Primary.Vigor",
-	                               "角色的活力属性，影响生命值和法力值的上限，以及角色的耐力。");
+	                               "角色的活力属性，影响生命值上限和生命值的恢复速度。");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attributes_Primary_Resilience, "Attributes.Primary.Resilience",
 	                               "角色的韧性属性，影响角色的防御能力和受到的伤害减免。");
 
