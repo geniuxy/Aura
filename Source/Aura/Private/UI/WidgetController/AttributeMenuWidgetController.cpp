@@ -12,9 +12,12 @@ void UAttributeMenuWidgetController::BroadcastInitialValues()
 	UAuraAttributeSet* AuraAttributeSet = CastChecked<UAuraAttributeSet>(AttributeSet);
 	checkf(AttributeInfos, TEXT("AttributeInfos is not set in %s"), *GetName());
 
-	FAuraAttributeInfo Info = AttributeInfos->FindAttributeInfoForTaf(AuraGameplayTags::Attributes_Primary_Strength);
-	Info.AttributeValue = AuraAttributeSet->GetStrength();
-	AttributeInfoDelegate.Broadcast(Info);
+	for (auto& Pair: AuraAttributeSet->TagsToAttributes)
+	{
+		FAuraAttributeInfo Info = AttributeInfos->FindAttributeInfoForTaf(Pair.Key);
+		Info.AttributeValue = Pair.Value().GetNumericValue(AuraAttributeSet);
+		AttributeInfoDelegate.Broadcast(Info);
+	}
 }
 
 void UAttributeMenuWidgetController::BindCallbacksToDependencies()
