@@ -4,12 +4,14 @@
 namespace AuraGameplayTags
 {
 	/** Input Tags **/
+	AURA_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(InputTag_LMB);
+	AURA_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(InputTag_RMB);
+	AURA_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(InputTag_1);
+	AURA_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(InputTag_2);
+	AURA_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(InputTag_3);
+	AURA_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(InputTag_4);
 
 	/** Aura Tags**/
-
-	/** Enemy Tags**/
-
-	/** Shared Tags**/
 	AURA_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attributes_Primary_Strength);
 	AURA_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attributes_Primary_Intelligence);
 	AURA_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attributes_Primary_Vigor);
@@ -26,10 +28,15 @@ namespace AuraGameplayTags
 	AURA_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attributes_Secondary_MaxMana);
 	AURA_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attributes_Vital_Health);
 	AURA_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attributes_Vital_Mana);
+	
 	AURA_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Message_HealthPotion);
 	AURA_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Message_ManaPotion);
 	AURA_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Message_HealthCrystal);
 	AURA_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Message_ManaCrystal);
+
+	/** Enemy Tags**/
+
+	/** Shared Tags**/
 	
 	/** Game Data tags **/
 }

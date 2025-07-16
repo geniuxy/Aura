@@ -7,12 +7,14 @@
 namespace AuraGameplayTags
 {
 	/** Input Tags **/
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(InputTag_LMB, "InputTag.LMB", "鼠标左键");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(InputTag_RMB, "InputTag.RMB", "鼠标右键");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(InputTag_1, "InputTag.1", "数字键 1");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(InputTag_2, "InputTag.2", "数字键 2");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(InputTag_3, "InputTag.3", "数字键 3");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(InputTag_4, "InputTag.4", "数字键 4");
 
 	/** Aura Tags**/
-
-	/** Enemy Tags**/
-
-	/** Shared Tags**/
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attributes_Primary_Strength, "Attributes.Primary.Strength",
 	                               "角色的力量属性，影响物理攻击的伤害和角色的负重能力。");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attributes_Primary_Intelligence, "Attributes.Primary.Intelligence",
@@ -47,6 +49,10 @@ namespace AuraGameplayTags
 	                               "角色当前的生命值，表示角色的生存能力，当生命值为0时角色死亡。");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attributes_Vital_Mana, "Attributes.Vital.Mana",
 	                               "角色当前的法力值，用于施展技能和法术，法力值耗尽时无法使用消耗法力的技能。");
+
+	/** Enemy Tags**/
+
+	/** Shared Tags**/
 
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Message_HealthPotion, "Message.HealthPotion",
 	                               "一次性恢复一定量的生命值。使用后立即增加生命值，效果为一次性。");
