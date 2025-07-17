@@ -26,8 +26,9 @@ void UAuraProjectileSpell::ActivateAbility(
 		FTransform SpawnTransform;
 		SpawnTransform.SetLocation(SocketLocation);
 
-		//TODO: Set the Projectile Rotation
-		
+		// TODO: Set the Projectile Rotation
+
+		// SpawnActorDeferred: 需手动调用 FinishSpawning 以完成 Actor 的最终生成和初始化
 		AAuraProjectile* Projectile = GetWorld()->SpawnActorDeferred<AAuraProjectile>(
 			ProjectileClass,
 			SpawnTransform,
@@ -35,7 +36,7 @@ void UAuraProjectileSpell::ActivateAbility(
 			Cast<APawn>(GetOwningActorFromActorInfo()),
 			ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
 
-		//TODO: Give the Projectile a Gameplay Effect Spec for causing Damage.
+		// TODO: Give the Projectile a Gameplay Effect Spec for causing Damage.
 		
 		Projectile->FinishSpawning(SpawnTransform);
 	}
