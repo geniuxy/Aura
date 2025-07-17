@@ -38,6 +38,7 @@ private:
 	
 	/* Cursor Actors */
 	void CursorTrace();
+	FHitResult CursorHit;
 	TScriptInterface<IEnemyInterface> LastActor;
 	TScriptInterface<IEnemyInterface> ThisActor;
 	/* End Cursor Actors */
