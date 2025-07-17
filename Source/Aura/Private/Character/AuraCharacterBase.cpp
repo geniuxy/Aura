@@ -30,6 +30,12 @@ void AAuraCharacterBase::InitAbilityActorInfo()
 {
 }
 
+FVector AAuraCharacterBase::GetCombatSocketLocation()
+{
+	checkf(Weapon, TEXT("Weapon component is not set for %s"), *GetName());
+	return Weapon->GetSocketLocation(WeaponTipSocketName);
+}
+
 void AAuraCharacterBase::ApplyEffectToSelf(const TSubclassOf<UGameplayEffect>& GameplayEffectClass, float Level) const
 {
 	check(IsValid(GetAbilitySystemComponent()));
