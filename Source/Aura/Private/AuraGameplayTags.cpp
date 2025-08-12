@@ -50,6 +50,8 @@ namespace AuraGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attributes_Vital_Mana, "Attributes.Vital.Mana",
 	                               "角色当前的法力值，用于施展技能和法术，法力值耗尽时无法使用消耗法力的技能。");
 
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Event_Montage_FireBolt, "Event.Montage.FireBolt", 
+	                               "火球术技能的动画事件标签，用于触发火球术的施放动画。");
 	/** Enemy Tags**/
 
 	/** Shared Tags**/
