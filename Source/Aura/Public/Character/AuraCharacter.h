@@ -7,6 +7,8 @@
 #include "Interaction/CombatInterface.h"
 #include "AuraCharacter.generated.h"
 
+class AController;
+
 UCLASS()
 class AURA_API AAuraCharacter : public AAuraCharacterBase
 {
