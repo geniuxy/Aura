@@ -9,7 +9,7 @@
 class UGameplayEffect;
 
 UENUM()
-enum class ECharacterClass
+enum class ECharacterClass : uint8
 {
 	Warrior,
 	Ranger,

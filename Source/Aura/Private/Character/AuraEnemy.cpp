@@ -5,6 +5,7 @@
 
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
 #include "AbilitySystem/AuraAttributeSet.h"
+#include "AbilitySystem/AuraAbilitySystemLibrary.h"
 #include "Aura/Aura.h"
 #include "Components/WidgetComponent.h"
 #include "UI/Widget/AuraUserWidget.h"
@@ -59,7 +60,7 @@ void AAuraEnemy::BeginPlay()
 			[this, AuraAS](const FOnAttributeChangeData& Data)
 			{
 				OnHealthChanged.Broadcast(Data.NewValue);
-				OnMaxHealthChanged.Broadcast(AuraAS->GetMaxHealth()); // 这一行可以解决Client端不能正确显示血条的问题
+				// OnMaxHealthChanged.Broadcast(AuraAS->GetMaxHealth()); // 这一行可以解决Client端不能正确显示血条的问题
 			}
 		);
 		AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AuraAS->GetMaxHealthAttribute()).AddLambda(
@@ -80,4 +81,9 @@ void AAuraEnemy::InitAbilityActorInfo()
 	Cast<UAuraAbilitySystemComponent>(AbilitySystemComponent)->AbilityActorInfoSet();
 
 	InitializeDefaultAttributes();
+}
+
+void AAuraEnemy::InitializeDefaultAttributes() const
+{
+	UAuraAbilitySystemLibrary::InitializeDefaultAttributes(this, CharacterClass, Level, AbilitySystemComponent);
 }
