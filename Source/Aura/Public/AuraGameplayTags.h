@@ -38,8 +38,7 @@ namespace AuraGameplayTags
 	AURA_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Message_ManaPotion);
 	AURA_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Message_HealthCrystal);
 	AURA_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Message_ManaCrystal);
-
-	
 	
 	/** Game Data tags **/
+	AURA_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Damage);
 }

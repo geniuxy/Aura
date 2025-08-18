@@ -66,4 +66,5 @@ namespace AuraGameplayTags
 	                               "持续恢复法力值。使用后将在一段时间内持续恢复法力值，效果为持续性。");
 
 	/** Game Data tags **/
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Damage, "Damage", "伤害");
 }
