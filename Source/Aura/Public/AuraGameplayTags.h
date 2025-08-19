@@ -28,9 +28,9 @@ namespace AuraGameplayTags
 	AURA_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attributes_Secondary_MaxMana);
 	AURA_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attributes_Vital_Health);
 	AURA_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attributes_Vital_Mana);
-	
+
 	AURA_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Event_Montage_FireBolt);
-	
+
 	/** Enemy Tags**/
 
 	/** Shared Tags**/
@@ -38,7 +38,9 @@ namespace AuraGameplayTags
 	AURA_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Message_ManaPotion);
 	AURA_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Message_HealthCrystal);
 	AURA_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Message_ManaCrystal);
-	
+
+	AURA_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Effect_HitReact);
+
 	/** Game Data tags **/
 	AURA_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Damage);
 }

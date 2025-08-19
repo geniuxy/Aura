@@ -34,7 +34,8 @@ namespace AuraGameplayTags
 	                               "暴击几率：造成伤害时触发暴击的概率。");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attributes_Secondary_CriticalHitDamage, "Attributes.Secondary.CriticalHitDamage",
 	                               "暴击伤害：触发暴击时，额外造成的伤害倍率。");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attributes_Secondary_CriticalHitResistance, "Attributes.Secondary.CriticalHitResistance",
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attributes_Secondary_CriticalHitResistance,
+	                               "Attributes.Secondary.CriticalHitResistance",
 	                               "暴击抗性：降低被暴击的概率及暴击伤害倍率。");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attributes_Secondary_HealthRegeneration, "Attributes.Secondary.HealthRegeneration",
 	                               "生命恢复：单位时间自动回复的生命值。");
@@ -50,7 +51,7 @@ namespace AuraGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attributes_Vital_Mana, "Attributes.Vital.Mana",
 	                               "角色当前的法力值，用于施展技能和法术，法力值耗尽时无法使用消耗法力的技能。");
 
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Event_Montage_FireBolt, "Event.Montage.FireBolt", 
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Event_Montage_FireBolt, "Event.Montage.FireBolt",
 	                               "火球术技能的动画事件标签，用于触发火球术的施放动画。");
 	/** Enemy Tags**/
 
@@ -64,6 +65,8 @@ namespace AuraGameplayTags
 	                               "持续恢复生命值。使用后将在一段时间内持续恢复生命值，效果为持续性。");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Message_ManaCrystal, "Message.ManaCrystal",
 	                               "持续恢复法力值。使用后将在一段时间内持续恢复法力值，效果为持续性。");
+
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Effect_HitReact, "Effect.HitReact", "用于对应的GameEffect来向Actor添加HitReact的Tag标签");
 
 	/** Game Data tags **/
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Damage, "Damage", "伤害");
