@@ -6,6 +6,7 @@
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemComponent.h"
 #include "AuraGameplayTags.h"
+#include "DebugHelper.h"
 #include "Actor/AuraProjectile.h"
 #include "Interaction/CombatInterface.h"
 #include "Kismet/KismetSystemLibrary.h"
@@ -47,9 +48,16 @@ void UAuraProjectileSpell::SpawnProjectile(const FVector& ProjectileTargetLocati
 			UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(GetAvatarActorFromActorInfo());
 		FGameplayEffectSpecHandle SpecHandle =
 			SourceASC->MakeOutgoingSpec(DamageEffectClass, GetAbilityLevel(), SourceASC->MakeEffectContext());
-		UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, AuraGameplayTags::Damage, 15.f);
+		
+		const float ScaledDamage = Damage.GetValueAtLevel(GetAbilityLevel());
+		UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(
+			SpecHandle,
+			AuraGameplayTags::Damage,
+			ScaledDamage
+		);
+		Debug::Print(FString::Printf(TEXT("Fire Bolt Damage: %f"), ScaledDamage));
 		Projectile->DamageEffectSpecHandle = SpecHandle;
-
+		
 		Projectile->FinishSpawning(SpawnTransform);
 	}
 }

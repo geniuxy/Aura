@@ -13,8 +13,11 @@ UCLASS()
 class AURA_API UAuraGameplayAbility : public UGameplayAbility
 {
 	GENERATED_BODY()
-public:
 
+public:
 	UPROPERTY(EditDefaultsOnly, Category="Input")
 	FGameplayTag StartupInputTag;
+
+	UPROPERTY(EditDefaultsOnly, Category="Damage")
+	FScalableFloat Damage;
 };
