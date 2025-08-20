@@ -105,6 +105,44 @@ void UAuraAttributeSet::SetEffectProperties(const FGameplayEffectModCallbackData
 	}
 }
 
+void UAuraAttributeSet::HandleIncomingDamage(FEffectProperties Props)
+{
+	const float LocalIncomingDamage = GetIncomingDamage();
+	SetIncomingDamage(0.f);
+	if (LocalIncomingDamage > 0.f)
+	{
+		float NewHealth = GetHealth() - LocalIncomingDamage;
+		SetHealth(FMath::Clamp(NewHealth, 0.f, GetMaxHealth()));
+		Debug::Print(FString::Printf(
+				TEXT("Meta Attribute Changed Health on %s, Health: %f"),
+				*Props.TargetAvatarActor->GetName(),
+				GetHealth())
+		);
+		const bool bFatal = NewHealth <= 0.f;
+		if (!bFatal)
+		{
+			FGameplayTagContainer TagContainer;
+			TagContainer.AddTag(AuraGameplayTags::Ability_HitReact);
+			// 正在运行的实例
+			TArray<FGameplayAbilitySpecHandle> OutHandles;
+			Props.TargetASC->FindAllAbilitiesWithTags(OutHandles, TagContainer);
+			// 先结束正在运行的 HitReact
+			for (const FGameplayAbilitySpecHandle& Handle : OutHandles)
+			{
+				if (const FGameplayAbilitySpec* Spec = Props.TargetASC->FindAbilitySpecFromHandle(Handle))
+				{
+					if (Spec->IsActive())
+					{
+						Props.TargetASC->CancelAbilityHandle(Handle);
+					}
+				}
+			}
+			// 再重新激活
+			Props.TargetASC->TryActivateAbilitiesByTag(TagContainer);
+		}
+	}
+}
+
 void UAuraAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data)
 {
 	Super::PostGameplayEffectExecute(Data);
@@ -122,19 +160,7 @@ void UAuraAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 	}
 	if (Data.EvaluatedData.Attribute == GetIncomingDamageAttribute())
 	{
-		const float LocalIncomingDamage = GetIncomingDamage();
-		SetIncomingDamage(0.f);
-		if (LocalIncomingDamage > 0.f)
-		{
-			float NewHealth = GetHealth() - LocalIncomingDamage;
-			SetHealth(FMath::Clamp(NewHealth, 0.f, GetMaxHealth()));
-			Debug::Print(FString::Printf(
-					TEXT("Meta Attribute Changed Health on %s, Health: %f"),
-					*Props.TargetAvatarActor->GetName(),
-					GetHealth())
-			);
-			const bool bFatal = NewHealth <= 0.f;
-		}
+		HandleIncomingDamage(Props);
 	}
 }
 

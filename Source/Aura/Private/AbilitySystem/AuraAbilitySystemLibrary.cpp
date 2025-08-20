@@ -5,13 +5,17 @@
 
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemComponent.h"
+#include "DebugHelper.h"
 #include "GameplayEffect.h"
+#include "AbilitySystem/Abilities/AuraGameplayAbility.h"
 #include "AbilitySystem/Data/CharacterClassInfo.h"
 #include "Game/AuraGameModeBase.h"
 #include "HUD/AuraHUD.h"
 #include "Kismet/GameplayStatics.h"
 #include "Player/AuraPlayerState.h"
 #include "UI/WidgetController/AuraWidgetController.h"
+
+class UAuraGameplayAbility;
 
 UOverlayWidgetController* UAuraAbilitySystemLibrary::GetOverlayWidgetController(const UObject* WorldContextObject)
 {
@@ -72,3 +76,33 @@ void UAuraAbilitySystemLibrary::ApplyAttributesEffectSpec(TSubclassOf<UGameplayE
 	FGameplayEffectSpecHandle SpecHandle = ASC->MakeOutgoingSpec(AppliedGameplayEffect, Level, AttributesContextHandle);
 	ASC->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get());
 }
+
+void UAuraAbilitySystemLibrary::GiveStartupAbilities(const UObject* WorldContextObject, UAbilitySystemComponent* ASC)
+{
+	AAuraGameModeBase* AuraGameMode = Cast<AAuraGameModeBase>(UGameplayStatics::GetGameMode(WorldContextObject));
+	if (!AuraGameMode) return;
+
+	UCharacterClassInfo* CharacterClassInfo = AuraGameMode->CharacterClassInfo;
+	for (TSubclassOf<UGameplayAbility> AbilityClass : CharacterClassInfo->CommonAbilities)
+	{
+		FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(AbilityClass, 1);
+		ASC->GiveAbility(AbilitySpec);
+	}
+}
+
+void UAuraAbilitySystemLibrary::StopMontageOnActor(AActor* TargetActor, UAnimMontage* MontageToStop, float BlendOutTime)
+{
+	if (!TargetActor || !MontageToStop) return;
+
+	USkeletalMeshComponent* MeshComp = TargetActor->FindComponentByClass<USkeletalMeshComponent>();
+	if (MeshComp && MeshComp->GetAnimInstance())
+	{
+		UAnimInstance* AnimInst = MeshComp->GetAnimInstance();
+		if (AnimInst->Montage_IsPlaying(MontageToStop))
+		{
+			Debug::Print("The MontageToStop is playing!");
+			AnimInst->Montage_Stop(BlendOutTime, MontageToStop);
+		}
+	}
+}
+

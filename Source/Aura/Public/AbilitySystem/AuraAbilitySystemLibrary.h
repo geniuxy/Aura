@@ -30,6 +30,13 @@ public:
 	static void InitializeDefaultAttributes(const UObject* WorldContextObject, ECharacterClass CharacterClass,
 	                                        int32 Level, UAbilitySystemComponent* ASC);
 
+	UFUNCTION(BlueprintCallable, Category="AuraAbilitySystemLibrary|CharacterClassDefaults")
+	static void GiveStartupAbilities(const UObject* WorldContextObject, UAbilitySystemComponent* ASC);
+
+	/* 停止指定 Montage（如果当前正在播放）*/
+	UFUNCTION(BlueprintCallable, Category="AuraAbilitySystemLibrary|AnimMontage")
+	static void StopMontageOnActor(AActor* TargetActor, UAnimMontage* MontageToStop, float BlendOutTime = 0.25f);
+
 private:
 	static void ApplyAttributesEffectSpec(TSubclassOf<UGameplayEffect> AppliedGameplayEffect, int32 Level,
 	                                      UAbilitySystemComponent* ASC);
