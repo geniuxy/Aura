@@ -45,6 +45,18 @@ int32 AAuraEnemy::GetLevel()
 	return Level;
 }
 
+void AAuraEnemy::Die()
+{
+	SetLifeSpan(LifeSpan);
+	Super::Die();
+}
+
+void AAuraEnemy::MulticastHandleDeath_Implementation()
+{
+	Super::MulticastHandleDeath_Implementation();
+	HealthBar->SetVisibility(false);
+}
+
 void AAuraEnemy::BeginPlay()
 {
 	Super::BeginPlay();

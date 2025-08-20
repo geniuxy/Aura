@@ -8,6 +8,7 @@
 #include "GameplayEffectExtension.h"
 #include "DebugHelper.h"
 #include "GameFramework/Character.h"
+#include "Interaction/CombatInterface.h"
 #include "Net/UnrealNetwork.h"
 
 UAuraAttributeSet::UAuraAttributeSet()
@@ -139,6 +140,14 @@ void UAuraAttributeSet::HandleIncomingDamage(FEffectProperties Props)
 			}
 			// 再重新激活
 			Props.TargetASC->TryActivateAbilitiesByTag(TagContainer);
+		}
+		else
+		{
+			ICombatInterface* CombatInterface = Cast<ICombatInterface>(Props.TargetAvatarActor);
+			if (CombatInterface)
+			{
+				CombatInterface->Die();
+			}
 		}
 	}
 }

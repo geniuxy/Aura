@@ -27,7 +27,9 @@ public:
 
 	/** Combat Interfaces */
 	virtual int32 GetLevel() override;
+	virtual void Die() override;
 	/** End Combat Interfaces */
+	virtual void MulticastHandleDeath_Implementation() override;
 
 	UPROPERTY(BlueprintAssignable, Category="GAS|Attributes")
 	FOnAttributeChangedDelegate OnHealthChanged;
@@ -42,6 +44,9 @@ public:
 
 	UPROPERTY(BlueprintReadOnly, Category="Combat")
 	float BaseWalkSpeed = 250.f;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Combat")
+	float LifeSpan = 5.f;
 
 protected:
 	virtual void BeginPlay() override;
