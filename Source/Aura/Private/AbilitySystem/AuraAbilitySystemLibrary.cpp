@@ -90,19 +90,3 @@ void UAuraAbilitySystemLibrary::GiveStartupAbilities(const UObject* WorldContext
 	}
 }
 
-void UAuraAbilitySystemLibrary::StopMontageOnActor(AActor* TargetActor, UAnimMontage* MontageToStop, float BlendOutTime)
-{
-	if (!TargetActor || !MontageToStop) return;
-
-	USkeletalMeshComponent* MeshComp = TargetActor->FindComponentByClass<USkeletalMeshComponent>();
-	if (MeshComp && MeshComp->GetAnimInstance())
-	{
-		UAnimInstance* AnimInst = MeshComp->GetAnimInstance();
-		if (AnimInst->Montage_IsPlaying(MontageToStop))
-		{
-			Debug::Print("The MontageToStop is playing!");
-			AnimInst->Montage_Stop(BlendOutTime, MontageToStop);
-		}
-	}
-}
-
