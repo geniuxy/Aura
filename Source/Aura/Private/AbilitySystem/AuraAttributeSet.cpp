@@ -10,6 +10,7 @@
 #include "GameFramework/Character.h"
 #include "Interaction/CombatInterface.h"
 #include "Net/UnrealNetwork.h"
+#include "Player/AuraPlayerController.h"
 
 UAuraAttributeSet::UAuraAttributeSet()
 {
@@ -149,6 +150,17 @@ void UAuraAttributeSet::HandleIncomingDamage(FEffectProperties Props)
 				CombatInterface->Die();
 			}
 		}
+
+		ShowFloatingText(Props, LocalIncomingDamage);
+	}
+}
+
+void UAuraAttributeSet::ShowFloatingText(const FEffectProperties& Props, float Damage) const
+{
+	// 注意：这里要获取对应玩家的Controller，才可以在正确的Client上显示浮动数字，不能用UGameplayStatic::GetPlayerController
+	if (AAuraPlayerController* PC = Cast<AAuraPlayerController>(Props.SourceCharacter->Controller))
+	{
+		PC->ShowDamageNumber(Damage, Props.TargetCharacter);
 	}
 }
 
