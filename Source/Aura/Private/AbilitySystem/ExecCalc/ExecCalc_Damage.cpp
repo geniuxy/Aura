@@ -69,12 +69,8 @@ namespace DamageCalcUtil
 
 // -----------------------------------------------------------------
 // 1) Armor + ArmorPenetration
-static float ApplyArmor(float Damage,
-                        float TargetArmor,
-                        float SourceArmorPen,
-                        const UObject* WorldContext,
-                        int32 SourceLevel,
-                        int32 TargetLevel)
+static float ApplyArmor(float Damage, float TargetArmor, float SourceArmorPen, const UObject* WorldContext,
+                        int32 SourceLevel, int32 TargetLevel)
 {
 	const float PenCoef = DamageCalcUtil::GetCoefficient(WorldContext, SourceLevel, TEXT("ArmorPenetration"));
 	const float EffectiveArmor = TargetArmor * (100.f - SourceArmorPen * PenCoef) / 100.f;
@@ -127,8 +123,9 @@ void UExecCalc_Damage::Execute_Implementation(
 
 	// 2. 抓取所有需要的属性
 	float Damage = Spec.GetSetByCallerMagnitude(AuraGameplayTags::Damage);
-	float TargetArmor = DamageCalcUtil::GetCapturedMagnitude(ExecutionParams, DamageStatics().ArmorDef, Params);
-	float SourcePen =
+	float TargetArmor =
+		DamageCalcUtil::GetCapturedMagnitude(ExecutionParams, DamageStatics().ArmorDef, Params);
+	float SourceArmorPen =
 		DamageCalcUtil::GetCapturedMagnitude(ExecutionParams, DamageStatics().ArmorPenetrationDef, Params);
 	float SourceCritC =
 		DamageCalcUtil::GetCapturedMagnitude(ExecutionParams, DamageStatics().CriticalHitChanceDef, Params);
@@ -136,10 +133,11 @@ void UExecCalc_Damage::Execute_Implementation(
 		DamageCalcUtil::GetCapturedMagnitude(ExecutionParams, DamageStatics().CriticalHitDamageDef, Params);
 	float TargetCritRes =
 		DamageCalcUtil::GetCapturedMagnitude(ExecutionParams, DamageStatics().CriticalHitResistanceDef, Params);
-	float TargetBlock = DamageCalcUtil::GetCapturedMagnitude(ExecutionParams, DamageStatics().BlockChanceDef, Params);
+	float TargetBlock =
+		DamageCalcUtil::GetCapturedMagnitude(ExecutionParams, DamageStatics().BlockChanceDef, Params);
 
 	// 3. 计算
-	Damage = ApplyArmor(Damage, TargetArmor, SourcePen, SourceAvatar, SourceCI->GetLevel(), TargetCI->GetLevel());
+	Damage = ApplyArmor(Damage, TargetArmor, SourceArmorPen, SourceAvatar, SourceCI->GetLevel(), TargetCI->GetLevel());
 	Damage = ApplyCritical(Damage, SourceCritC, SourceCritD, TargetCritRes, SourceAvatar, TargetCI->GetLevel());
 	Damage = ApplyBlock(Damage, TargetBlock);
 
