@@ -10,6 +10,10 @@
 #include "AbilitySystem/Data/CharacterClassInfo.h"
 #include "Interaction/CombatInterface.h"
 
+#define CURVE_ArmorPenetration        TEXT("ArmorPenetration")
+#define CURVE_EffectiveArmor          TEXT("EffectiveArmor")
+#define CURVE_CriticalHitResistance   TEXT("CriticalHitResistance")
+
 struct AuraDamageStatics
 {
 	DECLARE_ATTRIBUTE_CAPTUREDEF(Armor);
@@ -72,10 +76,10 @@ namespace DamageCalcUtil
 static float ApplyArmor(float Damage, float TargetArmor, float SourceArmorPen, const UObject* WorldContext,
                         int32 SourceLevel, int32 TargetLevel)
 {
-	const float PenCoef = DamageCalcUtil::GetCoefficient(WorldContext, SourceLevel, TEXT("ArmorPenetration"));
+	const float PenCoef = DamageCalcUtil::GetCoefficient(WorldContext, SourceLevel, CURVE_ArmorPenetration);
 	const float EffectiveArmor = TargetArmor * (100.f - SourceArmorPen * PenCoef) / 100.f;
 
-	const float ArmorCoef = DamageCalcUtil::GetCoefficient(WorldContext, TargetLevel, TEXT("EffectiveArmor"));
+	const float ArmorCoef = DamageCalcUtil::GetCoefficient(WorldContext, TargetLevel, CURVE_EffectiveArmor);
 	return Damage * (100.f - EffectiveArmor * ArmorCoef) / 100.f;
 }
 
@@ -84,7 +88,7 @@ static float ApplyArmor(float Damage, float TargetArmor, float SourceArmorPen, c
 static float ApplyCritical(float Damage, float SourceCritChance, float SourceCritDamage, float TargetCritResist,
                            const UObject* WorldContext, int32 TargetLevel)
 {
-	const float ResistCoef = DamageCalcUtil::GetCoefficient(WorldContext, TargetLevel, TEXT("CriticalHitResistance"));
+	const float ResistCoef = DamageCalcUtil::GetCoefficient(WorldContext, TargetLevel, CURVE_CriticalHitResistance);
 	const float Chance = SourceCritChance - TargetCritResist * ResistCoef;
 	const bool bCrit = FMath::RandRange(1, 100) < Chance;
 	return bCrit ? 2.f * Damage + SourceCritDamage : Damage;
