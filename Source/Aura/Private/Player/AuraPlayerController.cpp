@@ -81,7 +81,8 @@ void AAuraPlayerController::AutoRun()
 	}
 }
 
-void AAuraPlayerController::ShowDamageNumber_Implementation(float Damage, ACharacter* TargetCharacter)
+void AAuraPlayerController::ShowDamageNumber_Implementation(float Damage, ACharacter* TargetCharacter,
+                                                            bool bBlock, bool bCritical)
 {
 	if (IsValid(TargetCharacter) && DamageTextComponentClass)
 	{
@@ -92,7 +93,7 @@ void AAuraPlayerController::ShowDamageNumber_Implementation(float Damage, AChara
 			TargetCharacter->GetRootComponent(), FAttachmentTransformRules::KeepRelativeTransform);
 		// 再脱离TargetActor，进行Floating动画
 		DamageText->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
-		DamageText->SetDamageText(Damage);
+		DamageText->SetDamageText(Damage, bBlock, bCritical);
 	}
 }
 
