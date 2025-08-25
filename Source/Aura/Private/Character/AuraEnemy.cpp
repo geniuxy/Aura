@@ -78,7 +78,7 @@ void AAuraEnemy::BeginPlay()
 			[this, AuraAS](const FOnAttributeChangeData& Data)
 			{
 				OnHealthChanged.Broadcast(Data.NewValue);
-				// OnMaxHealthChanged.Broadcast(AuraAS->GetMaxHealth()); // 这一行可以解决Client端不能正确显示血条的问题
+				OnMaxHealthChanged.Broadcast(AuraAS->GetMaxHealth()); // 这一行可以解决Client端不能正确显示血条的问题
 			}
 		);
 		AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AuraAS->GetMaxHealthAttribute()).AddLambda(
