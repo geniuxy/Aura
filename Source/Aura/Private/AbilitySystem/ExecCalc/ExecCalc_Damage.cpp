@@ -86,19 +86,21 @@ static float ApplyArmor(float Damage, float TargetArmor, float SourceArmorPen, c
 // -----------------------------------------------------------------
 // 2) Critical Hit
 static float ApplyCritical(float Damage, float SourceCritChance, float SourceCritDamage, float TargetCritResist,
-                           const UObject* WorldContext, int32 TargetLevel)
+                           const UObject* WorldContext, int32 TargetLevel, FGameplayEffectContextHandle ContextHandle)
 {
 	const float ResistCoef = DamageCalcUtil::GetCoefficient(WorldContext, TargetLevel, CURVE_CriticalHitResistance);
 	const float Chance = SourceCritChance - TargetCritResist * ResistCoef;
 	const bool bCrit = FMath::RandRange(1, 100) < Chance;
+	UAuraAbilitySystemLibrary::SetIsCriticalHit(ContextHandle, bCrit);
 	return bCrit ? 2.f * Damage + SourceCritDamage : Damage;
 }
 
 // -----------------------------------------------------------------
 // 3) Block
-static float ApplyBlock(float Damage, float TargetBlockChance)
+static float ApplyBlock(float Damage, float TargetBlockChance, FGameplayEffectContextHandle ContextHandle)
 {
 	const bool bBlocked = FMath::RandRange(1, 100) < TargetBlockChance;
+	UAuraAbilitySystemLibrary::SetIsBlockedHit(ContextHandle, bBlocked);
 	return bBlocked ? Damage * 0.5f : Damage;
 }
 
@@ -127,6 +129,7 @@ void UExecCalc_Damage::Execute_Implementation(
 
 	// 2. 抓取所有需要的属性
 	float Damage = Spec.GetSetByCallerMagnitude(AuraGameplayTags::Damage);
+	FGameplayEffectContextHandle ContextHandle = Spec.GetContext();
 	float TargetArmor =
 		DamageCalcUtil::GetCapturedMagnitude(ExecutionParams, DamageStatics().ArmorDef, Params);
 	float SourceArmorPen =
@@ -142,8 +145,9 @@ void UExecCalc_Damage::Execute_Implementation(
 
 	// 3. 计算
 	Damage = ApplyArmor(Damage, TargetArmor, SourceArmorPen, SourceAvatar, SourceCI->GetLevel(), TargetCI->GetLevel());
-	Damage = ApplyCritical(Damage, SourceCritC, SourceCritD, TargetCritRes, SourceAvatar, TargetCI->GetLevel());
-	Damage = ApplyBlock(Damage, TargetBlock);
+	Damage = ApplyCritical(Damage, SourceCritC, SourceCritD, TargetCritRes,
+	                       SourceAvatar, TargetCI->GetLevel(), ContextHandle);
+	Damage = ApplyBlock(Damage, TargetBlock, ContextHandle);
 
 	// 4. 输出
 	FGameplayModifierEvaluatedData EvaluatedData(UAuraAttributeSet::GetIncomingDamageAttribute(),
