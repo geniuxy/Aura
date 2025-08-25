@@ -152,18 +152,18 @@ void UAuraAttributeSet::HandleIncomingDamage(FEffectProperties Props)
 			}
 		}
 
-		const bool bBlock = UAuraAbilitySystemLibrary::IsBlockedHit(Props.EffectContextHandle);
+		const bool bBlocked = UAuraAbilitySystemLibrary::IsBlockedHit(Props.EffectContextHandle);
 		const bool bCritical = UAuraAbilitySystemLibrary::IsCriticalHit(Props.EffectContextHandle);
-		ShowFloatingText(Props, LocalIncomingDamage, bBlock, bCritical);
+		ShowFloatingText(Props, LocalIncomingDamage, bBlocked, bCritical);
 	}
 }
 
-void UAuraAttributeSet::ShowFloatingText(const FEffectProperties& Props, float Damage, bool bBlock, bool bCritical) const
+void UAuraAttributeSet::ShowFloatingText(const FEffectProperties& Props, float Damage, bool bBlockedHit, bool bCriticalHit) const
 {
 	// 注意：这里要获取对应玩家的Controller，才可以在正确的Client上显示浮动数字，不能用UGameplayStatic::GetPlayerController
 	if (AAuraPlayerController* PC = Cast<AAuraPlayerController>(Props.SourceCharacter->Controller))
 	{
-		PC->ShowDamageNumber(Damage, Props.TargetCharacter, bBlock, bCritical);
+		PC->ShowDamageNumber(Damage, Props.TargetCharacter, bBlockedHit, bCriticalHit);
 	}
 }
 
