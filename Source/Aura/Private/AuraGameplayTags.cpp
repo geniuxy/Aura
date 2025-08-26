@@ -72,4 +72,5 @@ namespace AuraGameplayTags
 
 	/** Game Data tags **/
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Damage, "Damage", "伤害");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Damage_Fire, "Damage.Fire", "火焰伤害");
 }

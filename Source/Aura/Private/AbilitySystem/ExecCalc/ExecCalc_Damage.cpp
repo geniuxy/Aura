@@ -128,7 +128,14 @@ void UExecCalc_Damage::Execute_Implementation(
 	Params.TargetTags = TargetTags;
 
 	// 2. 抓取所有需要的属性
-	float Damage = Spec.GetSetByCallerMagnitude(AuraGameplayTags::Damage);
+	float Damage = 0.f;
+	FGameplayTagContainer AllDamageTags =
+		UGameplayTagsManager::Get().RequestGameplayTagChildren(AuraGameplayTags::Damage); // 获取所有Damage开头的Tags
+	for (FGameplayTag DamageTypeTag : AllDamageTags)
+	{
+		Damage += Spec.GetSetByCallerMagnitude(DamageTypeTag);
+	}
+	
 	FGameplayEffectContextHandle ContextHandle = Spec.GetContext();
 	float TargetArmor =
 		DamageCalcUtil::GetCapturedMagnitude(ExecutionParams, DamageStatics().ArmorDef, Params);

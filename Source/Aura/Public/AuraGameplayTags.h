@@ -45,4 +45,5 @@ namespace AuraGameplayTags
 
 	/** Game Data tags **/
 	AURA_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Damage);
+	AURA_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Damage_Fire);
 }

@@ -59,16 +59,16 @@ void UAuraProjectileSpell::SpawnProjectile(const FVector& ProjectileTargetLocati
 		EffectContextHandle.AddHitResult(HitResult);
 		FGameplayEffectSpecHandle SpecHandle =
 			SourceASC->MakeOutgoingSpec(DamageEffectClass, GetAbilityLevel(), EffectContextHandle);
-		
-		const float ScaledDamage = Damage.GetValueAtLevel(20);
-		UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(
-			SpecHandle,
-			AuraGameplayTags::Damage,
-			ScaledDamage
-		);
-		Debug::Print(FString::Printf(TEXT("Fire Bolt Damage: %f"), ScaledDamage));
+
+		for (auto& Pair : DamageTypes)
+		{
+			const float ScaledDamage = Pair.Value.GetValueAtLevel(GetAbilityLevel());
+			UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, Pair.Key, ScaledDamage);
+			Debug::Print(
+				FString::Printf(TEXT("Gameplay Tag: %s, Fire Bolt Damage: %f"), *Pair.Key.ToString(), ScaledDamage));
+		}
 		Projectile->DamageEffectSpecHandle = SpecHandle;
-		
+
 		Projectile->FinishSpawning(SpawnTransform);
 	}
 }
