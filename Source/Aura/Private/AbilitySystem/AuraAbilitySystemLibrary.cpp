@@ -127,6 +127,9 @@ void UAuraAbilitySystemLibrary::GiveStartupAbilities(const UObject* WorldContext
 
 UCharacterClassInfo* UAuraAbilitySystemLibrary::GetCharacterClassInfo(const UObject* WorldContextObject)
 {
+	// UGameplayStatics::GetGameMode(WorldContextObject)只能在服务器（Server）上成功返回指针
+	// GameMode 只存在于服务器, 客户端对应的是 GameState/PlayerController
+	// 所以和这个方法相关的使用，都需要考虑HasAuthority()
 	AAuraGameModeBase* AuraGameMode = Cast<AAuraGameModeBase>(UGameplayStatics::GetGameMode(WorldContextObject));
 	if (!AuraGameMode) return nullptr;
 	return AuraGameMode->CharacterClassInfo;
