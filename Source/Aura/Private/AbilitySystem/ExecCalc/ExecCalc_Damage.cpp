@@ -5,6 +5,7 @@
 
 #include "AbilitySystemComponent.h"
 #include "AuraGameplayTags.h"
+#include "DebugHelper.h"
 #include "AbilitySystem/AuraAbilitySystemLibrary.h"
 #include "AbilitySystem/AuraAttributeSet.h"
 #include "AbilitySystem/Data/CharacterClassInfo.h"
@@ -128,7 +129,14 @@ static float CalcInitialDamage(const FGameplayEffectSpec& Spec,
 			float RawDamage = Spec.GetSetByCallerMagnitude(DamageTypeTag, false, 0.f);
 
 			// 抗性值
-			float Resistance = DamageCalcUtil::GetCapturedMagnitude(ExecParams, TagsToCaptureDefs[*ResistanceTag], EvalParams);
+			float Resistance =
+				DamageCalcUtil::GetCapturedMagnitude(ExecParams, TagsToCaptureDefs[*ResistanceTag], EvalParams);
+			if (Resistance > 0.f)
+			{
+				Debug::Print(FString::Printf(
+					TEXT("Raw Damage for %s: %f, Resistance for %s: %f"),
+					*DamageTypeTag.ToString(), RawDamage, *DamageTypeTag.ToString(), Resistance));
+			}
 
 			// 应用抗性
 			RawDamage *= (100.f - FMath::Clamp(Resistance, 0.f, 100.f)) / 100.f;
@@ -195,9 +203,10 @@ void UExecCalc_Damage::Execute_Implementation(
 	Params.SourceTags = SourceTags;
 	Params.TargetTags = TargetTags;
 
-	// 2. 抓取所有需要的属性
+	// 2. 初步计算伤害，考虑抗性
 	float Damage = CalcInitialDamage(Spec, ExecutionParams, Params);
 
+	// 3. 抓取所有需要的属性
 	FGameplayEffectContextHandle ContextHandle = Spec.GetContext();
 	float TargetArmor =
 		DamageCalcUtil::GetCapturedMagnitude(ExecutionParams, GetDamageStatics().ArmorDef, Params);
@@ -212,13 +221,13 @@ void UExecCalc_Damage::Execute_Implementation(
 	float TargetBlock =
 		DamageCalcUtil::GetCapturedMagnitude(ExecutionParams, GetDamageStatics().BlockChanceDef, Params);
 
-	// 3. 计算
+	// 4. 进一步计算伤害
 	Damage = ApplyArmor(Damage, TargetArmor, SourceArmorPen, SourceAvatar, SourceCI->GetLevel(), TargetCI->GetLevel());
 	Damage = ApplyCritical(Damage, SourceCritC, SourceCritD, TargetCritRes,
 	                       SourceAvatar, TargetCI->GetLevel(), ContextHandle);
 	Damage = ApplyBlock(Damage, TargetBlock, ContextHandle);
 
-	// 4. 输出
+	// 5. 输出
 	FGameplayModifierEvaluatedData EvaluatedData(UAuraAttributeSet::GetIncomingDamageAttribute(),
 	                                             EGameplayModOp::Additive, Damage);
 	OutExecutionOutput.AddOutputModifier(EvaluatedData);
