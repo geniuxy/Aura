@@ -67,6 +67,7 @@ void UAuraProjectileSpell::SpawnProjectile(const FVector& ProjectileTargetLocati
 				FString::Printf(TEXT("Gameplay Tag: %s, Fire Bolt Damage: %f"), *Pair.Key.ToString(), ScaledDamage));
 		}
 		Projectile->DamageEffectSpecHandle = SpecHandle;
+		Projectile->Owner = GetAvatarActorFromActorInfo();
 
 		Projectile->FinishSpawning(SpawnTransform);
 	}

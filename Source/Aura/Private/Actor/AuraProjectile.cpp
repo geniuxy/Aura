@@ -61,8 +61,10 @@ void AAuraProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, 
 {
 	// 子弹打到自己发射者直接return
 	// DamageEffectSpecHandle.Data.IsValid()是为了保证DamageEffectSpecHandle.Data.Get()不是空指针
-	if (DamageEffectSpecHandle.Data.IsValid() &&
-		DamageEffectSpecHandle.Data.Get()->GetContext().GetEffectCauser() == OtherActor)
+	// Client会打到自己..
+	// if (DamageEffectSpecHandle.Data.IsValid() &&
+	// 	DamageEffectSpecHandle.Data.Get()->GetContext().GetEffectCauser() == OtherActor)
+	if (Owner && Owner == OtherActor)
 	{
 		return;
 	}
