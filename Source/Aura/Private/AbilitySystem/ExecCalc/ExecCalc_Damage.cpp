@@ -23,6 +23,11 @@ struct AuraDamageStatics
 	DECLARE_ATTRIBUTE_CAPTUREDEF(CriticalHitDamage);
 	DECLARE_ATTRIBUTE_CAPTUREDEF(CriticalHitResistance);
 
+	DECLARE_ATTRIBUTE_CAPTUREDEF(FireResistance);
+	DECLARE_ATTRIBUTE_CAPTUREDEF(LightningResistance);
+	DECLARE_ATTRIBUTE_CAPTUREDEF(ArcaneResistance);
+	DECLARE_ATTRIBUTE_CAPTUREDEF(PhysicalResistance);
+
 	AuraDamageStatics()
 	{
 		DEFINE_ATTRIBUTE_CAPTUREDEF(UAuraAttributeSet, Armor, Target, false);
@@ -31,10 +36,28 @@ struct AuraDamageStatics
 		DEFINE_ATTRIBUTE_CAPTUREDEF(UAuraAttributeSet, CriticalHitChance, Source, false);
 		DEFINE_ATTRIBUTE_CAPTUREDEF(UAuraAttributeSet, CriticalHitDamage, Source, false);
 		DEFINE_ATTRIBUTE_CAPTUREDEF(UAuraAttributeSet, CriticalHitResistance, Target, false);
+
+		DEFINE_ATTRIBUTE_CAPTUREDEF(UAuraAttributeSet, FireResistance, Target, false);
+		DEFINE_ATTRIBUTE_CAPTUREDEF(UAuraAttributeSet, LightningResistance, Target, false);
+		DEFINE_ATTRIBUTE_CAPTUREDEF(UAuraAttributeSet, ArcaneResistance, Target, false);
+		DEFINE_ATTRIBUTE_CAPTUREDEF(UAuraAttributeSet, PhysicalResistance, Target, false);
 	}
+
+
+	TMap<FGameplayTag, FGameplayEffectAttributeCaptureDefinition> GetTagsToCaptureDefsMap()
+	{
+		TagsToCaptureDefs.Add(AuraGameplayTags::Attributes_Resistance_Fire, FireResistanceDef);
+		TagsToCaptureDefs.Add(AuraGameplayTags::Attributes_Resistance_Lightning, LightningResistanceDef);
+		TagsToCaptureDefs.Add(AuraGameplayTags::Attributes_Resistance_Arcane, ArcaneResistanceDef);
+		TagsToCaptureDefs.Add(AuraGameplayTags::Attributes_Resistance_Physical, PhysicalResistanceDef);
+		return TagsToCaptureDefs;
+	}
+
+private:
+	TMap<FGameplayTag, FGameplayEffectAttributeCaptureDefinition> TagsToCaptureDefs;
 };
 
-static const AuraDamageStatics& DamageStatics()
+static const AuraDamageStatics& GetDamageStatics()
 {
 	static AuraDamageStatics DamageStatics;
 	return DamageStatics;
@@ -42,20 +65,24 @@ static const AuraDamageStatics& DamageStatics()
 
 UExecCalc_Damage::UExecCalc_Damage()
 {
-	RelevantAttributesToCapture.Add(DamageStatics().ArmorDef);
-	RelevantAttributesToCapture.Add(DamageStatics().ArmorPenetrationDef);
-	RelevantAttributesToCapture.Add(DamageStatics().BlockChanceDef);
-	RelevantAttributesToCapture.Add(DamageStatics().CriticalHitChanceDef);
-	RelevantAttributesToCapture.Add(DamageStatics().CriticalHitDamageDef);
-	RelevantAttributesToCapture.Add(DamageStatics().CriticalHitResistanceDef);
+	RelevantAttributesToCapture.Add(GetDamageStatics().ArmorDef);
+	RelevantAttributesToCapture.Add(GetDamageStatics().ArmorPenetrationDef);
+	RelevantAttributesToCapture.Add(GetDamageStatics().BlockChanceDef);
+	RelevantAttributesToCapture.Add(GetDamageStatics().CriticalHitChanceDef);
+	RelevantAttributesToCapture.Add(GetDamageStatics().CriticalHitDamageDef);
+	RelevantAttributesToCapture.Add(GetDamageStatics().CriticalHitResistanceDef);
+	RelevantAttributesToCapture.Add(GetDamageStatics().FireResistanceDef);
+	RelevantAttributesToCapture.Add(GetDamageStatics().LightningResistanceDef);
+	RelevantAttributesToCapture.Add(GetDamageStatics().ArcaneResistanceDef);
+	RelevantAttributesToCapture.Add(GetDamageStatics().PhysicalResistanceDef);
 }
 
 namespace DamageCalcUtil
 {
 	// 统一抓取属性并保证非负
-	static float GetCapturedMagnitude(const FGameplayEffectCustomExecutionParameters& ExecParams,
-	                                  const FGameplayEffectAttributeCaptureDefinition& Def,
-	                                  const FAggregatorEvaluateParameters& Params)
+	float GetCapturedMagnitude(const FGameplayEffectCustomExecutionParameters& ExecParams,
+	                           const FGameplayEffectAttributeCaptureDefinition& Def,
+	                           const FAggregatorEvaluateParameters& Params)
 	{
 		float Value = 0.f;
 		ExecParams.AttemptCalculateCapturedAttributeMagnitude(Def, Params, Value);
@@ -63,7 +90,7 @@ namespace DamageCalcUtil
 	}
 
 	// 根据 Curve 获取系数
-	static float GetCoefficient(const UObject* WorldContext, int32 Level, FName CurveName)
+	float GetCoefficient(const UObject* WorldContext, int32 Level, FName CurveName)
 	{
 		const UCharacterClassInfo* Info = UAuraAbilitySystemLibrary::GetCharacterClassInfo(WorldContext);
 		const FRealCurve* Curve = Info->DamageCalculationCoefficients->FindCurve(CurveName, FString());
@@ -72,6 +99,47 @@ namespace DamageCalcUtil
 }
 
 // -----------------------------------------------------------------
+// 0) Init Damage
+static float CalcInitialDamage(const FGameplayEffectSpec& Spec,
+                               const FGameplayEffectCustomExecutionParameters& ExecParams,
+                               const FAggregatorEvaluateParameters& EvalParams)
+{
+	float FinalDamage = 0.f;
+
+	// 1. 拿到 Damage -> Resistance 映射
+	const TMap<FGameplayTag, FGameplayTag>& DamageToResistance = UAuraAbilitySystemLibrary::GetDamageToResistanceMap();
+
+	// 2. 所有以 Damage 为根的子 Tag
+	const FGameplayTagContainer AllDamageTags =
+		UGameplayTagsManager::Get().RequestGameplayTagChildren(AuraGameplayTags::Damage);
+
+	// 3. 抗性 Tag → CaptureDef 的映射
+	const TMap<FGameplayTag, FGameplayEffectAttributeCaptureDefinition>& TagsToCaptureDefs =
+		AuraDamageStatics().GetTagsToCaptureDefsMap();
+
+	// 4. 遍历每种伤害类型
+	for (const FGameplayTag& DamageTypeTag : AllDamageTags)
+	{
+		if (const FGameplayTag* ResistanceTag = DamageToResistance.Find(DamageTypeTag))
+		{
+			check(TagsToCaptureDefs.Contains(*ResistanceTag));
+
+			// 原始伤害
+			float RawDamage = Spec.GetSetByCallerMagnitude(DamageTypeTag, false, 0.f);
+
+			// 抗性值
+			float Resistance = DamageCalcUtil::GetCapturedMagnitude(ExecParams, TagsToCaptureDefs[*ResistanceTag], EvalParams);
+
+			// 应用抗性
+			RawDamage *= (100.f - FMath::Clamp(Resistance, 0.f, 100.f)) / 100.f;
+
+			FinalDamage += RawDamage;
+		}
+	}
+
+	return FinalDamage;
+}
+
 // 1) Armor + ArmorPenetration
 static float ApplyArmor(float Damage, float TargetArmor, float SourceArmorPen, const UObject* WorldContext,
                         int32 SourceLevel, int32 TargetLevel)
@@ -128,27 +196,21 @@ void UExecCalc_Damage::Execute_Implementation(
 	Params.TargetTags = TargetTags;
 
 	// 2. 抓取所有需要的属性
-	float Damage = 0.f;
-	FGameplayTagContainer AllDamageTags =
-		UGameplayTagsManager::Get().RequestGameplayTagChildren(AuraGameplayTags::Damage); // 获取所有Damage开头的Tags
-	for (FGameplayTag DamageTypeTag : AllDamageTags)
-	{
-		Damage += Spec.GetSetByCallerMagnitude(DamageTypeTag);
-	}
-	
+	float Damage = CalcInitialDamage(Spec, ExecutionParams, Params);
+
 	FGameplayEffectContextHandle ContextHandle = Spec.GetContext();
 	float TargetArmor =
-		DamageCalcUtil::GetCapturedMagnitude(ExecutionParams, DamageStatics().ArmorDef, Params);
+		DamageCalcUtil::GetCapturedMagnitude(ExecutionParams, GetDamageStatics().ArmorDef, Params);
 	float SourceArmorPen =
-		DamageCalcUtil::GetCapturedMagnitude(ExecutionParams, DamageStatics().ArmorPenetrationDef, Params);
+		DamageCalcUtil::GetCapturedMagnitude(ExecutionParams, GetDamageStatics().ArmorPenetrationDef, Params);
 	float SourceCritC =
-		DamageCalcUtil::GetCapturedMagnitude(ExecutionParams, DamageStatics().CriticalHitChanceDef, Params);
+		DamageCalcUtil::GetCapturedMagnitude(ExecutionParams, GetDamageStatics().CriticalHitChanceDef, Params);
 	float SourceCritD =
-		DamageCalcUtil::GetCapturedMagnitude(ExecutionParams, DamageStatics().CriticalHitDamageDef, Params);
+		DamageCalcUtil::GetCapturedMagnitude(ExecutionParams, GetDamageStatics().CriticalHitDamageDef, Params);
 	float TargetCritRes =
-		DamageCalcUtil::GetCapturedMagnitude(ExecutionParams, DamageStatics().CriticalHitResistanceDef, Params);
+		DamageCalcUtil::GetCapturedMagnitude(ExecutionParams, GetDamageStatics().CriticalHitResistanceDef, Params);
 	float TargetBlock =
-		DamageCalcUtil::GetCapturedMagnitude(ExecutionParams, DamageStatics().BlockChanceDef, Params);
+		DamageCalcUtil::GetCapturedMagnitude(ExecutionParams, GetDamageStatics().BlockChanceDef, Params);
 
 	// 3. 计算
 	Damage = ApplyArmor(Damage, TargetArmor, SourceArmorPen, SourceAvatar, SourceCI->GetLevel(), TargetCI->GetLevel());

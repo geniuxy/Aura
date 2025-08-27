@@ -3,7 +3,6 @@
 
 #include "AuraGameplayTags.h"
 
-
 namespace AuraGameplayTags
 {
 	/** Input Tags **/

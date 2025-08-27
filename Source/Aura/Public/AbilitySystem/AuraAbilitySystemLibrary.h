@@ -6,6 +6,7 @@
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "AuraAbilitySystemLibrary.generated.h"
 
+struct FGameplayTag;
 struct FGameplayEffectContextHandle;
 class UCharacterClassInfo;
 class UGameplayEffect;
@@ -40,7 +41,7 @@ public:
 
 	UFUNCTION(BlueprintPure, Category="AuraAbilitySystemLibrary|GameplayEffects")
 	static bool IsBlockedHit(const FGameplayEffectContextHandle& EffectContextHandle);
-	
+
 	UFUNCTION(BlueprintPure, Category="AuraAbilitySystemLibrary|GameplayEffects")
 	static bool IsCriticalHit(const FGameplayEffectContextHandle& EffectContextHandle);
 
@@ -49,6 +50,8 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category="AuraAbilitySystemLibrary|GameplayEffects")
 	static void SetIsCriticalHit(UPARAM(ref) FGameplayEffectContextHandle& EffectContextHandle, bool bInIsCriticalHit);
+
+	static TMap<FGameplayTag, FGameplayTag> GetDamageToResistanceMap();
 
 private:
 	static void ApplyAttributesEffectSpec(TSubclassOf<UGameplayEffect> AppliedGameplayEffect, int32 Level,

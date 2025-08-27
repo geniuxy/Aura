@@ -8,6 +8,7 @@
 #include "AuraAbilityTypes.h"
 #include "DebugHelper.h"
 #include "GameplayEffect.h"
+#include "GameplayTagsManager.h"
 #include "AbilitySystem/Abilities/AuraGameplayAbility.h"
 #include "AbilitySystem/Data/CharacterClassInfo.h"
 #include "Game/AuraGameModeBase.h"
@@ -75,6 +76,45 @@ void UAuraAbilitySystemLibrary::ApplyAttributesEffectSpec(TSubclassOf<UGameplayE
 	ASC->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get());
 }
 
+TMap<FGameplayTag, FGameplayTag> UAuraAbilitySystemLibrary::GetDamageToResistanceMap()
+{
+	static TMap<FGameplayTag, FGameplayTag> Cache;
+	if (!Cache.IsEmpty())
+	{
+		return Cache;
+	}
+
+	const UGameplayTagsManager& Manager = UGameplayTagsManager::Get();
+
+	// 需要按前缀过滤的 Tag 列表
+	const FString DamagePrefix = TEXT("Damage.");
+	const FString ResistancePrefix = TEXT("Attributes.Resistance.");
+
+	// 遍历所有已注册 Tag
+	FGameplayTagContainer AllTagsContainer;
+	Manager.RequestAllGameplayTags(AllTagsContainer, false);
+
+	for (const FGameplayTag& Tag : AllTagsContainer)
+	{
+		const FString TagStr = Tag.ToString();
+		if (!TagStr.StartsWith(DamagePrefix))
+			continue;
+
+		// 2. 拼出抗性 Tag 的名字
+		const FString TypeName = TagStr.RightChop(DamagePrefix.Len());
+		const FString ResistanceName = ResistancePrefix + TypeName;
+
+		// 3. 查找对应抗性 Tag
+		const FGameplayTag ResistanceTag = Manager.RequestGameplayTag(FName(*ResistanceName), false);
+		if (ResistanceTag.IsValid())
+		{
+			Cache.Add(Tag, ResistanceTag);
+		}
+	}
+
+	return Cache;
+}
+
 void UAuraAbilitySystemLibrary::GiveStartupAbilities(const UObject* WorldContextObject, UAbilitySystemComponent* ASC)
 {
 	UCharacterClassInfo* CharacterClassInfo = GetCharacterClassInfo(WorldContextObject);
@@ -123,7 +163,7 @@ void UAuraAbilitySystemLibrary::SetIsBlockedHit(FGameplayEffectContextHandle& Ef
 }
 
 void UAuraAbilitySystemLibrary::SetIsCriticalHit(FGameplayEffectContextHandle& EffectContextHandle,
-	bool bInIsCriticalHit)
+                                                 bool bInIsCriticalHit)
 {
 	if (FAuraGameplayEffectContext* AuraEffectContext =
 		static_cast<FAuraGameplayEffectContext*>(EffectContextHandle.Get()))
