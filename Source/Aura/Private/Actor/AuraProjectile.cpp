@@ -59,11 +59,15 @@ void AAuraProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, 
                                       UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep,
                                       const FHitResult& SweepResult)
 {
+	// 子弹打到自己发射者直接return
+	// DamageEffectSpecHandle.Data.IsValid()是为了保证DamageEffectSpecHandle.Data.Get()不是空指针
 	if (DamageEffectSpecHandle.Data.IsValid() &&
 		DamageEffectSpecHandle.Data.Get()->GetContext().GetEffectCauser() == OtherActor)
 	{
 		return;
 	}
+	// bHit不会在不同端之间复制，每个段的bHit值独立
+	// 第一次命中时，无论服务器还是客户端，先把声光表现一次性播完
 	if (!bHit)
 	{
 		UGameplayStatics::PlaySoundAtLocation(this, ImpactSound, GetActorLocation(), FRotator::ZeroRotator);
@@ -74,17 +78,17 @@ void AAuraProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, 
 		}
 	}
 
-	if (HasAuthority())
+	if (HasAuthority()) // 只有服务器能“真”结算
 	{
 		if (UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(OtherActor))
 		{
 			TargetASC->ApplyGameplayEffectSpecToSelf(*DamageEffectSpecHandle.Data.Get());
 		}
 
-		Destroy();
+		Destroy(); // 权威端销毁，所有客户端同步销毁
 	}
-	else
+	else // 客户端
 	{
-		bHit = true;
+		bHit = true; // 告诉本地：特效已播，后面 Destroyed() 不再补播
 	}
 }
