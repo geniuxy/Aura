@@ -23,7 +23,8 @@ public class Aura : ModuleRules
 			"GameplayTasks",
 			"GameplayTags",
 			"NavigationSystem",
-			"Niagara"
+			"Niagara",
+			"AIModule"
 		});
 
 		// Uncomment if you are using Slate UI
