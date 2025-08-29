@@ -43,6 +43,9 @@ void AAuraEnemy::PossessedBy(AController* NewController)
 	AIController = Cast<AAuraAIController>(NewController);
 	AIController->GetBlackboardComponent()->InitializeBlackboard(*BehaviorTree->GetBlackboardAsset());
 	AIController->RunBehaviorTree(BehaviorTree);
+	AIController->GetBlackboardComponent()->SetValueAsBool(FName("HitReacting"), false);
+	AIController->GetBlackboardComponent()->
+	              SetValueAsBool(FName("RangerAttack"), CharacterClass != ECharacterClass::Warrior);
 }
 
 void AAuraEnemy::HighlightActor()
@@ -83,7 +86,7 @@ void AAuraEnemy::BeginPlay()
 	InitAbilityActorInfo();
 	if (HasAuthority())
 	{
-		UAuraAbilitySystemLibrary::GiveStartupAbilities(this, AbilitySystemComponent);	
+		UAuraAbilitySystemLibrary::GiveStartupAbilities(this, AbilitySystemComponent);
 	}
 
 	if (UAuraUserWidget* AuraUserWidget = Cast<UAuraUserWidget>(HealthBar->GetUserWidgetObject()))
@@ -119,6 +122,7 @@ void AAuraEnemy::HitReactTagChanged(const FGameplayTag CallbackTag, int32 NewCou
 {
 	bHitReacting = NewCount > 0;
 	GetCharacterMovement()->MaxWalkSpeed = bHitReacting ? 0.f : BaseWalkSpeed;
+	AIController->GetBlackboardComponent()->SetValueAsBool(FName("HitReacting"), bHitReacting);
 }
 
 void AAuraEnemy::InitAbilityActorInfo()
@@ -128,7 +132,7 @@ void AAuraEnemy::InitAbilityActorInfo()
 
 	if (HasAuthority())
 	{
-		InitializeDefaultAttributes();		
+		InitializeDefaultAttributes();
 	}
 }
 
