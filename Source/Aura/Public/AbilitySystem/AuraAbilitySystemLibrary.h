@@ -34,7 +34,8 @@ public:
 	                                        int32 Level, UAbilitySystemComponent* ASC);
 
 	UFUNCTION(BlueprintCallable, Category="AuraAbilitySystemLibrary|CharacterClassDefaults")
-	static void GiveStartupAbilities(const UObject* WorldContextObject, UAbilitySystemComponent* ASC, ECharacterClass CharacterClass);
+	static void GiveStartupAbilities(const UObject* WorldContextObject, UAbilitySystemComponent* ASC,
+	                                 ECharacterClass CharacterClass);
 
 	UFUNCTION(BlueprintCallable, Category="AuraAbilitySystemLibrary|CharacterClassDefaults")
 	static UCharacterClassInfo* GetCharacterClassInfo(const UObject* WorldContextObject);
@@ -50,6 +51,16 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category="AuraAbilitySystemLibrary|GameplayEffects")
 	static void SetIsCriticalHit(UPARAM(ref) FGameplayEffectContextHandle& EffectContextHandle, bool bInIsCriticalHit);
+
+	UFUNCTION(BlueprintCallable, Category="AuraAbilitySystemLibrary|GameplayMechanics")
+	static void GetLivePlayerWithinRadius(
+		const UObject* WorldContextObject,
+		TArray<AActor*>& OutOverlappingActors,
+		const TArray<AActor*>& ActorsToIgnore,
+		float Radius,
+		const FVector& SphereOrigin,
+		bool bDebugSphere
+	);
 
 	static TMap<FGameplayTag, FGameplayTag> GetDamageToResistanceMap();
 

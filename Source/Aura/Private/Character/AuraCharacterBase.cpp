@@ -28,17 +28,6 @@ UAbilitySystemComponent* AAuraCharacterBase::GetAbilitySystemComponent() const
 	return AbilitySystemComponent;
 }
 
-UAnimMontage* AAuraCharacterBase::GetHitReactMontage_Implementation()
-{
-	return HitReactMontage;
-}
-
-void AAuraCharacterBase::Die()
-{
-	Weapon->DetachFromComponent(FDetachmentTransformRules(EDetachmentRule::KeepWorld, true));
-	MulticastHandleDeath();
-}
-
 void AAuraCharacterBase::MulticastHandleDeath_Implementation()
 {
 	Weapon->SetIsReplicated(true); // 加上这一行可以解决死亡后武器抖动的问题
@@ -54,6 +43,7 @@ void AAuraCharacterBase::MulticastHandleDeath_Implementation()
 
 	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	Dissolve();
+	bDead = true;
 }
 
 void AAuraCharacterBase::BeginPlay()
@@ -65,10 +55,31 @@ void AAuraCharacterBase::InitAbilityActorInfo()
 {
 }
 
+void AAuraCharacterBase::Die()
+{
+	Weapon->DetachFromComponent(FDetachmentTransformRules(EDetachmentRule::KeepWorld, true));
+	MulticastHandleDeath();
+}
+
+UAnimMontage* AAuraCharacterBase::GetHitReactMontage_Implementation()
+{
+	return HitReactMontage;
+}
+
 FVector AAuraCharacterBase::GetCombatSocketLocation_Implementation()
 {
 	checkf(Weapon, TEXT("Weapon component is not set for %s"), *GetName());
 	return Weapon->GetSocketLocation(WeaponTipSocketName);
+}
+
+bool AAuraCharacterBase::IsDead_Implementation() const
+{
+	return bDead;
+}
+
+AActor* AAuraCharacterBase::GetAvatar_Implementation()
+{
+	return this;
 }
 
 void AAuraCharacterBase::ApplyEffectToSelf(const TSubclassOf<UGameplayEffect>& GameplayEffectClass, float Level) const
