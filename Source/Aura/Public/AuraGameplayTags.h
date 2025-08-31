@@ -39,6 +39,7 @@ namespace AuraGameplayTags
 	AURA_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Damage_Physical);
 
 	AURA_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Event_Montage_FireBolt);
+	AURA_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Event_Montage_Attack_Melee);
 
 	/** Enemy Tags**/
 

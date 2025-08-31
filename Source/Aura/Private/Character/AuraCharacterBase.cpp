@@ -65,7 +65,7 @@ void AAuraCharacterBase::InitAbilityActorInfo()
 {
 }
 
-FVector AAuraCharacterBase::GetCombatSocketLocation()
+FVector AAuraCharacterBase::GetCombatSocketLocation_Implementation()
 {
 	checkf(Weapon, TEXT("Weapon component is not set for %s"), *GetName());
 	return Weapon->GetSocketLocation(WeaponTipSocketName);
