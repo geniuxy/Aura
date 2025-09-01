@@ -63,12 +63,13 @@ namespace AuraGameplayTags
 
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Event_Montage_FireBolt, "Event.Montage.FireBolt",
 	                               "火球术技能的动画事件标签，用于触发火球术的施放动画。");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Event_Montage_Attack_Melee, "Event.Montage.Attack.Melee",
-	                               "近战攻击的动画事件标签，用于触发近战攻击后续事件。");
 	/** Enemy Tags**/
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Montage_Attack_Weapon, "Montage.Attack.Weapon", "用于代表敌人用武器攻击的Montage。");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Montage_Attack_LeftHand, "Montage.Attack.LeftHand", "用于代表敌人用左手攻击的Montage。");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Montage_Attack_RightHand, "Montage.Attack.RightHand", "用于代表敌人用右手攻击的Montage。");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Event_Montage_Attack_Weapon, "Event.Montage.Attack.Weapon",
+	                               "用于代表敌人用武器攻击的Montage。");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Event_Montage_Attack_LeftHand, "Event.Montage.Attack.LeftHand",
+	                               "用于代表敌人用左手攻击的Montage。");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Event_Montage_Attack_RightHand, "Event.Montage.Attack.RightHand",
+	                               "用于代表敌人用右手攻击的Montage。");
 
 	/** Shared Tags**/
 
