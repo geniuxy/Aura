@@ -169,10 +169,18 @@ void UAuraAttributeSet::HandleIncomingDamage(FEffectProperties Props)
 
 void UAuraAttributeSet::ShowFloatingText(const FEffectProperties& Props, float Damage, bool bBlockedHit, bool bCriticalHit) const
 {
-	// 注意：这里要获取对应玩家的Controller，才可以在正确的Client上显示浮动数字，不能用UGameplayStatic::GetPlayerController
-	if (AAuraPlayerController* PC = Cast<AAuraPlayerController>(Props.SourceCharacter->Controller))
+	if (Props.SourceCharacter != Props.TargetCharacter)
 	{
-		PC->ShowDamageNumber(Damage, Props.TargetCharacter, bBlockedHit, bCriticalHit);
+		// 注意：这里要获取对应玩家的Controller，才可以在正确的Client上显示浮动数字，不能用UGameplayStatic::GetPlayerController
+		if (AAuraPlayerController* PC = Cast<AAuraPlayerController>(Props.SourceCharacter->Controller))
+		{
+			PC->ShowDamageNumber(Damage, Props.TargetCharacter, bBlockedHit, bCriticalHit);
+			return;
+		}
+		if (AAuraPlayerController* PC = Cast<AAuraPlayerController>(Props.TargetCharacter->Controller))
+		{
+			PC->ShowDamageNumber(Damage, Props.TargetCharacter, bBlockedHit, bCriticalHit);
+		}
 	}
 }
 

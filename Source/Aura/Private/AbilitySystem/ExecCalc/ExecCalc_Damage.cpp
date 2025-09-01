@@ -131,12 +131,6 @@ static float CalcInitialDamage(const FGameplayEffectSpec& Spec,
 			// 抗性值
 			float Resistance =
 				DamageCalcUtil::GetCapturedMagnitude(ExecParams, TagsToCaptureDefs[*ResistanceTag], EvalParams);
-			if (Resistance > 0.f)
-			{
-				Debug::Print(FString::Printf(
-					TEXT("Raw Damage for %s: %f, Resistance for %s: %f"),
-					*DamageTypeTag.ToString(), RawDamage, *DamageTypeTag.ToString(), Resistance));
-			}
 
 			// 应用抗性
 			RawDamage *= (100.f - FMath::Clamp(Resistance, 0.f, 100.f)) / 100.f;
