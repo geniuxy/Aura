@@ -4,6 +4,7 @@
 #include "Character/AuraCharacterBase.h"
 
 #include "AbilitySystemComponent.h"
+#include "AuraGameplayTags.h"
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
 #include "Aura/Aura.h"
 #include "Components/CapsuleComponent.h"
@@ -66,10 +67,27 @@ UAnimMontage* AAuraCharacterBase::GetHitReactMontage_Implementation()
 	return HitReactMontage;
 }
 
-FVector AAuraCharacterBase::GetCombatSocketLocation_Implementation()
+FVector AAuraCharacterBase::GetCombatSocketLocation_Implementation(const FGameplayTag& InTag)
 {
-	checkf(Weapon, TEXT("Weapon component is not set for %s"), *GetName());
-	return Weapon->GetSocketLocation(WeaponTipSocketName);
+	if (InTag.MatchesAnyExact(FGameplayTagContainer(AuraGameplayTags::Event_Montage_Attack_Weapon)) &&
+		IsValid(Weapon) && !WeaponTipSocketName.IsNone())
+	{
+		return Weapon->GetSocketLocation(WeaponTipSocketName);
+	}
+
+	if (InTag.MatchesAnyExact(FGameplayTagContainer(AuraGameplayTags::Event_Montage_Attack_LeftHand)) &&
+		!LeftHandSocketName.IsNone())
+	{
+		return Weapon->GetSocketLocation(LeftHandSocketName);
+	}
+
+	if (InTag.MatchesAnyExact(FGameplayTagContainer(AuraGameplayTags::Event_Montage_Attack_RightHand)) &&
+		!RightHandSocketName.IsNone())
+	{
+		return Weapon->GetSocketLocation(RightHandSocketName);
+	}
+
+	return FVector();
 }
 
 bool AAuraCharacterBase::IsDead_Implementation() const
