@@ -42,6 +42,9 @@ namespace AuraGameplayTags
 	AURA_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Event_Montage_Attack_Melee);
 
 	/** Enemy Tags**/
+	AURA_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Montage_Attack_Weapon);
+	AURA_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Montage_Attack_LeftHand);
+	AURA_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Montage_Attack_RightHand);
 
 	/** Shared Tags**/
 	AURA_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Message_HealthPotion);
