@@ -13,4 +13,3 @@ AAuraAIController::AAuraAIController()
 	BehaviorTreeComponent = CreateDefaultSubobject<UBehaviorTreeComponent>("BehaviorTreeComponent");
 	checkf(BehaviorTreeComponent, TEXT("BehaviorTreeComponent creation failed in %s"), *GetNameSafe(this));
 }
-
