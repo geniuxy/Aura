@@ -62,6 +62,9 @@ public:
 		bool bDebugSphere
 	);
 
+	UFUNCTION(BlueprintPure, Category = "AuraAbilitySystemLibrary|GameplayMechanics")
+	static bool IsNotFriend(AActor* FirstActor, AActor* SecondActor);
+
 	static TMap<FGameplayTag, FGameplayTag> GetDamageToResistanceMap();
 
 private:
