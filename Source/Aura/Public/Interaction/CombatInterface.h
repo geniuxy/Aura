@@ -17,6 +17,9 @@ struct FTaggedMontage
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	FGameplayTag MontageEventTag;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	float MontageRangeRadius = 0.f;
 };
 
 UINTERFACE(MinimalAPI, BlueprintType)
