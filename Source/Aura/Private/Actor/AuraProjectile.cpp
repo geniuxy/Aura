@@ -70,7 +70,7 @@ void AAuraProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, 
 		return;
 	}
 	// 子弹不会打到友军
-	if (DamageEffectSpecHandle.Data.IsValid() && !UAuraAbilitySystemLibrary::IsNotFriend(
+	if (!DamageEffectSpecHandle.Data.IsValid() || !UAuraAbilitySystemLibrary::IsNotFriend(
 		DamageEffectSpecHandle.Data.Get()->GetContext().GetEffectCauser(), OtherActor))
 	{
 		return;
