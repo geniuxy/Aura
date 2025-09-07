@@ -64,13 +64,15 @@ namespace AuraGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Event_Montage_FireBolt, "Event.Montage.FireBolt",
 	                               "火球术技能的动画事件标签，用于触发火球术的施放动画。");
 	/** Enemy Tags**/
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Event_Montage_Attack_Weapon, "Event.Montage.Attack.Weapon",
-	                               "用于代表敌人用武器攻击的Montage。");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Event_Montage_Attack_LeftHand, "Event.Montage.Attack.LeftHand",
-	                               "用于代表敌人用左手攻击的Montage。");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Event_Montage_Attack_RightHand, "Event.Montage.Attack.RightHand",
-	                               "用于代表敌人用右手攻击的Montage。");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Event_Montage_Attack_1, "Event.Montage.Attack.1", "用于代表敌人的1号Montage。");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Event_Montage_Attack_2, "Event.Montage.Attack.2", "用于代表敌人的2号Montage。");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Event_Montage_Attack_3, "Event.Montage.Attack.3", "用于代表敌人的3号Montage。");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Event_Montage_Attack_4, "Event.Montage.Attack.4", "用于代表敌人的4号Montage。");
 
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(CombatSocket_Weapon, "CombatSocket.Weapon", "指代敌人的进攻方式属于武器槽位。");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(CombatSocket_LeftHand, "CombatSocket.LeftHand", "指代敌人的进攻方式属于左手槽位。");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(CombatSocket_RightHand, "CombatSocket.RightHand", "指代敌人的进攻方式属于右手槽位。");
+	
 	/** Shared Tags**/
 
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Message_HealthPotion, "Message.HealthPotion",

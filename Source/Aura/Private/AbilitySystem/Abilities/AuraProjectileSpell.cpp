@@ -28,7 +28,7 @@ void UAuraProjectileSpell::SpawnProjectile(const FVector& ProjectileTargetLocati
 	// 原因：该 Actor 被标记为“可复制” => bReplicates = true;
 
 	const FVector SocketLocation = ICombatInterface::Execute_GetCombatSocketLocation(
-		GetAvatarActorFromActorInfo(), AuraGameplayTags::Event_Montage_Attack_Weapon);
+		GetAvatarActorFromActorInfo(), AuraGameplayTags::CombatSocket_Weapon);
 	FRotator Rotation = (ProjectileTargetLocation - SocketLocation).Rotation();
 
 	FTransform SpawnTransform;

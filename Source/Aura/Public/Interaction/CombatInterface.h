@@ -21,6 +21,9 @@ struct FTaggedMontage
 	FGameplayTag MontageEventTag;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	FGameplayTag CombatSocketTag;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	float MontageRangeRadius = 0.f;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
@@ -65,4 +68,7 @@ public:
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	UNiagaraSystem* GetBloodEffect();
+	
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	FTaggedMontage GetTaggedMontageByTag(const FGameplayTag& InTag);
 };
