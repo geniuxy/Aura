@@ -56,4 +56,8 @@ namespace AuraGameplayTags
 	AURA_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_Attack_Ranged);
 	
 	AURA_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Effect_HitReact);
+
+	/** GameplayCue Tags **/
+	AURA_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayCue_Enemy_MeleeAttack_Impact);
+	
 }

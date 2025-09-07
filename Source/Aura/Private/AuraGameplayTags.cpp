@@ -87,4 +87,7 @@ namespace AuraGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Ability_Attack_Ranged, "Ability.Attack.Ranged", "用于Activate对应的远距离攻击的GameAbility");
 
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Effect_HitReact, "Effect.HitReact", "用于对应的GameEffect来向Actor添加HitReact的Tag标签");
+
+	/** GameplayCue Tags **/
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(GameplayCue_Enemy_MeleeAttack_Impact, "GameplayCue.Enemy.MeleeAttack.Impact", "敌人近战攻击相关的特效");
 }
