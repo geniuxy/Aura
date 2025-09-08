@@ -52,6 +52,7 @@ void AAuraProjectile::Destroyed()
 		{
 			LoopingSoundComponent->Stop();
 		}
+		bHit = true;
 	}
 	Super::Destroyed();
 }
@@ -85,6 +86,7 @@ void AAuraProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, 
 		{
 			LoopingSoundComponent->Stop();
 		}
+		bHit = true;
 	}
 
 	if (HasAuthority()) // 只有服务器能“真”结算
