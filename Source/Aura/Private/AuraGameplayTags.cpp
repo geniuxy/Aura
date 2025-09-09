@@ -72,6 +72,7 @@ namespace AuraGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(CombatSocket_Weapon, "CombatSocket.Weapon", "指代敌人的进攻方式属于武器槽位。");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(CombatSocket_LeftHand, "CombatSocket.LeftHand", "指代敌人的进攻方式属于左手槽位。");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(CombatSocket_RightHand, "CombatSocket.RightHand", "指代敌人的进攻方式属于右手槽位。");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(CombatSocket_Tail, "CombatSocket.Tail", "指代敌人的进攻方式属于尾巴槽位。");
 	
 	/** Shared Tags**/
 

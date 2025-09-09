@@ -59,6 +59,9 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Combat")
 	FName RightHandSocketName;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Combat")
+	FName TailSocketName;
 	
 	bool bDead = false;
 

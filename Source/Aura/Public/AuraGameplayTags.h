@@ -49,6 +49,7 @@ namespace AuraGameplayTags
 	AURA_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(CombatSocket_Weapon);
 	AURA_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(CombatSocket_LeftHand);
 	AURA_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(CombatSocket_RightHand);
+	AURA_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(CombatSocket_Tail);
 
 	/** Shared Tags**/
 	AURA_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Message_HealthPotion);
