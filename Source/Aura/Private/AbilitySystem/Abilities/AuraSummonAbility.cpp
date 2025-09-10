@@ -3,6 +3,8 @@
 
 #include "AbilitySystem/Abilities/AuraSummonAbility.h"
 
+#include "Kismet/KismetSystemLibrary.h"
+
 TArray<FVector> UAuraSummonAbility::GetSpawnLocations()
 {
 	const FVector Forward = GetAvatarActorFromActorInfo()->GetActorForwardVector();
@@ -23,6 +25,11 @@ TArray<FVector> UAuraSummonAbility::GetSpawnLocations()
 			ChosenSpawnLocation = Hit.ImpactPoint;
 		}
 		SpawnLocations.Add(ChosenSpawnLocation);
+
+		// DrawDebugSphere(GetWorld(), ChosenSpawnLocation, 18.f, 12, FColor::Cyan, false, 3.f );
+		// UKismetSystemLibrary::DrawDebugArrow(GetAvatarActorFromActorInfo(), Location, Location + Direction * MaxSpawnDistance, 4.f, FLinearColor::Green, 3.f );
+		// DrawDebugSphere(GetWorld(), Location + Direction * MinSpawnDistance, 5.f, 12, FColor::Red, false, 3.f );
+		// DrawDebugSphere(GetWorld(), Location + Direction * MaxSpawnDistance, 5.f, 12, FColor::Red, false, 3.f );
 	}
 
 	return SpawnLocations;
