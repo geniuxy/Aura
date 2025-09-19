@@ -90,6 +90,8 @@ namespace AuraGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Ability_Attack_Ranged, "Ability.Attack.Ranged", "用于Activate对应的远距离攻击的GameAbility");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Ability_Summon, "Ability.Summon", "用于Activate对应的召唤流的GameAbility");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Ability_Skill_FireBolt, "Ability.Skill.FireBolt", "主角的火球技能");
+	
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Cooldown_Skill_FireBolt, "Cooldown.Skill.FireBolt", "主角的火球技能的冷却时间");
 
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Effect_HitReact, "Effect.HitReact", "用于对应的GameEffect来向Actor添加HitReact的Tag标签");
 
