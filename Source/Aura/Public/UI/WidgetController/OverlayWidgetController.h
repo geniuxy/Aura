@@ -22,16 +22,18 @@ struct FUIWidgetRow : public FTableRowBase
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	FText Message = FText();
-	
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TSubclassOf<UAuraUserWidget> MessageWidget; // 直接省略初始化，因为默认值已经是 nullptr
-	
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	UTexture2D* Image = nullptr;
 };
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAttributeChangedDelegate, float, NewValue);
+
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FMessageWidgetRowSignature, FUIWidgetRow, Row);
+
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FAbilityInfoSignature, const FAuraAbilityInfo&, Info);
 
 /**
@@ -43,13 +45,14 @@ UCLASS(BlueprintType, Blueprintable)
 class AURA_API UOverlayWidgetController : public UAuraWidgetController
 {
 	GENERATED_BODY()
+
 public:
 	virtual void BroadcastInitialValues() override;
 	virtual void BindCallbacksToDependencies() override;
 
 	UPROPERTY(BlueprintAssignable, Category="GAS|Attributes")
 	FOnAttributeChangedDelegate OnHealthChanged;
-	
+
 	UPROPERTY(BlueprintAssignable, Category="GAS|Attributes")
 	FOnAttributeChangedDelegate OnMaxHealthChanged;
 
@@ -58,6 +61,9 @@ public:
 
 	UPROPERTY(BlueprintAssignable, Category="GAS|Attributes")
 	FOnAttributeChangedDelegate OnMaxManaChanged;
+
+	UPROPERTY(BlueprintAssignable, Category="GAS|XP")
+	FOnAttributeChangedDelegate OnXPPercentChangedDelegate;
 
 	UPROPERTY(BlueprintAssignable, Category="GAS|Messages")
 	FMessageWidgetRowSignature MessageWidgetRowDelegate;
@@ -71,11 +77,13 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Widget Data")
 	TObjectPtr<UAbilityInfo> AbilityInfo;
-	
-	template<typename T>
+
+	template <typename T>
 	T* GetDataTableRowByTag(UDataTable* DataTable, const FGameplayTag& Tag);
 
 	void OnInitializeStartupAbilities(UAuraAbilitySystemComponent* AuraAbilitySystemComponent);
+
+	void OnXPChanged(int32 NewXP) const;
 };
 
 template <typename T>
