@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "AbilitySystemInterface.h"
+#include "AbilitySystem/Data/CharacterClassInfo.h"
 #include "GameFramework/Character.h"
 #include "Interaction/CombatInterface.h"
 #include "AuraCharacterBase.generated.h"
@@ -37,6 +38,7 @@ public:
 	virtual FTaggedMontage GetTaggedMontageByTag_Implementation(const FGameplayTag& InTag) override;
 	virtual int32 GetMinionCount_Implementation() override;
 	virtual void AdjustMinionCount_Implementation(int32 InAmount) override;
+	virtual ECharacterClass GetCharacterClass_Implementation() override;
 	/** End Combat Interfaces */
 
 	UPROPERTY(EditAnywhere, Category = "Combat")
@@ -86,6 +88,9 @@ protected:
 	virtual void InitializeDefaultAttributes() const;
 
 	void AddCharacterAbilities();
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Enemy Defaults")
+	ECharacterClass CharacterClass = ECharacterClass::Warrior;
 
 	/* Dissolve Effects */
 	
