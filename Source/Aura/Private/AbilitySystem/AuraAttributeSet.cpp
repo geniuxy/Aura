@@ -167,6 +167,13 @@ void UAuraAttributeSet::HandleIncomingDamage(FEffectProperties Props)
 	}
 }
 
+void UAuraAttributeSet::HandleIncomingXP(FEffectProperties Props)
+{
+	const float LocalIncomingXP = GetIncomingXP();
+	SetIncomingXP(0.f);
+	Debug::Print(TEXT("Incoming XP"), LocalIncomingXP);
+}
+
 void UAuraAttributeSet::ShowFloatingText(const FEffectProperties& Props, float Damage, bool bBlockedHit, bool bCriticalHit) const
 {
 	if (Props.SourceCharacter != Props.TargetCharacter)
@@ -202,6 +209,10 @@ void UAuraAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 	if (Data.EvaluatedData.Attribute == GetIncomingDamageAttribute())
 	{
 		HandleIncomingDamage(Props);
+	}
+	if (Data.EvaluatedData.Attribute == GetIncomingXPAttribute())
+	{
+		HandleIncomingXP(Props);
 	}
 }
 

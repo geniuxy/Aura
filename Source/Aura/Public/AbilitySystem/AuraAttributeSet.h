@@ -148,6 +148,10 @@ public:
 	UPROPERTY(BlueprintReadOnly, Category="Meta Attribute")
 	FGameplayAttributeData IncomingDamage;
 	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, IncomingDamage);
+
+	UPROPERTY(BlueprintReadOnly, Category="Meta Attribute")
+	FGameplayAttributeData IncomingXP;
+	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, IncomingXP);
 	
 	/*
 	 * Resistance Attributes
@@ -236,5 +240,6 @@ public:
 private:
 	void SetEffectProperties(const FGameplayEffectModCallbackData& Data, FEffectProperties& Props) const;
 	void HandleIncomingDamage(FEffectProperties Props);
+	void HandleIncomingXP(FEffectProperties Props);
 	void ShowFloatingText(const FEffectProperties& Props, float Damage, bool bBlock, bool bCritical) const;
 };
