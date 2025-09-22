@@ -5,7 +5,6 @@
 
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemComponent.h"
-#include "DebugHelper.h"
 
 void UAuraDamageGameplayAbility::CauseDamage(AActor* TargetActor)
 {
@@ -15,8 +14,6 @@ void UAuraDamageGameplayAbility::CauseDamage(AActor* TargetActor)
 	{
 		const float ScaledDamage = Pair.Value.GetValueAtLevel(GetAbilityLevel());
 		UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(DamageSpecHandle, Pair.Key, ScaledDamage);
-		Debug::Print(
-			FString::Printf(TEXT("Gameplay Tag: %s, Caused Damage: %f"), *Pair.Key.ToString(), ScaledDamage));
 	}
 	GetAbilitySystemComponentFromActorInfo()->ApplyGameplayEffectSpecToTarget(
 		*DamageSpecHandle.Data.Get(), UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(TargetActor));

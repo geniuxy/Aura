@@ -125,11 +125,6 @@ void UAuraAttributeSet::HandleIncomingDamage(FEffectProperties Props)
 	{
 		float NewHealth = GetHealth() - LocalIncomingDamage;
 		SetHealth(FMath::Clamp(NewHealth, 0.f, GetMaxHealth()));
-		Debug::Print(FString::Printf(
-				TEXT("Meta Attribute Changed Health on %s, Health: %f"),
-				*Props.TargetAvatarActor->GetName(),
-				GetHealth())
-		);
 		const bool bFatal = NewHealth <= 0.f;
 		if (!bFatal)
 		{
@@ -159,6 +154,7 @@ void UAuraAttributeSet::HandleIncomingDamage(FEffectProperties Props)
 			{
 				CombatInterface->Die();
 			}
+			SendXPEvent(Props);
 		}
 
 		const bool bBlocked = UAuraAbilitySystemLibrary::IsBlockedHit(Props.EffectContextHandle);
@@ -174,7 +170,28 @@ void UAuraAttributeSet::HandleIncomingXP(FEffectProperties Props)
 	Debug::Print(TEXT("Incoming XP"), LocalIncomingXP);
 }
 
-void UAuraAttributeSet::ShowFloatingText(const FEffectProperties& Props, float Damage, bool bBlockedHit, bool bCriticalHit) const
+void UAuraAttributeSet::SendXPEvent(const FEffectProperties& Props)
+{
+	if (ICombatInterface* CombatInterface = Cast<ICombatInterface>(Props.TargetCharacter))
+	{
+		const int32 TargetLevel = CombatInterface->GetLevel();
+		ECharacterClass TargetClass = ICombatInterface::Execute_GetCharacterClass(Props.TargetCharacter);
+		int32 XPReward =
+			UAuraAbilitySystemLibrary::GetXPRewardForClassAndLevel(Props.TargetCharacter, TargetClass, TargetLevel);
+
+		FGameplayEventData Payload;
+		Payload.EventTag = AuraGameplayTags::Attributes_Meta_IncomingXP;
+		Payload.EventMagnitude = XPReward;
+		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(
+			Props.SourceCharacter,
+			AuraGameplayTags::Attributes_Meta_IncomingXP,
+			Payload
+		);
+	}
+}
+
+void UAuraAttributeSet::ShowFloatingText(const FEffectProperties& Props, float Damage, bool bBlockedHit,
+                                         bool bCriticalHit) const
 {
 	if (Props.SourceCharacter != Props.TargetCharacter)
 	{
@@ -324,4 +341,3 @@ void UAuraAttributeSet::OnRep_PhysicalResistance(const FGameplayAttributeData& O
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, PhysicalResistance, OldPhysicalResistance);
 }
-
