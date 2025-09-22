@@ -61,8 +61,6 @@ void UAuraProjectileSpell::SpawnProjectile(const FVector& ProjectileTargetLocati
 	{
 		const float ScaledDamage = Pair.Value.GetValueAtLevel(GetAbilityLevel());
 		UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, Pair.Key, ScaledDamage);
-		Debug::Print(
-			FString::Printf(TEXT("Gameplay Tag: %s, Fire Bolt Damage: %f"), *Pair.Key.ToString(), ScaledDamage));
 	}
 	Projectile->DamageEffectSpecHandle = SpecHandle;
 	Projectile->Owner = GetAvatarActorFromActorInfo();
