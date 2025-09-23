@@ -186,8 +186,16 @@ void UExecCalc_Damage::Execute_Implementation(
 	AActor* SourceAvatar = SourceASC ? SourceASC->GetAvatarActor() : nullptr;
 	AActor* TargetAvatar = TargetASC ? TargetASC->GetAvatarActor() : nullptr;
 
-	ICombatInterface* SourceCI = Cast<ICombatInterface>(SourceAvatar);
-	ICombatInterface* TargetCI = Cast<ICombatInterface>(TargetAvatar);
+	int32 SourceLevel = 1;
+	if (SourceAvatar->Implements<UCombatInterface>())
+	{
+		SourceLevel = ICombatInterface::Execute_GetLevel(SourceAvatar);
+	}
+	int32 TargetLevel = 1;
+	if (TargetAvatar->Implements<UCombatInterface>())
+	{
+		TargetLevel = ICombatInterface::Execute_GetLevel(TargetAvatar);
+	}
 
 	const FGameplayEffectSpec& Spec = ExecutionParams.GetOwningSpec();
 	const FGameplayTagContainer* SourceTags = Spec.CapturedSourceTags.GetAggregatedTags();
@@ -216,9 +224,9 @@ void UExecCalc_Damage::Execute_Implementation(
 		DamageCalcUtil::GetCapturedMagnitude(ExecutionParams, GetDamageStatics().BlockChanceDef, Params);
 
 	// 4. 进一步计算伤害
-	Damage = ApplyArmor(Damage, TargetArmor, SourceArmorPen, SourceAvatar, SourceCI->GetLevel(), TargetCI->GetLevel());
+	Damage = ApplyArmor(Damage, TargetArmor, SourceArmorPen, SourceAvatar, SourceLevel, TargetLevel);
 	Damage = ApplyCritical(Damage, SourceCritC, SourceCritD, TargetCritRes,
-	                       SourceAvatar, TargetCI->GetLevel(), ContextHandle);
+	                       SourceAvatar, TargetLevel, ContextHandle);
 	Damage = ApplyBlock(Damage, TargetBlock, ContextHandle);
 
 	// 5. 输出

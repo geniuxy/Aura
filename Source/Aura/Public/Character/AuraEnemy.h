@@ -30,7 +30,7 @@ public:
 	/** End Enemy Interfaces */
 
 	/** Combat Interfaces */
-	virtual int32 GetLevel() override;
+	virtual int32 GetLevel_Implementation() override;
 	virtual void Die() override;
 	/** End Combat Interfaces */
 	virtual void MulticastHandleDeath_Implementation() override;

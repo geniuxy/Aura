@@ -29,9 +29,11 @@ float UMMC_MaxHealth::CalculateBaseMagnitude_Implementation(const FGameplayEffec
 	GetCapturedAttributeMagnitude(VigorDef, Spec, EvaluateParameters, Vigor);
 	Vigor = FMath::Max<float>(Vigor, 0.f);
 
-	ICombatInterface* CombatInterface = Cast<ICombatInterface>(Spec.GetContext().GetSourceObject());
-	checkf(CombatInterface, TEXT("Source object must implement ICombatInterface."));
-	const int32 PlayerLevel = CombatInterface->GetLevel();
+	int32 PlayerLevel = 1;
+	if (Spec.GetEffectContext().GetSourceObject()->Implements<UCombatInterface>())
+	{
+		PlayerLevel = ICombatInterface::Execute_GetLevel(Spec.GetEffectContext().GetSourceObject());
+	}
 	
 	return 80.f + 2.5f * Vigor + 10.f * PlayerLevel;
 }
