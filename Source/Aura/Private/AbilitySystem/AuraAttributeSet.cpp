@@ -10,6 +10,7 @@
 #include "AbilitySystem/AuraAbilitySystemLibrary.h"
 #include "GameFramework/Character.h"
 #include "Interaction/CombatInterface.h"
+#include "Interaction/PlayerInterface.h"
 #include "Net/UnrealNetwork.h"
 #include "Player/AuraPlayerController.h"
 
@@ -167,7 +168,12 @@ void UAuraAttributeSet::HandleIncomingXP(FEffectProperties Props)
 {
 	const float LocalIncomingXP = GetIncomingXP();
 	SetIncomingXP(0.f);
-	Debug::Print(TEXT("Incoming XP"), LocalIncomingXP);
+	
+	//TODO: See if we should level up
+	if (Props.SourceCharacter->Implements<UPlayerInterface>())
+	{
+		IPlayerInterface::Execute_AddToPlayerXP(Props.SourceCharacter, LocalIncomingXP);
+	}
 }
 
 void UAuraAttributeSet::SendXPEvent(const FEffectProperties& Props)
