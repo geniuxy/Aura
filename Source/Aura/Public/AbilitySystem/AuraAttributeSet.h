@@ -60,6 +60,7 @@ public:
 	virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const override;
 
 	virtual void PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue) override;
+	virtual void PostAttributeChange(const FGameplayAttribute& Attribute, float OldValue, float NewValue) override;
 
 	virtual void PostGameplayEffectExecute(const struct FGameplayEffectModCallbackData& Data) override;
 
@@ -243,4 +244,6 @@ private:
 	void HandleIncomingXP(FEffectProperties Props);
 	void SendXPEvent(const FEffectProperties& Props);
 	void ShowFloatingText(const FEffectProperties& Props, float Damage, bool bBlock, bool bCritical) const;
+	bool bTopOffHealth = false;
+	bool bTopOffMana = false;
 };
