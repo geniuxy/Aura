@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "AuraWidgetController.h"
+#include "GameplayTagContainer.h"
 #include "AttributeMenuWidgetController.generated.h"
 
 struct FGameplayAttribute;
@@ -30,6 +31,9 @@ public:
 
 	UPROPERTY(BlueprintAssignable, Category="GAS|Attributes")
 	FOnPlayerStatChangedSignature AttributePointsChangeDelegate;
+
+	UFUNCTION(BlueprintCallable, Category="GAS|Attributes")
+	void UpgradeAttribute(const FGameplayTag& GameplayTag);
 
 protected:
 	UPROPERTY(EditDefaultsOnly)

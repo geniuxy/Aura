@@ -30,6 +30,7 @@ UAuraAttributeSet::UAuraAttributeSet()
 	TagsToAttributes.Add(AuraGameplayTags::Attributes_Secondary_HealthRegeneration, GetHealthRegenerationAttribute);
 	TagsToAttributes.Add(AuraGameplayTags::Attributes_Secondary_ManaRegeneration, GetManaRegenerationAttribute);
 	TagsToAttributes.Add(AuraGameplayTags::Attributes_Secondary_MaxHealth, GetMaxHealthAttribute);
+	TagsToAttributes.Add(AuraGameplayTags::Attributes_Secondary_MaxMana, GetMaxManaAttribute);
 	TagsToAttributes.Add(AuraGameplayTags::Attributes_Resistance_Fire, GetFireResistanceAttribute);
 	TagsToAttributes.Add(AuraGameplayTags::Attributes_Resistance_Lightning, GetLightningResistanceAttribute);
 	TagsToAttributes.Add(AuraGameplayTags::Attributes_Resistance_Arcane, GetArcaneResistanceAttribute);
