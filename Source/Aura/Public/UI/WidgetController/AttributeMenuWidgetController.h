@@ -12,6 +12,7 @@ struct FAuraAttributeInfo;
 class UAttributeInfo;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FAttributeInfoDelegate, const FAuraAttributeInfo&, Info);
+
 /**
  * 
  */
@@ -26,6 +27,9 @@ public:
 
 	UPROPERTY(BlueprintAssignable, Category="GAS|Attributes")
 	FAttributeInfoDelegate AttributeInfoDelegate;
+
+	UPROPERTY(BlueprintAssignable, Category="GAS|Attributes")
+	FOnPlayerStatChangedSignature AttributePointsChangeDelegate;
 
 protected:
 	UPROPERTY(EditDefaultsOnly)
