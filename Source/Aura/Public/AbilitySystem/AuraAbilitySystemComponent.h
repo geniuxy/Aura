@@ -5,7 +5,7 @@
 #include "AuraAbilitySystemComponent.generated.h"
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FEffectAssetsTagDelegate, const FGameplayTagContainer&);
-DECLARE_MULTICAST_DELEGATE_OneParam(FAbilitiesGiven, UAuraAbilitySystemComponent*);
+DECLARE_MULTICAST_DELEGATE(FAbilitiesGiven);
 DECLARE_DELEGATE_OneParam(FForEachAbility, const FGameplayAbilitySpec&);
 /**
  * 
