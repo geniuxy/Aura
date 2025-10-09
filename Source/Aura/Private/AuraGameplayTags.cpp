@@ -101,7 +101,7 @@ namespace AuraGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Ability_Status_Locked, "Ability.Status.Locked", "能力状态：锁定中");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Ability_Status_Eligible, "Ability.Status.Eligible", "能力状态：可解锁");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Ability_Status_Unlocked, "Ability.Status.Unlocked", "能力状态：已解锁");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Ability_Status_Equipped, "Ability。Status.Equipped", "能力状态：已装备");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Ability_Status_Equipped, "Ability.Status.Equipped", "能力状态：已装备");
 	
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Cooldown_Skill_FireBolt, "Cooldown.Skill.FireBolt", "主角的火球技能的冷却时间");
 
