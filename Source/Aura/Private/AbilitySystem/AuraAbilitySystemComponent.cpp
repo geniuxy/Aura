@@ -177,6 +177,7 @@ void UAuraAbilitySystemComponent::UpdateAbilityStatuses(int32 Level)
 			AbilitySpec.DynamicAbilityTags.AddTag(AuraGameplayTags::Ability_Status_Eligible);
 			GiveAbility(AbilitySpec);
 			MarkAbilitySpecDirty(AbilitySpec);
+			ClientUpdateAbilityStatus(Info.AbilityTag, AuraGameplayTags::Ability_Status_Eligible);
 		}
 	}
 }
@@ -201,4 +202,10 @@ void UAuraAbilitySystemComponent::ClientEffectApplied_Implementation(
 	GameplayEffectSpec.GetAllAssetTags(AssetTagContainer);
 
 	EffectAssetsTagDelegate.Broadcast(AssetTagContainer);
+}
+
+void UAuraAbilitySystemComponent::ClientUpdateAbilityStatus_Implementation(const FGameplayTag& AbilityTag,
+	const FGameplayTag& StatusTag)
+{
+	AbilityStatusChangedDelegate.Broadcast(AbilityTag, StatusTag);
 }
