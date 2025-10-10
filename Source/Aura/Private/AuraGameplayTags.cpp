@@ -56,7 +56,7 @@ namespace AuraGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attributes_Resistance_Lightning, "Attributes.Resistance.Lightning", "闪电抗性");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attributes_Resistance_Arcane, "Attributes.Resistance.Arcane", "奥术抗性");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attributes_Resistance_Physical, "Attributes.Resistance.Physical", "物理抗性");
-	
+
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attributes_Meta_IncomingXP, "Attributes.Meta.IncomingXP", "元数据经验值");
 
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Damage, "Damage", "伤害");
@@ -77,7 +77,7 @@ namespace AuraGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(CombatSocket_LeftHand, "CombatSocket.LeftHand", "指代敌人的进攻方式属于左手槽位。");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(CombatSocket_RightHand, "CombatSocket.RightHand", "指代敌人的进攻方式属于右手槽位。");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(CombatSocket_Tail, "CombatSocket.Tail", "指代敌人的进攻方式属于尾巴槽位。");
-	
+
 	/** Shared Tags**/
 
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Message_HealthPotion, "Message.HealthPotion",
@@ -93,8 +93,10 @@ namespace AuraGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Ability_Attack_Melee, "Ability.Attack.Melee", "用于Activate对应的近距离攻击的GameAbility");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Ability_Attack_Ranged, "Ability.Attack.Ranged", "用于Activate对应的远距离攻击的GameAbility");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Ability_Summon, "Ability.Summon", "用于Activate对应的召唤流的GameAbility");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Ability_Skill_FireBolt, "Ability.Skill.FireBolt", "主角的火球技能");
-	
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Ability_Skill_Fire_FireBolt, "Ability.Skill.Fire.FireBolt", "主角的火球技能");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Ability_Skill_Lightning_Electrocute, "Ability.Skill.Lightning.Electrocute",
+	                               "主角的闪电技能");
+
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Ability_Type_None, "Ability.Type.None", "能力类型：无");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Ability_Type_Offensive, "Ability.Type.Offensive", "能力类型：主动");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Ability_Type_Passive, "Ability.Type.Passive", "能力类型：被动");
@@ -102,11 +104,12 @@ namespace AuraGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Ability_Status_Eligible, "Ability.Status.Eligible", "能力状态：可解锁");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Ability_Status_Unlocked, "Ability.Status.Unlocked", "能力状态：已解锁");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Ability_Status_Equipped, "Ability.Status.Equipped", "能力状态：已装备");
-	
+
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Cooldown_Skill_FireBolt, "Cooldown.Skill.FireBolt", "主角的火球技能的冷却时间");
 
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Effect_HitReact, "Effect.HitReact", "用于对应的GameEffect来向Actor添加HitReact的Tag标签");
 
 	/** GameplayCue Tags **/
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(GameplayCue_Enemy_MeleeAttack_Impact, "GameplayCue.Enemy.MeleeAttack.Impact", "敌人近战攻击相关的特效");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(GameplayCue_Enemy_MeleeAttack_Impact, "GameplayCue.Enemy.MeleeAttack.Impact",
+	                               "敌人近战攻击相关的特效");
 }
