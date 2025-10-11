@@ -2,10 +2,13 @@
 
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
 #include "AbilitySystem/Data/AbilityInfo.h"
+#include "Player/AuraPlayerState.h"
 
 void USpellMenuWidgetController::BroadcastInitialValues()
 {
 	BroadcastAbilityInfo();
+
+	SpellPointsChangeDelegate.Broadcast(GetAuraPS()->GetPlayerSpellPoints());
 }
 
 void USpellMenuWidgetController::BindCallbacksToDependencies()
@@ -19,6 +22,13 @@ void USpellMenuWidgetController::BindCallbacksToDependencies()
 				Info.StatusTag = StatusTag;
 				AbilityInfoDelegate.Broadcast(Info);
 			}
+		}
+	);
+
+	GetAuraPS()->OnSpellPointsChangedDelegate.AddLambda(
+		[this](int32 Points)
+		{
+			SpellPointsChangeDelegate.Broadcast(Points);
 		}
 	);
 }
