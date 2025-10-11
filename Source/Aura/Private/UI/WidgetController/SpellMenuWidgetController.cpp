@@ -32,3 +32,8 @@ void USpellMenuWidgetController::BindCallbacksToDependencies()
 		}
 	);
 }
+
+void USpellMenuWidgetController::SelectAbility(UAuraUserWidget* SpellGlobe)
+{
+	SpellGlobeSelectedDelegate.Broadcast(SpellGlobe);
+}
