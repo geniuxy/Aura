@@ -10,8 +10,13 @@ struct FGameplayTag;
 class UAuraUserWidget;
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FSpellGlobeSelectedSignature, UAuraUserWidget*, SpellGlobe);
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnSpellGlobeSelectedSignature,
-                                             bool, bSpendPointsButtonEnabled, bool, bEquipButtonEnabled);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_FourParams(
+	FOnSpellGlobeSelectedSignature,
+	bool, bSpendPointsButtonEnabled,
+	bool, bEquipButtonEnabled,
+	FString, CurrentLevelDescriptionString,
+	FString, NextLevelDescriptionString
+);
 
 struct SelectedSpell
 {
@@ -50,6 +55,7 @@ public:
 	void SpendSpellPointsButtonPressed();
 
 private:
+	void UpdateSelectedSpellTreeUI(int32 SpellPoints);
 	static void ShouldEnableButtons(
 		const FGameplayTag& AbilityStatus,
 		int32 SpellPoints,

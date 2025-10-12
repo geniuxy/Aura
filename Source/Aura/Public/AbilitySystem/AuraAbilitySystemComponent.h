@@ -40,6 +40,12 @@ public:
 
 	FGameplayAbilitySpec* GetSpecFromAbilityTag(const FGameplayTag& AbilityTag);
 
+	bool GetDescriptionsByAbilityTag(
+		const FGameplayTag& AbilityTag,
+		FString& OutDescription,
+		FString& OutNextLevelDescription
+	);
+
 	void UpgradeAttribute(const FGameplayTag& AttributeTag);
 
 	UFUNCTION(Server, Reliable)
