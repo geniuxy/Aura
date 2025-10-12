@@ -1,6 +1,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "AuraGameplayTags.h"
+#include "GameplayTagContainer.h"
 #include "UI/WidgetController/AuraWidgetController.h"
 #include "SpellMenuWidgetController.generated.h"
 
@@ -10,6 +12,12 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FSpellGlobeSelectedSignature, UAuraU
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnSpellGlobeSelectedSignature,
                                              bool, bSpendPointsButtonEnabled, bool, bEquipButtonEnabled);
+
+struct SelectedSpell
+{
+	FGameplayTag AbilityTag = FGameplayTag();
+	FGameplayTag StatusTag = FGameplayTag();
+};
 
 /**
  * 
@@ -33,7 +41,7 @@ public:
 	FOnSpellGlobeSelectedSignature OnSpellGlobeSelectedDelegate;
 
 	UFUNCTION(BlueprintCallable, Category = "GAS|Spells")
-	void SelectSpellGlobe(UAuraUserWidget* SpellGlobeWidget);
+	void SelectSpellGlobe(UAuraUserWidget* SpellGlobe);
 
 	UFUNCTION(BlueprintCallable, Category = "GAS|Spells")
 	void OnSpellGlobeSelected(const FGameplayTag& AbilityTag);
@@ -45,4 +53,7 @@ private:
 		bool& bShouldEnableSpellPointsButton,
 		bool& bShouldEnableEquipButton
 	);
+
+	SelectedSpell CurrentSelectedSpell = {AuraGameplayTags::Ability_None, AuraGameplayTags::Ability_Status_Locked};
+	int32 CurrentSpellPoints = 0;
 };

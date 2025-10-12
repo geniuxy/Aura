@@ -17,6 +17,15 @@ void USpellMenuWidgetController::BindCallbacksToDependencies()
 	GetAuraASC()->AbilityStatusChangedDelegate.AddLambda(
 		[this](const FGameplayTag& AbilityTag, const FGameplayTag& StatusTag)
 		{
+			if (CurrentSelectedSpell.AbilityTag.MatchesTagExact(AbilityTag))
+			{
+				CurrentSelectedSpell.StatusTag = StatusTag;
+				bool bEnableSpendPoints = false;
+				bool bEnableEquip = false;
+				ShouldEnableButtons(StatusTag, CurrentSpellPoints, bEnableSpendPoints, bEnableEquip);
+				OnSpellGlobeSelectedDelegate.Broadcast(bEnableSpendPoints, bEnableEquip);
+			}
+			
 			if (AbilityInfo)
 			{
 				FAuraAbilityInfo Info = AbilityInfo->FindAbilityInfoForTag(AbilityTag);
@@ -27,16 +36,22 @@ void USpellMenuWidgetController::BindCallbacksToDependencies()
 	);
 
 	GetAuraPS()->OnSpellPointsChangedDelegate.AddLambda(
-		[this](int32 Points)
+		[this](int32 SpellPoints)
 		{
-			SpellPointsChangeDelegate.Broadcast(Points);
+			CurrentSpellPoints = SpellPoints;
+			SpellPointsChangeDelegate.Broadcast(SpellPoints);
+
+			bool bEnableSpendPoints = false;
+			bool bEnableEquip = false;
+			ShouldEnableButtons(CurrentSelectedSpell.StatusTag, CurrentSpellPoints, bEnableSpendPoints, bEnableEquip);
+			OnSpellGlobeSelectedDelegate.Broadcast(bEnableSpendPoints, bEnableEquip);
 		}
 	);
 }
 
-void USpellMenuWidgetController::SelectSpellGlobe(UAuraUserWidget* SpellGlobeWidget)
+void USpellMenuWidgetController::SelectSpellGlobe(UAuraUserWidget* SpellGlobe)
 {
-	SpellGlobeSelectedDelegate.Broadcast(SpellGlobeWidget);
+	SpellGlobeSelectedDelegate.Broadcast(SpellGlobe);
 }
 
 void USpellMenuWidgetController::OnSpellGlobeSelected(const FGameplayTag& AbilityTag)
@@ -58,6 +73,9 @@ void USpellMenuWidgetController::OnSpellGlobeSelected(const FGameplayTag& Abilit
 		SpellStatus = GetAuraASC()->GetStatusFromSpec(*AbilitySpec);
 	}
 
+	CurrentSelectedSpell.AbilityTag = AbilityTag;
+	CurrentSelectedSpell.StatusTag = SpellStatus;
+
 	bool bEnableSpendPoints = false;
 	bool bEnableEquip = false;
 	ShouldEnableButtons(SpellStatus, SpellPoints, bEnableSpendPoints, bEnableEquip);
@@ -72,7 +90,8 @@ void USpellMenuWidgetController::ShouldEnableButtons(
 {
 	bShouldEnableSpellPointsButton = false;
 	bShouldEnableEquipButton = false;
-	if (AbilityStatus.MatchesTagExact(AuraGameplayTags::Ability_Status_Equipped))
+	if (AbilityStatus.MatchesTagExact(AuraGameplayTags::Ability_Status_Equipped) ||
+		AbilityStatus.MatchesTagExact(AuraGameplayTags::Ability_Status_Unlocked))
 	{
 		bShouldEnableEquipButton = true;
 		if (SpellPoints > 0)
@@ -82,14 +101,6 @@ void USpellMenuWidgetController::ShouldEnableButtons(
 	}
 	else if (AbilityStatus.MatchesTagExact(AuraGameplayTags::Ability_Status_Eligible))
 	{
-		if (SpellPoints > 0)
-		{
-			bShouldEnableSpellPointsButton = true;
-		}
-	}
-	else if (AbilityStatus.MatchesTagExact(AuraGameplayTags::Ability_Status_Unlocked))
-	{
-		bShouldEnableEquipButton = true;
 		if (SpellPoints > 0)
 		{
 			bShouldEnableSpellPointsButton = true;
