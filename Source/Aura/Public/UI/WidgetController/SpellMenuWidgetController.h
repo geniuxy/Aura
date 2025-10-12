@@ -46,6 +46,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "GAS|Spells")
 	void OnSpellGlobeSelected(const FGameplayTag& AbilityTag);
 
+	UFUNCTION(BlueprintCallable, Category = "GAS|Spells")
+	void SpendSpellPointsButtonPressed();
+
 private:
 	static void ShouldEnableButtons(
 		const FGameplayTag& AbilityStatus,

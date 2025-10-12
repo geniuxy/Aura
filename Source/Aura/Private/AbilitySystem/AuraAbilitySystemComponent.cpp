@@ -177,8 +177,34 @@ void UAuraAbilitySystemComponent::UpdateAbilityStatuses(int32 Level)
 			AbilitySpec.DynamicAbilityTags.AddTag(AuraGameplayTags::Ability_Status_Eligible);
 			GiveAbility(AbilitySpec);
 			MarkAbilitySpecDirty(AbilitySpec);
-			ClientUpdateAbilityStatus(Info.AbilityTag, AuraGameplayTags::Ability_Status_Eligible);
+			ClientUpdateAbilityStatus(Info.AbilityTag, AuraGameplayTags::Ability_Status_Eligible, 1);
 		}
+	}
+}
+
+void UAuraAbilitySystemComponent::ServerSpendSpellPoint_Implementation(const FGameplayTag& AbilityTag)
+{
+	if (FGameplayAbilitySpec* AbilitySpec = GetSpecFromAbilityTag(AbilityTag))
+	{
+		if (GetAvatarActor()->Implements<UPlayerInterface>())
+		{
+			IPlayerInterface::Execute_AddToSpellPoints(GetAvatarActor(), -1);
+		}
+
+		FGameplayTag StatusTag = GetStatusFromSpec(*AbilitySpec);
+		if (StatusTag.MatchesTagExact(AuraGameplayTags::Ability_Status_Eligible))
+		{
+			AbilitySpec->DynamicAbilityTags.RemoveTag(AuraGameplayTags::Ability_Status_Eligible);
+			AbilitySpec->DynamicAbilityTags.AddTag(AuraGameplayTags::Ability_Status_Unlocked);
+			StatusTag = AuraGameplayTags::Ability_Status_Unlocked;
+		}
+		else if (StatusTag.MatchesTagExact(AuraGameplayTags::Ability_Status_Equipped) ||
+			StatusTag.MatchesTagExact(AuraGameplayTags::Ability_Status_Unlocked))
+		{
+			AbilitySpec->Level += 1;
+		}
+		MarkAbilitySpecDirty(*AbilitySpec);
+		ClientUpdateAbilityStatus(AbilityTag, StatusTag, AbilitySpec->Level);
 	}
 }
 
@@ -204,8 +230,10 @@ void UAuraAbilitySystemComponent::ClientEffectApplied_Implementation(
 	EffectAssetsTagDelegate.Broadcast(AssetTagContainer);
 }
 
-void UAuraAbilitySystemComponent::ClientUpdateAbilityStatus_Implementation(const FGameplayTag& AbilityTag,
-	const FGameplayTag& StatusTag)
+void UAuraAbilitySystemComponent::ClientUpdateAbilityStatus_Implementation(
+	const FGameplayTag& AbilityTag,
+	const FGameplayTag& StatusTag,
+	int32 AbilityLevel)
 {
-	AbilityStatusChangedDelegate.Broadcast(AbilityTag, StatusTag);
+	AbilityStatusChangedDelegate.Broadcast(AbilityTag, StatusTag, AbilityLevel);
 }

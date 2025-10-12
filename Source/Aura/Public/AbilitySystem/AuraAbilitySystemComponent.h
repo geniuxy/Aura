@@ -2,13 +2,14 @@
 
 #include "CoreMinimal.h"
 #include "AbilitySystemComponent.h"
+#include "UI/WidgetController/SpellMenuWidgetController.h"
 #include "AuraAbilitySystemComponent.generated.h"
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FEffectAssetsTagDelegate, const FGameplayTagContainer&);
 DECLARE_MULTICAST_DELEGATE(FAbilitiesGiven);
 DECLARE_DELEGATE_OneParam(FForEachAbility, const FGameplayAbilitySpec&);
-DECLARE_MULTICAST_DELEGATE_TwoParams(FAbilityStatusChanged,
-                                     const FGameplayTag& /* AbilityTag */, const FGameplayTag& /* StatusTag */)
+DECLARE_MULTICAST_DELEGATE_ThreeParams(FAbilityStatusChanged, const FGameplayTag& /* AbilityTag */,
+                                       const FGameplayTag& /* StatusTag */, int32 /* AbilityLevel */)
 
 /**
  * 
@@ -46,6 +47,9 @@ public:
 
 	void UpdateAbilityStatuses(int32 Level);
 
+	UFUNCTION(Server, Reliable)
+	void ServerSpendSpellPoint(const FGameplayTag& AbilityTag);
+
 protected:
 	virtual void OnRep_ActivateAbilities() override;
 
@@ -55,7 +59,7 @@ protected:
 		const FGameplayEffectSpec& GameplayEffectSpec,
 		FActiveGameplayEffectHandle ActiveGameplayEffectHandle
 	);
-	
+
 	UFUNCTION(Client, Reliable)
-	void ClientUpdateAbilityStatus(const FGameplayTag& AbilityTag, const FGameplayTag& StatusTag);
+	void ClientUpdateAbilityStatus(const FGameplayTag& AbilityTag, const FGameplayTag& StatusTag, int32 AbilityLevel);
 };
