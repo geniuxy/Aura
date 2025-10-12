@@ -83,6 +83,7 @@ void USpellMenuWidgetController::SpendSpellPointsButtonPressed()
 
 void USpellMenuWidgetController::UpdateSelectedSpellTreeUI(const int32 SpellPoints)
 {
+	if (CurrentSelectedSpell.AbilityTag == AuraGameplayTags::Ability_None) return;
 	bool bEnableSpendPoints = false;
 	bool bEnableEquip = false;
 	ShouldEnableButtons(CurrentSelectedSpell.StatusTag, SpellPoints, bEnableSpendPoints, bEnableEquip);
