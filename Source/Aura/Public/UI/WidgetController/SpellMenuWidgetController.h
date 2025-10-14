@@ -54,6 +54,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "GAS|Spells")
 	void SpendSpellPointsButtonPressed();
 
+	UFUNCTION(BlueprintCallable, Category = "GAS|Spells")
+	void GlobeDeselect();
 private:
 	void UpdateSelectedSpellTreeUI(int32 SpellPoints);
 	static void ShouldEnableButtons(

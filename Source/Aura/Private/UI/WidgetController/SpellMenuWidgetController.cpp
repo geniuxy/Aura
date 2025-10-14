@@ -81,6 +81,14 @@ void USpellMenuWidgetController::SpendSpellPointsButtonPressed()
 	}
 }
 
+void USpellMenuWidgetController::GlobeDeselect()
+{
+	CurrentSelectedSpell.AbilityTag = AuraGameplayTags::Ability_None;
+	CurrentSelectedSpell.StatusTag = AuraGameplayTags::Ability_Status_Locked;
+
+	OnSpellGlobeSelectedDelegate.Broadcast(false, false, FString(), FString());
+}
+
 void USpellMenuWidgetController::UpdateSelectedSpellTreeUI(const int32 SpellPoints)
 {
 	if (CurrentSelectedSpell.AbilityTag == AuraGameplayTags::Ability_None) return;
