@@ -6,6 +6,7 @@
 namespace AuraGameplayTags
 {
 	/** Input Tags **/
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(InputTag_None, "InputTag.None", "不具备任何Input Tag");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(InputTag_LMB, "InputTag.LMB", "鼠标左键");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(InputTag_RMB, "InputTag.RMB", "鼠标右键");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(InputTag_Passive_1, "InputTag.Passive.1", "被动1");

@@ -48,6 +48,11 @@ void USpellMenuWidgetController::SelectSpellGlobe(UAuraUserWidget* SpellGlobe)
 	SpellGlobeSelectedDelegate.Broadcast(SpellGlobe);
 }
 
+void USpellMenuWidgetController::SelectEquippedSpellGlobe(UAuraUserWidget* EquippedSpellGlobe)
+{
+	EquippedSpellGlobeSelectedDelegate.Broadcast(EquippedSpellGlobe);
+}
+
 void USpellMenuWidgetController::OnSpellGlobeSelected(const FGameplayTag& AbilityTag)
 {
 	const int32 SpellPoints = GetAuraPS()->GetPlayerSpellPoints();

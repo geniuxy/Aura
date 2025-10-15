@@ -43,10 +43,16 @@ public:
 	FSpellGlobeSelectedSignature SpellGlobeSelectedDelegate;
 
 	UPROPERTY(BlueprintAssignable, Category="GAS|Spells")
+	FSpellGlobeSelectedSignature EquippedSpellGlobeSelectedDelegate;
+
+	UPROPERTY(BlueprintAssignable, Category="GAS|Spells")
 	FOnSpellGlobeSelectedSignature OnSpellGlobeSelectedDelegate;
 
 	UFUNCTION(BlueprintCallable, Category = "GAS|Spells")
 	void SelectSpellGlobe(UAuraUserWidget* SpellGlobe);
+
+	UFUNCTION(BlueprintCallable, Category = "GAS|Spells")
+	void SelectEquippedSpellGlobe(UAuraUserWidget* EquippedSpellGlobe);
 
 	UFUNCTION(BlueprintCallable, Category = "GAS|Spells")
 	void OnSpellGlobeSelected(const FGameplayTag& AbilityTag);
@@ -66,5 +72,6 @@ private:
 	);
 
 	SelectedSpell CurrentSelectedSpell = {AuraGameplayTags::Ability_None, AuraGameplayTags::Ability_Status_Locked};
+	FGameplayTag CurrentSelectedEquippedSpellInputTag = AuraGameplayTags::InputTag_None;
 	int32 CurrentSpellPoints = 0;
 };
