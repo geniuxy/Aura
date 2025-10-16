@@ -187,7 +187,7 @@ void USpellMenuWidgetController::OnAbilityEquipped(const FGameplayTag& AbilityTa
 	AbilityInfoDelegate.Broadcast(LastSlotInfo);
 
 	FAuraAbilityInfo Info = AbilityInfo->FindAbilityInfoForTag(AbilityTag);
-	Info.StatusTag = AuraGameplayTags::Ability_Status_Unlocked;
+	Info.StatusTag = AuraGameplayTags::Ability_Status_Equipped;
 	Info.InputTag = InputTag;
 	AbilityInfoDelegate.Broadcast(Info);
 }

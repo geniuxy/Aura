@@ -26,7 +26,7 @@ void UOverlayWidgetController::BindCallbacksToDependencies()
 	GetAuraPS()->OnLevelChangedDelegate.AddLambda(
 		[this](int32 NewLevel)
 		{
-			OnPlayerLevelChangedDelegate.Broadcast(NewLevel);		
+			OnPlayerLevelChangedDelegate.Broadcast(NewLevel);
 		}
 	);
 
@@ -70,6 +70,8 @@ void UOverlayWidgetController::BindCallbacksToDependencies()
 			GetAuraASC()->AbilitiesGivenDelegate.AddUObject(this, &UOverlayWidgetController::BroadcastAbilityInfo);
 		}
 
+		GetAuraASC()->AbilityEquippedDelegate.AddUObject(this, &UOverlayWidgetController::OnAbilityEquipped);
+
 		GetAuraASC()->EffectAssetsTagDelegate.AddLambda(
 			[this](const FGameplayTagContainer& AssetTagsContainer)
 			{
@@ -112,4 +114,20 @@ void UOverlayWidgetController::OnXPChanged(int32 NewXP)
 
 		OnXPPercentChangedDelegate.Broadcast(XPBarPercent);
 	}
+}
+
+void UOverlayWidgetController::OnAbilityEquipped(const FGameplayTag& AbilityTag, const FGameplayTag& InputTag,
+                                                 const FGameplayTag& PrevInputTag)
+{
+	FAuraAbilityInfo LastSlotInfo;
+	LastSlotInfo.StatusTag = AuraGameplayTags::Ability_Status_Unlocked;
+	LastSlotInfo.InputTag = PrevInputTag;
+	LastSlotInfo.AbilityTag = AuraGameplayTags::Ability_None;
+	// Broadcast empty info if PreviousSlot is a valid slot. Only if equipping an already-equipped spell
+	AbilityInfoDelegate.Broadcast(LastSlotInfo);
+
+	FAuraAbilityInfo Info = AbilityInfo->FindAbilityInfoForTag(AbilityTag);
+	Info.StatusTag = AuraGameplayTags::Ability_Status_Equipped;
+	Info.InputTag = InputTag;
+	AbilityInfoDelegate.Broadcast(Info);
 }
