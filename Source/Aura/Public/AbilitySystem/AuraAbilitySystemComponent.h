@@ -8,8 +8,11 @@
 DECLARE_MULTICAST_DELEGATE_OneParam(FEffectAssetsTagDelegate, const FGameplayTagContainer&);
 DECLARE_MULTICAST_DELEGATE(FAbilitiesGiven);
 DECLARE_DELEGATE_OneParam(FForEachAbility, const FGameplayAbilitySpec&);
-DECLARE_MULTICAST_DELEGATE_ThreeParams(FAbilityStatusChanged, const FGameplayTag& /* AbilityTag */,
-                                       const FGameplayTag& /* StatusTag */, int32 /* AbilityLevel */)
+DECLARE_MULTICAST_DELEGATE_FourParams(FAbilityStatusChanged, const FGameplayTag& /* AbilityTag */,
+                                      const FGameplayTag& /* AbilityType */, const FGameplayTag& /* StatusTag */,
+                                      int32 /* AbilityLevel */);
+DECLARE_MULTICAST_DELEGATE_ThreeParams(FAbilityEquipped, const FGameplayTag& /*AbilityTag*/,
+                                       const FGameplayTag& /*InputTag*/, const FGameplayTag& /*PrevInputTag*/)
 
 /**
  * 
@@ -25,6 +28,7 @@ public:
 	FEffectAssetsTagDelegate EffectAssetsTagDelegate;
 	FAbilitiesGiven AbilitiesGivenDelegate;
 	FAbilityStatusChanged AbilityStatusChangedDelegate;
+	FAbilityEquipped AbilityEquippedDelegate;
 
 	void AddAbilities(const TArray<TSubclassOf<UGameplayAbility>>& StartupAbilities);
 	void AddPassiveAbilities(const TArray<TSubclassOf<UGameplayAbility>>& StartupPassiveAbilities);
@@ -54,7 +58,17 @@ public:
 	void UpdateAbilityStatuses(int32 Level);
 
 	UFUNCTION(Server, Reliable)
-	void ServerSpendSpellPoint(const FGameplayTag& AbilityTag);
+	void ServerSpendSpellPoint(const FGameplayTag& AbilityTag, const FGameplayTag& AbilityType);
+
+	UFUNCTION(Server, Reliable)
+	void ServerEquipAbility(const FGameplayTag& AbilityTag, const FGameplayTag& InputTag);
+
+	UFUNCTION(Client, Reliable)
+	void ClientEquipAbility(FGameplayTag AbilityTag, FGameplayTag InputTag, FGameplayTag PrevInputTag);
+
+	void ClearAbilityOfCurrentEquippedSpell(FGameplayTag InputTag);
+	void ClearEquippedSpell(FGameplayAbilitySpec* AbilitySpec);
+	static bool AbilityHasEquipped(FGameplayAbilitySpec* AbilitySpec, const FGameplayTag& InputTag);
 
 protected:
 	virtual void OnRep_ActivateAbilities() override;
@@ -67,5 +81,6 @@ protected:
 	);
 
 	UFUNCTION(Client, Reliable)
-	void ClientUpdateAbilityStatus(const FGameplayTag& AbilityTag, const FGameplayTag& StatusTag, int32 AbilityLevel);
+	void ClientUpdateAbilityStatus(const FGameplayTag& AbilityTag, const FGameplayTag& AbilityType,
+	                               const FGameplayTag& StatusTag, int32 AbilityLevel);
 };

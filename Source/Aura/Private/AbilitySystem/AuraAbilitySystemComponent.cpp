@@ -198,12 +198,13 @@ void UAuraAbilitySystemComponent::UpdateAbilityStatuses(int32 Level)
 			AbilitySpec.DynamicAbilityTags.AddTag(AuraGameplayTags::Ability_Status_Eligible);
 			GiveAbility(AbilitySpec);
 			MarkAbilitySpecDirty(AbilitySpec);
-			ClientUpdateAbilityStatus(Info.AbilityTag, AuraGameplayTags::Ability_Status_Eligible, 1);
+			ClientUpdateAbilityStatus(Info.AbilityTag, Info.AbilityType, AuraGameplayTags::Ability_Status_Eligible, 1);
 		}
 	}
 }
 
-void UAuraAbilitySystemComponent::ServerSpendSpellPoint_Implementation(const FGameplayTag& AbilityTag)
+void UAuraAbilitySystemComponent::ServerSpendSpellPoint_Implementation(const FGameplayTag& AbilityTag,
+                                                                       const FGameplayTag& AbilityType)
 {
 	if (FGameplayAbilitySpec* AbilitySpec = GetSpecFromAbilityTag(AbilityTag))
 	{
@@ -225,8 +226,74 @@ void UAuraAbilitySystemComponent::ServerSpendSpellPoint_Implementation(const FGa
 			AbilitySpec->Level += 1;
 		}
 		MarkAbilitySpecDirty(*AbilitySpec);
-		ClientUpdateAbilityStatus(AbilityTag, StatusTag, AbilitySpec->Level);
+		ClientUpdateAbilityStatus(AbilityTag, AbilityType, StatusTag, AbilitySpec->Level);
 	}
+}
+
+void UAuraAbilitySystemComponent::ServerEquipAbility_Implementation(const FGameplayTag& AbilityTag,
+                                                                    const FGameplayTag& InputTag)
+{
+	if (FGameplayAbilitySpec* AbilitySpec = GetSpecFromAbilityTag(AbilityTag))
+	{
+		FGameplayTag PrevInputTag = GetInputTagFromSpec(*AbilitySpec);
+		const FGameplayTag& AbilityStatus = GetStatusFromSpec(*AbilitySpec);
+
+		const bool bStatusValid = AbilityStatus == AuraGameplayTags::Ability_Status_Equipped ||
+			AbilityStatus == AuraGameplayTags::Ability_Status_Unlocked;
+		if (bStatusValid)
+		{
+			// Remove this InputTag (slot) from any Ability that has it.
+			ClearAbilityOfCurrentEquippedSpell(InputTag);
+			// Clear this ability's slot, just in case, it's a different slot
+			ClearEquippedSpell(AbilitySpec);
+			// Now, assign this ability to this slot
+			AbilitySpec->DynamicAbilityTags.AddTag(InputTag);
+			if (AbilityStatus.MatchesTagExact(AuraGameplayTags::Ability_Status_Unlocked))
+			{
+				AbilitySpec->DynamicAbilityTags.RemoveTag(AuraGameplayTags::Ability_Status_Unlocked);
+				AbilitySpec->DynamicAbilityTags.AddTag(AuraGameplayTags::Ability_Status_Equipped);
+			}
+			MarkAbilitySpecDirty(*AbilitySpec);
+		}
+		ClientEquipAbility(AbilityTag, InputTag, PrevInputTag);
+	}
+}
+
+void UAuraAbilitySystemComponent::ClientEquipAbility_Implementation(FGameplayTag AbilityTag, FGameplayTag InputTag,
+                                                                    FGameplayTag PrevInputTag)
+{
+	AbilityEquippedDelegate.Broadcast(AbilityTag, InputTag, PrevInputTag);
+}
+
+void UAuraAbilitySystemComponent::ClearAbilityOfCurrentEquippedSpell(FGameplayTag InputTag)
+{
+	FScopedAbilityListLock ActiveScopeLock(*this);
+	for (FGameplayAbilitySpec& Spec : GetActivatableAbilities())
+	{
+		if (AbilityHasEquipped(&Spec, InputTag))
+		{
+			ClearEquippedSpell(&Spec);
+		}
+	}
+}
+
+void UAuraAbilitySystemComponent::ClearEquippedSpell(FGameplayAbilitySpec* AbilitySpec)
+{
+	const FGameplayTag InputTag = GetInputTagFromSpec(*AbilitySpec);
+	AbilitySpec->DynamicAbilityTags.RemoveTag(InputTag);
+	MarkAbilitySpecDirty(*AbilitySpec);
+}
+
+bool UAuraAbilitySystemComponent::AbilityHasEquipped(FGameplayAbilitySpec* AbilitySpec, const FGameplayTag& InputTag)
+{
+	for (FGameplayTag Tag : AbilitySpec->DynamicAbilityTags)
+	{
+		if (Tag.MatchesTagExact(InputTag))
+		{
+			return true;
+		}
+	}
+	return false;
 }
 
 void UAuraAbilitySystemComponent::OnRep_ActivateAbilities()
@@ -253,8 +320,9 @@ void UAuraAbilitySystemComponent::ClientEffectApplied_Implementation(
 
 void UAuraAbilitySystemComponent::ClientUpdateAbilityStatus_Implementation(
 	const FGameplayTag& AbilityTag,
+	const FGameplayTag& AbilityType,
 	const FGameplayTag& StatusTag,
 	int32 AbilityLevel)
 {
-	AbilityStatusChangedDelegate.Broadcast(AbilityTag, StatusTag, AbilityLevel);
+	AbilityStatusChangedDelegate.Broadcast(AbilityTag, AbilityType, StatusTag, AbilityLevel);
 }

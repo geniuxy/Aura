@@ -21,7 +21,14 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_FourParams(
 struct SelectedSpell
 {
 	FGameplayTag AbilityTag = FGameplayTag();
+	FGameplayTag AbilityType = FGameplayTag();
 	FGameplayTag StatusTag = FGameplayTag();
+};
+
+struct SelectedEquippedSpell
+{
+	FGameplayTag AbilityType = FGameplayTag();
+	FGameplayTag InputTag = FGameplayTag();
 };
 
 /**
@@ -55,13 +62,23 @@ public:
 	void SelectEquippedSpellGlobe(UAuraUserWidget* EquippedSpellGlobe);
 
 	UFUNCTION(BlueprintCallable, Category = "GAS|Spells")
-	void OnSpellGlobeSelected(const FGameplayTag& AbilityTag);
+	void OnSpellGlobeSelected(const FGameplayTag& AbilityTag, const FGameplayTag& AbilityType);
 
 	UFUNCTION(BlueprintCallable, Category = "GAS|Spells")
 	void SpendSpellPointsButtonPressed();
 
 	UFUNCTION(BlueprintCallable, Category = "GAS|Spells")
+	void EquippedButtonPressed();
+
+	UFUNCTION(BlueprintCallable, Category = "GAS|Spells")
+	void SetCurrentSelectedEquippedSpell(const FGameplayTag& InAbilityType, const FGameplayTag& InInputTag);
+
+	UFUNCTION(BlueprintCallable, Category = "GAS|Spells")
 	void GlobeDeselect();
+
+	UFUNCTION(BlueprintCallable, Category = "GAS|Spells")
+	void EquippedGlobeDeselect();
+
 private:
 	void UpdateSelectedSpellTreeUI(int32 SpellPoints);
 	static void ShouldEnableButtons(
@@ -70,8 +87,14 @@ private:
 		bool& bShouldEnableSpellPointsButton,
 		bool& bShouldEnableEquipButton
 	);
+	void OnAbilityEquipped(const FGameplayTag& AbilityTag, const FGameplayTag& InputTag,
+	                       const FGameplayTag& PrevInputTag);
 
-	SelectedSpell CurrentSelectedSpell = {AuraGameplayTags::Ability_None, AuraGameplayTags::Ability_Status_Locked};
-	FGameplayTag CurrentSelectedEquippedSpellInputTag = AuraGameplayTags::InputTag_None;
+	SelectedSpell CurrentSelectedSpell = {
+		AuraGameplayTags::Ability_None, AuraGameplayTags::Ability_Type_None, AuraGameplayTags::Ability_Status_Locked
+	};
+	SelectedEquippedSpell CurrentSelectedEquippedSpell = {
+		AuraGameplayTags::Ability_Type_None, AuraGameplayTags::InputTag_None
+	};
 	int32 CurrentSpellPoints = 0;
 };
