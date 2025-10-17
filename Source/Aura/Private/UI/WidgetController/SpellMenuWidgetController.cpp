@@ -190,4 +190,8 @@ void USpellMenuWidgetController::OnAbilityEquipped(const FGameplayTag& AbilityTa
 	Info.StatusTag = AuraGameplayTags::Ability_Status_Equipped;
 	Info.InputTag = InputTag;
 	AbilityInfoDelegate.Broadcast(Info);
+
+	OnSpellEquippedDelegate.Broadcast(AbilityTag);
+	GlobeDeselect();
+	EquippedGlobeDeselect();
 }
