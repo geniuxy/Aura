@@ -17,7 +17,7 @@ FString UAuraFireBolt::GetNextLevelDescription(int32 Level)
 
 FString UAuraFireBolt::BuildDescription(int32 Level, const FString& TitleTag)
 {
-	const int32 Damage = GetDamageByDamageType(Level, AuraGameplayTags::Damage_Fire);
+	const int32 ScalableDamage = Damage.GetValueAtLevel(Level);
 	const float ManaCost = FMath::Abs(GetManaCost(Level));
 	const float Cooldown = GetCooldown(Level);
 	const int32 Projectiles = FMath::Min(Level, NumProjectiles);
@@ -38,5 +38,5 @@ FString UAuraFireBolt::BuildDescription(int32 Level, const FString& TitleTag)
 
 		// Damage
 		"<Damage>%d</><Default>火焰伤害，并有几率点燃敌人</>"
-	), *TitleTag, Level, ManaCost, Cooldown, Projectiles, Damage);
+	), *TitleTag, Level, ManaCost, Cooldown, Projectiles, ScalableDamage);
 }

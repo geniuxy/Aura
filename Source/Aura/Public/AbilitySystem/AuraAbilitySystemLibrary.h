@@ -89,8 +89,11 @@ public:
 	static bool IsNotFriend(AActor* FirstActor, AActor* SecondActor);
 
 	static TMap<FGameplayTag, FGameplayTag> GetDamageToResistanceMap();
+	static TMap<FGameplayTag, FGameplayTag> GetDamageToDebuffMap();
 
 private:
 	static void ApplyAttributesEffectSpec(TSubclassOf<UGameplayEffect> AppliedGameplayEffect, int32 Level,
 	                                      UAbilitySystemComponent* ASC);
+
+	static TMap<FGameplayTag, FGameplayTag> GetRelatedMap(const FString& KeyPrefix, const FString& ValuePrefix);
 };

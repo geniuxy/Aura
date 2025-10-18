@@ -90,6 +90,54 @@ void UAuraAbilitySystemLibrary::InitializeDefaultAttributes(
 	ApplyAttributesEffectSpec(CharacterClassInfo->VitalAttributes, Level, ASC);
 }
 
+TMap<FGameplayTag, FGameplayTag> UAuraAbilitySystemLibrary::GetDamageToResistanceMap()
+{
+	return GetRelatedMap(TEXT("Damage."), TEXT("Attributes.Resistance."));
+}
+
+TMap<FGameplayTag, FGameplayTag> UAuraAbilitySystemLibrary::GetDamageToDebuffMap()
+{
+	return GetRelatedMap(TEXT("Damage."), TEXT("Debuff."));
+}
+
+TMap<FGameplayTag, FGameplayTag> UAuraAbilitySystemLibrary::GetRelatedMap(const FString& KeyPrefix,
+                                                                          const FString& ValuePrefix)
+{
+	static TMap<FGameplayTag, FGameplayTag> RelatedMap;
+	if (!RelatedMap.IsEmpty())
+	{
+		return RelatedMap;
+	}
+
+	const UGameplayTagsManager& Manager = UGameplayTagsManager::Get();
+
+	// 遍历所有已注册 Tag
+	FGameplayTagContainer AllTagsContainer;
+	Manager.RequestAllGameplayTags(AllTagsContainer, false);
+
+	for (const FGameplayTag& KeyTag : AllTagsContainer)
+	{
+		const FString KeyTagStr = KeyTag.ToString();
+		if (!KeyTagStr.StartsWith(KeyPrefix))
+		{
+			continue;
+		}
+
+		// 拼出抗性 Tag 的名字
+		const FString TypeName = KeyTagStr.RightChop(KeyPrefix.Len());
+		const FString ValueTagName = ValuePrefix + TypeName;
+
+		// 查找对应抗性 Tag
+		const FGameplayTag ValueTag = Manager.RequestGameplayTag(FName(*ValueTagName), false);
+		if (ValueTag.IsValid())
+		{
+			RelatedMap.Add(KeyTag, ValueTag);
+		}
+	}
+
+	return RelatedMap;
+}
+
 void UAuraAbilitySystemLibrary::ApplyAttributesEffectSpec(TSubclassOf<UGameplayEffect> AppliedGameplayEffect,
                                                           int32 Level, UAbilitySystemComponent* ASC)
 {
@@ -98,45 +146,6 @@ void UAuraAbilitySystemLibrary::ApplyAttributesEffectSpec(TSubclassOf<UGameplayE
 	AttributesContextHandle.AddSourceObject(AvatarActor);
 	FGameplayEffectSpecHandle SpecHandle = ASC->MakeOutgoingSpec(AppliedGameplayEffect, Level, AttributesContextHandle);
 	ASC->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get());
-}
-
-TMap<FGameplayTag, FGameplayTag> UAuraAbilitySystemLibrary::GetDamageToResistanceMap()
-{
-	static TMap<FGameplayTag, FGameplayTag> Cache;
-	if (!Cache.IsEmpty())
-	{
-		return Cache;
-	}
-
-	const UGameplayTagsManager& Manager = UGameplayTagsManager::Get();
-
-	// 需要按前缀过滤的 Tag 列表
-	const FString DamagePrefix = TEXT("Damage.");
-	const FString ResistancePrefix = TEXT("Attributes.Resistance.");
-
-	// 遍历所有已注册 Tag
-	FGameplayTagContainer AllTagsContainer;
-	Manager.RequestAllGameplayTags(AllTagsContainer, false);
-
-	for (const FGameplayTag& Tag : AllTagsContainer)
-	{
-		const FString TagStr = Tag.ToString();
-		if (!TagStr.StartsWith(DamagePrefix))
-			continue;
-
-		// 2. 拼出抗性 Tag 的名字
-		const FString TypeName = TagStr.RightChop(DamagePrefix.Len());
-		const FString ResistanceName = ResistancePrefix + TypeName;
-
-		// 3. 查找对应抗性 Tag
-		const FGameplayTag ResistanceTag = Manager.RequestGameplayTag(FName(*ResistanceName), false);
-		if (ResistanceTag.IsValid())
-		{
-			Cache.Add(Tag, ResistanceTag);
-		}
-	}
-
-	return Cache;
 }
 
 void UAuraAbilitySystemLibrary::GiveStartupAbilities(
