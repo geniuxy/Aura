@@ -46,15 +46,20 @@ void AAuraProjectile::Destroyed()
 {
 	if (!bHit && !HasAuthority())
 	{
-		UGameplayStatics::PlaySoundAtLocation(this, ImpactSound, GetActorLocation(), FRotator::ZeroRotator);
-		UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ImpactEffect, GetActorLocation());
-		if (LoopingSoundComponent && LoopingSoundComponent->IsPlaying())
-		{
-			LoopingSoundComponent->Stop();
-		}
-		bHit = true;
+		OnHit();
 	}
 	Super::Destroyed();
+}
+
+void AAuraProjectile::OnHit()
+{
+	UGameplayStatics::PlaySoundAtLocation(this, ImpactSound, GetActorLocation(), FRotator::ZeroRotator);
+	UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ImpactEffect, GetActorLocation());
+	if (LoopingSoundComponent && LoopingSoundComponent->IsPlaying())
+	{
+		LoopingSoundComponent->Stop();
+	}
+	bHit = true;
 }
 
 void AAuraProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
@@ -66,34 +71,20 @@ void AAuraProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, 
 	// Client会打到自己..
 	// if (DamageEffectSpecHandle.Data.IsValid() &&
 	// 	DamageEffectSpecHandle.Data.Get()->GetContext().GetEffectCauser() == OtherActor)
-	if (Owner && Owner == OtherActor)
-	{
-		return;
-	}
+	AActor* SourceAvatarActor = DamageEffectParams.SourceAbilitySystemComponent->GetAvatarActor();
+	if (SourceAvatarActor == OtherActor) return;
 	// 子弹不会打到友军
-	if (!DamageEffectSpecHandle.Data.IsValid() || !UAuraAbilitySystemLibrary::IsNotFriend(
-		DamageEffectSpecHandle.Data.Get()->GetContext().GetEffectCauser(), OtherActor))
-	{
-		return;
-	}
+	if (!UAuraAbilitySystemLibrary::IsNotFriend(SourceAvatarActor, OtherActor)) return;
 	// bHit不会在不同端之间复制，每个段的bHit值独立
 	// 第一次命中时，无论服务器还是客户端，先把声光表现一次性播完
-	if (!bHit)
-	{
-		UGameplayStatics::PlaySoundAtLocation(this, ImpactSound, GetActorLocation(), FRotator::ZeroRotator);
-		UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ImpactEffect, GetActorLocation());
-		if (LoopingSoundComponent && LoopingSoundComponent->IsPlaying())
-		{
-			LoopingSoundComponent->Stop();
-		}
-		bHit = true;
-	}
+	if (!bHit) OnHit();
 
 	if (HasAuthority()) // 只有服务器能“真”结算
 	{
 		if (UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(OtherActor))
 		{
-			TargetASC->ApplyGameplayEffectSpecToSelf(*DamageEffectSpecHandle.Data.Get());
+			DamageEffectParams.TargetAbilitySystemComponent = TargetASC;
+			UAuraAbilitySystemLibrary::ApplyDamageEffect(DamageEffectParams);
 		}
 
 		Destroy(); // 权威端销毁，所有客户端同步销毁
