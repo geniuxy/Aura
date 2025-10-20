@@ -129,11 +129,7 @@ FGameplayEffectContextHandle UAuraAbilitySystemLibrary::ApplyDamageEffect(const 
 TMap<FGameplayTag, FGameplayTag> UAuraAbilitySystemLibrary::GetRelatedMap(const FString& KeyPrefix,
                                                                           const FString& ValuePrefix)
 {
-	static TMap<FGameplayTag, FGameplayTag> RelatedMap;
-	if (!RelatedMap.IsEmpty())
-	{
-		return RelatedMap;
-	}
+	TMap<FGameplayTag, FGameplayTag> RelatedMap;
 
 	const UGameplayTagsManager& Manager = UGameplayTagsManager::Get();
 

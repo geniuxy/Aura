@@ -19,4 +19,12 @@ public:
 
 	virtual void Execute_Implementation(const FGameplayEffectCustomExecutionParameters& ExecutionParams,
 	                                    FGameplayEffectCustomExecutionOutput& OutExecutionOutput) const override;
+
+private:
+	void DetermineDebuff(const FGameplayEffectSpec& Spec,
+	                     const FGameplayEffectCustomExecutionParameters& ExecParams,
+	                     const FAggregatorEvaluateParameters& EvalParams) const;
+	static float CalcInitialDamage(const FGameplayEffectSpec& Spec,
+	                               const FGameplayEffectCustomExecutionParameters& ExecParams,
+	                               const FAggregatorEvaluateParameters& EvalParams);
 };

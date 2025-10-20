@@ -64,20 +64,6 @@ static const AuraDamageStatics& GetDamageStatics()
 	return DamageStatics;
 }
 
-UExecCalc_Damage::UExecCalc_Damage()
-{
-	RelevantAttributesToCapture.Add(GetDamageStatics().ArmorDef);
-	RelevantAttributesToCapture.Add(GetDamageStatics().ArmorPenetrationDef);
-	RelevantAttributesToCapture.Add(GetDamageStatics().BlockChanceDef);
-	RelevantAttributesToCapture.Add(GetDamageStatics().CriticalHitChanceDef);
-	RelevantAttributesToCapture.Add(GetDamageStatics().CriticalHitDamageDef);
-	RelevantAttributesToCapture.Add(GetDamageStatics().CriticalHitResistanceDef);
-	RelevantAttributesToCapture.Add(GetDamageStatics().FireResistanceDef);
-	RelevantAttributesToCapture.Add(GetDamageStatics().LightningResistanceDef);
-	RelevantAttributesToCapture.Add(GetDamageStatics().ArcaneResistanceDef);
-	RelevantAttributesToCapture.Add(GetDamageStatics().PhysicalResistanceDef);
-}
-
 namespace DamageCalcUtil
 {
 	// 统一抓取属性并保证非负
@@ -100,10 +86,159 @@ namespace DamageCalcUtil
 }
 
 // -----------------------------------------------------------------
-// 0) Init Damage
-static float CalcInitialDamage(const FGameplayEffectSpec& Spec,
-                               const FGameplayEffectCustomExecutionParameters& ExecParams,
-                               const FAggregatorEvaluateParameters& EvalParams)
+// 1) Armor + ArmorPenetration
+static float ApplyArmor(float Damage, float TargetArmor, float SourceArmorPen, const UObject* WorldContext,
+                        int32 SourceLevel, int32 TargetLevel)
+{
+	const float PenCoef = DamageCalcUtil::GetCoefficient(WorldContext, SourceLevel, CURVE_ArmorPenetration);
+	const float EffectiveArmor = TargetArmor * (100.f - SourceArmorPen * PenCoef) / 100.f;
+
+	const float ArmorCoef = DamageCalcUtil::GetCoefficient(WorldContext, TargetLevel, CURVE_EffectiveArmor);
+	return Damage * (100.f - EffectiveArmor * ArmorCoef) / 100.f;
+}
+
+// -----------------------------------------------------------------
+// 2) Critical Hit
+static float ApplyCritical(float Damage, float SourceCritChance, float SourceCritDamage, float TargetCritResist,
+                           const UObject* WorldContext, int32 TargetLevel, FGameplayEffectContextHandle ContextHandle)
+{
+	const float ResistCoef = DamageCalcUtil::GetCoefficient(WorldContext, TargetLevel, CURVE_CriticalHitResistance);
+	const float Chance = SourceCritChance - TargetCritResist * ResistCoef;
+	const bool bCrit = FMath::RandRange(1, 100) < Chance;
+	UAuraAbilitySystemLibrary::SetIsCriticalHit(ContextHandle, bCrit);
+	return bCrit ? 2.f * Damage + SourceCritDamage : Damage;
+}
+
+// -----------------------------------------------------------------
+// 3) Block
+static float ApplyBlock(float Damage, float TargetBlockChance, FGameplayEffectContextHandle ContextHandle)
+{
+	const bool bBlocked = FMath::RandRange(1, 100) < TargetBlockChance;
+	UAuraAbilitySystemLibrary::SetIsBlockedHit(ContextHandle, bBlocked);
+	return bBlocked ? Damage * 0.5f : Damage;
+}
+
+// -----------------------------------------------------------------
+UExecCalc_Damage::UExecCalc_Damage()
+{
+	RelevantAttributesToCapture.Add(GetDamageStatics().ArmorDef);
+	RelevantAttributesToCapture.Add(GetDamageStatics().ArmorPenetrationDef);
+	RelevantAttributesToCapture.Add(GetDamageStatics().BlockChanceDef);
+	RelevantAttributesToCapture.Add(GetDamageStatics().CriticalHitChanceDef);
+	RelevantAttributesToCapture.Add(GetDamageStatics().CriticalHitDamageDef);
+	RelevantAttributesToCapture.Add(GetDamageStatics().CriticalHitResistanceDef);
+	RelevantAttributesToCapture.Add(GetDamageStatics().FireResistanceDef);
+	RelevantAttributesToCapture.Add(GetDamageStatics().LightningResistanceDef);
+	RelevantAttributesToCapture.Add(GetDamageStatics().ArcaneResistanceDef);
+	RelevantAttributesToCapture.Add(GetDamageStatics().PhysicalResistanceDef);
+}
+
+void UExecCalc_Damage::Execute_Implementation(
+	const FGameplayEffectCustomExecutionParameters& ExecutionParams,
+	FGameplayEffectCustomExecutionOutput& OutExecutionOutput) const
+{
+	// 1. 通用准备
+	const UAbilitySystemComponent* SourceASC = ExecutionParams.GetSourceAbilitySystemComponent();
+	const UAbilitySystemComponent* TargetASC = ExecutionParams.GetTargetAbilitySystemComponent();
+
+	AActor* SourceAvatar = SourceASC ? SourceASC->GetAvatarActor() : nullptr;
+	AActor* TargetAvatar = TargetASC ? TargetASC->GetAvatarActor() : nullptr;
+
+	int32 SourceLevel = 1;
+	if (SourceAvatar->Implements<UCombatInterface>())
+	{
+		SourceLevel = ICombatInterface::Execute_GetLevel(SourceAvatar);
+	}
+	int32 TargetLevel = 1;
+	if (TargetAvatar->Implements<UCombatInterface>())
+	{
+		TargetLevel = ICombatInterface::Execute_GetLevel(TargetAvatar);
+	}
+
+	const FGameplayEffectSpec& Spec = ExecutionParams.GetOwningSpec();
+	const FGameplayTagContainer* SourceTags = Spec.CapturedSourceTags.GetAggregatedTags();
+	const FGameplayTagContainer* TargetTags = Spec.CapturedTargetTags.GetAggregatedTags();
+
+	FAggregatorEvaluateParameters Params;
+	Params.SourceTags = SourceTags;
+	Params.TargetTags = TargetTags;
+
+	// 2. 计算debuff, 考虑抗性
+	DetermineDebuff(Spec, ExecutionParams, Params);
+
+	// 2. 初步计算伤害, 考虑抗性
+	float Damage = CalcInitialDamage(Spec, ExecutionParams, Params);
+
+	// 3. 抓取所有需要的属性
+	FGameplayEffectContextHandle ContextHandle = Spec.GetContext();
+	float TargetArmor =
+		DamageCalcUtil::GetCapturedMagnitude(ExecutionParams, GetDamageStatics().ArmorDef, Params);
+	float SourceArmorPen =
+		DamageCalcUtil::GetCapturedMagnitude(ExecutionParams, GetDamageStatics().ArmorPenetrationDef, Params);
+	float SourceCritC =
+		DamageCalcUtil::GetCapturedMagnitude(ExecutionParams, GetDamageStatics().CriticalHitChanceDef, Params);
+	float SourceCritD =
+		DamageCalcUtil::GetCapturedMagnitude(ExecutionParams, GetDamageStatics().CriticalHitDamageDef, Params);
+	float TargetCritRes =
+		DamageCalcUtil::GetCapturedMagnitude(ExecutionParams, GetDamageStatics().CriticalHitResistanceDef, Params);
+	float TargetBlock =
+		DamageCalcUtil::GetCapturedMagnitude(ExecutionParams, GetDamageStatics().BlockChanceDef, Params);
+
+	// 4. 进一步计算伤害
+	Damage = ApplyArmor(Damage, TargetArmor, SourceArmorPen, SourceAvatar, SourceLevel, TargetLevel);
+	Damage = ApplyCritical(Damage, SourceCritC, SourceCritD, TargetCritRes,
+	                       SourceAvatar, TargetLevel, ContextHandle);
+	Damage = ApplyBlock(Damage, TargetBlock, ContextHandle);
+
+	// 5. 输出
+	FGameplayModifierEvaluatedData EvaluatedData(UAuraAttributeSet::GetIncomingDamageAttribute(),
+	                                             EGameplayModOp::Additive, Damage);
+	OutExecutionOutput.AddOutputModifier(EvaluatedData);
+}
+
+void UExecCalc_Damage::DetermineDebuff(const FGameplayEffectSpec& Spec,
+                                       const FGameplayEffectCustomExecutionParameters& ExecParams,
+                                       const FAggregatorEvaluateParameters& EvalParams) const
+{
+	// 1. 拿到 Damage -> Debuff 映射 和 Damage -> Resistance 映射
+	const TMap<FGameplayTag, FGameplayTag>& DamageToDebuff = UAuraAbilitySystemLibrary::GetDamageToDebuffMap();
+	const TMap<FGameplayTag, FGameplayTag>& DamageToResistance = UAuraAbilitySystemLibrary::GetDamageToResistanceMap();
+
+	// 2. 所有以 Damage 为根的子 Tag
+	const FGameplayTagContainer AllDamageTags =
+		UGameplayTagsManager::Get().RequestGameplayTagChildren(AuraGameplayTags::Damage);
+
+	// 3. 抗性 Tag → CaptureDef 的映射
+	const TMap<FGameplayTag, FGameplayEffectAttributeCaptureDefinition>& TagsToCaptureDefs =
+		AuraDamageStatics().GetTagsToCaptureDefsMap();
+
+	// 4. 遍历每种伤害类型
+	for (const FGameplayTag& DamageTypeTag : AllDamageTags)
+	{
+		const FGameplayTag* DebuffTag = DamageToDebuff.Find(DamageTypeTag);
+		const FGameplayTag* ResistanceTag = DamageToResistance.Find(DamageTypeTag);
+		// 原始伤害
+		float RawDamage = Spec.GetSetByCallerMagnitude(DamageTypeTag, false, 0.f);
+		if (DebuffTag && ResistanceTag && RawDamage > 0.f)
+		{
+			// Determine if there was a successful debuff
+			const float SourceDebuffChance = Spec.GetSetByCallerMagnitude(AuraGameplayTags::Debuff_Chance, false, -1.f);
+
+			// 抗性值
+			float Resistance =
+				DamageCalcUtil::GetCapturedMagnitude(ExecParams, TagsToCaptureDefs[*ResistanceTag], EvalParams);
+			const float EffectiveDebuffChance = SourceDebuffChance * (100 - Resistance) / 100.f;
+			const bool bDebuff = FMath::RandRange(1, 100) < EffectiveDebuffChance;
+			if (bDebuff)
+			{
+			}
+		}
+	}
+}
+
+float UExecCalc_Damage::CalcInitialDamage(const FGameplayEffectSpec& Spec,
+                                          const FGameplayEffectCustomExecutionParameters& ExecParams,
+                                          const FAggregatorEvaluateParameters& EvalParams)
 {
 	float FinalDamage = 0.f;
 
@@ -140,97 +275,4 @@ static float CalcInitialDamage(const FGameplayEffectSpec& Spec,
 	}
 
 	return FinalDamage;
-}
-
-// 1) Armor + ArmorPenetration
-static float ApplyArmor(float Damage, float TargetArmor, float SourceArmorPen, const UObject* WorldContext,
-                        int32 SourceLevel, int32 TargetLevel)
-{
-	const float PenCoef = DamageCalcUtil::GetCoefficient(WorldContext, SourceLevel, CURVE_ArmorPenetration);
-	const float EffectiveArmor = TargetArmor * (100.f - SourceArmorPen * PenCoef) / 100.f;
-
-	const float ArmorCoef = DamageCalcUtil::GetCoefficient(WorldContext, TargetLevel, CURVE_EffectiveArmor);
-	return Damage * (100.f - EffectiveArmor * ArmorCoef) / 100.f;
-}
-
-// -----------------------------------------------------------------
-// 2) Critical Hit
-static float ApplyCritical(float Damage, float SourceCritChance, float SourceCritDamage, float TargetCritResist,
-                           const UObject* WorldContext, int32 TargetLevel, FGameplayEffectContextHandle ContextHandle)
-{
-	const float ResistCoef = DamageCalcUtil::GetCoefficient(WorldContext, TargetLevel, CURVE_CriticalHitResistance);
-	const float Chance = SourceCritChance - TargetCritResist * ResistCoef;
-	const bool bCrit = FMath::RandRange(1, 100) < Chance;
-	UAuraAbilitySystemLibrary::SetIsCriticalHit(ContextHandle, bCrit);
-	return bCrit ? 2.f * Damage + SourceCritDamage : Damage;
-}
-
-// -----------------------------------------------------------------
-// 3) Block
-static float ApplyBlock(float Damage, float TargetBlockChance, FGameplayEffectContextHandle ContextHandle)
-{
-	const bool bBlocked = FMath::RandRange(1, 100) < TargetBlockChance;
-	UAuraAbilitySystemLibrary::SetIsBlockedHit(ContextHandle, bBlocked);
-	return bBlocked ? Damage * 0.5f : Damage;
-}
-
-// -----------------------------------------------------------------
-void UExecCalc_Damage::Execute_Implementation(
-	const FGameplayEffectCustomExecutionParameters& ExecutionParams,
-	FGameplayEffectCustomExecutionOutput& OutExecutionOutput) const
-{
-	// 1. 通用准备
-	const UAbilitySystemComponent* SourceASC = ExecutionParams.GetSourceAbilitySystemComponent();
-	const UAbilitySystemComponent* TargetASC = ExecutionParams.GetTargetAbilitySystemComponent();
-
-	AActor* SourceAvatar = SourceASC ? SourceASC->GetAvatarActor() : nullptr;
-	AActor* TargetAvatar = TargetASC ? TargetASC->GetAvatarActor() : nullptr;
-
-	int32 SourceLevel = 1;
-	if (SourceAvatar->Implements<UCombatInterface>())
-	{
-		SourceLevel = ICombatInterface::Execute_GetLevel(SourceAvatar);
-	}
-	int32 TargetLevel = 1;
-	if (TargetAvatar->Implements<UCombatInterface>())
-	{
-		TargetLevel = ICombatInterface::Execute_GetLevel(TargetAvatar);
-	}
-
-	const FGameplayEffectSpec& Spec = ExecutionParams.GetOwningSpec();
-	const FGameplayTagContainer* SourceTags = Spec.CapturedSourceTags.GetAggregatedTags();
-	const FGameplayTagContainer* TargetTags = Spec.CapturedTargetTags.GetAggregatedTags();
-
-	FAggregatorEvaluateParameters Params;
-	Params.SourceTags = SourceTags;
-	Params.TargetTags = TargetTags;
-
-	// 2. 初步计算伤害，考虑抗性
-	float Damage = CalcInitialDamage(Spec, ExecutionParams, Params);
-
-	// 3. 抓取所有需要的属性
-	FGameplayEffectContextHandle ContextHandle = Spec.GetContext();
-	float TargetArmor =
-		DamageCalcUtil::GetCapturedMagnitude(ExecutionParams, GetDamageStatics().ArmorDef, Params);
-	float SourceArmorPen =
-		DamageCalcUtil::GetCapturedMagnitude(ExecutionParams, GetDamageStatics().ArmorPenetrationDef, Params);
-	float SourceCritC =
-		DamageCalcUtil::GetCapturedMagnitude(ExecutionParams, GetDamageStatics().CriticalHitChanceDef, Params);
-	float SourceCritD =
-		DamageCalcUtil::GetCapturedMagnitude(ExecutionParams, GetDamageStatics().CriticalHitDamageDef, Params);
-	float TargetCritRes =
-		DamageCalcUtil::GetCapturedMagnitude(ExecutionParams, GetDamageStatics().CriticalHitResistanceDef, Params);
-	float TargetBlock =
-		DamageCalcUtil::GetCapturedMagnitude(ExecutionParams, GetDamageStatics().BlockChanceDef, Params);
-
-	// 4. 进一步计算伤害
-	Damage = ApplyArmor(Damage, TargetArmor, SourceArmorPen, SourceAvatar, SourceLevel, TargetLevel);
-	Damage = ApplyCritical(Damage, SourceCritC, SourceCritD, TargetCritRes,
-	                       SourceAvatar, TargetLevel, ContextHandle);
-	Damage = ApplyBlock(Damage, TargetBlock, ContextHandle);
-
-	// 5. 输出
-	FGameplayModifierEvaluatedData EvaluatedData(UAuraAttributeSet::GetIncomingDamageAttribute(),
-	                                             EGameplayModOp::Additive, Damage);
-	OutExecutionOutput.AddOutputModifier(EvaluatedData);
 }
