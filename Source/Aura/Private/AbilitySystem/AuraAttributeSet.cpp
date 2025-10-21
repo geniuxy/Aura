@@ -178,6 +178,11 @@ void UAuraAttributeSet::HandleIncomingDamage(FEffectProperties Props)
 		const bool bBlocked = UAuraAbilitySystemLibrary::IsBlockedHit(Props.EffectContextHandle);
 		const bool bCritical = UAuraAbilitySystemLibrary::IsCriticalHit(Props.EffectContextHandle);
 		ShowFloatingText(Props, LocalIncomingDamage, bBlocked, bCritical);
+
+		if (UAuraAbilitySystemLibrary::IsSuccessfulDebuff(Props.EffectContextHandle))
+		{
+			Debuff(Props);
+		}
 	}
 }
 
@@ -214,6 +219,11 @@ void UAuraAttributeSet::HandleIncomingXP(FEffectProperties Props)
 
 		IPlayerInterface::Execute_AddToPlayerXP(Props.SourceCharacter, LocalIncomingXP);
 	}
+}
+
+void UAuraAttributeSet::Debuff(const FEffectProperties& Props)
+{
+	
 }
 
 void UAuraAttributeSet::SendXPEvent(const FEffectProperties& Props)
