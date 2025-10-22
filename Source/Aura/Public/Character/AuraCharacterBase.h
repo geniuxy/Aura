@@ -9,6 +9,7 @@
 #include "Interaction/CombatInterface.h"
 #include "AuraCharacterBase.generated.h"
 
+class UDebuffNiagaraComponent;
 class UNiagaraSystem;
 class UGameplayAbility;
 class UGameplayEffect;
@@ -26,7 +27,7 @@ public:
 	AAuraCharacterBase();
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	UAttributeSet* GetAttributeSet() const { return AttributeSet; }
-	
+
 	/** Combat Interfaces */
 	virtual void Die() override;
 	virtual UAnimMontage* GetHitReactMontage_Implementation() override;
@@ -39,11 +40,16 @@ public:
 	virtual int32 GetMinionCount_Implementation() override;
 	virtual void AdjustMinionCount_Implementation(int32 InAmount) override;
 	virtual ECharacterClass GetCharacterClass_Implementation() override;
+	virtual FOnASCRegistered GetOnASCRegisteredDelegate() override;
+	virtual FOnDeath* GetOnDeathDelegate() override;
 	/** End Combat Interfaces */
+
+	FOnASCRegistered OnAscRegistered;
+	FOnDeath OnDeathDelegate;
 
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	TArray<FTaggedMontage> AttackMontages;
-	
+
 	UFUNCTION(NetMulticast, Reliable)
 	virtual void MulticastHandleDeath();
 
@@ -66,7 +72,7 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Combat")
 	FName TailSocketName;
-	
+
 	bool bDead = false;
 
 	UPROPERTY()
@@ -88,12 +94,12 @@ protected:
 	virtual void InitializeDefaultAttributes() const;
 
 	void AddCharacterAbilities();
-	
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Enemy Defaults")
 	ECharacterClass CharacterClass = ECharacterClass::Warrior;
 
 	/* Dissolve Effects */
-	
+
 	void Dissolve();
 
 	UFUNCTION(BlueprintImplementableEvent)
@@ -101,7 +107,7 @@ protected:
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void StartWeaponDissolveTimeline(UMaterialInstanceDynamic* DynamicMaterialInstance);
-	
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TObjectPtr<UMaterialInstance> DissolveMaterialInstance;
 
@@ -115,13 +121,18 @@ protected:
 	USoundBase* DeathSound;
 
 	/* Minions */
-	
+
 	int32 MinionCount = 0;
+
+	/* Debuff */
+
+	UPROPERTY(VisibleAnywhere)
+	TObjectPtr<UDebuffNiagaraComponent> BurnDebuffComponent;
 
 private:
 	UPROPERTY(EditAnywhere, Category = "Abilities")
 	TArray<TSubclassOf<UGameplayAbility>> StartupAbilities;
-	
+
 	UPROPERTY(EditAnywhere, Category = "Abilities")
 	TArray<TSubclassOf<UGameplayAbility>> StartupPassiveAbilities;
 
