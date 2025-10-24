@@ -67,7 +67,7 @@ int32 AAuraEnemy::GetLevel_Implementation()
 	return Level;
 }
 
-void AAuraEnemy::Die()
+void AAuraEnemy::Die(const FVector& DeathImpulse)
 {
 	SetLifeSpan(LifeSpan);
 
@@ -75,7 +75,7 @@ void AAuraEnemy::Die()
 	{
 		AIController->GetBlackboardComponent()->SetValueAsBool(FName("Dead"), true);
 	}
-	Super::Die();
+	Super::Die(DeathImpulse);
 }
 
 void AAuraEnemy::SetCombatTarget_Implementation(AActor* InCombatTarget)
@@ -89,9 +89,9 @@ AActor* AAuraEnemy::GetCombatTarget_Implementation() const
 }
 
 
-void AAuraEnemy::MulticastHandleDeath_Implementation()
+void AAuraEnemy::MulticastHandleDeath_Implementation(const FVector& DeathImpulse)
 {
-	Super::MulticastHandleDeath_Implementation();
+	Super::MulticastHandleDeath_Implementation(DeathImpulse);
 	HealthBar->SetVisibility(false);
 }
 

@@ -31,9 +31,9 @@ public:
 
 	/** Combat Interfaces */
 	virtual int32 GetLevel_Implementation() override;
-	virtual void Die() override;
+	virtual void Die(const FVector& DeathImpulse) override;
 	/** End Combat Interfaces */
-	virtual void MulticastHandleDeath_Implementation() override;
+	virtual void MulticastHandleDeath_Implementation(const FVector& DeathImpulse) override;
 
 	UPROPERTY(BlueprintReadWrite, Category="Combat")
 	TObjectPtr<AActor> CombatTarget;
