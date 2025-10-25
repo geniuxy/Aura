@@ -165,6 +165,13 @@ void UAuraAttributeSet::HandleIncomingDamage(FEffectProperties Props)
 			}
 			// 再重新激活
 			Props.TargetASC->TryActivateAbilitiesByTag(TagContainer);
+
+			// 施加KnockBack击退力
+			const FVector KnockBackForce = UAuraAbilitySystemLibrary::GetKnockBackForce(Props.EffectContextHandle);
+			if (!KnockBackForce.IsNearlyZero(1.f))
+			{
+				Props.TargetCharacter->LaunchCharacter(KnockBackForce, true, true);
+			}
 		}
 		else
 		{
