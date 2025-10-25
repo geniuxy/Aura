@@ -32,7 +32,7 @@ protected:
 	int32 MaxNumProjectiles = 5;
 
 	UPROPERTY(EditDefaultsOnly, Category = "FireBolt")
-	float HomingAccelerationMin = 1600.f;
+	float HomingAccelerationMin = 500.f;
 
 	UPROPERTY(EditDefaultsOnly, Category = "FireBolt")
 	float HomingAccelerationMax = 3200.f;
