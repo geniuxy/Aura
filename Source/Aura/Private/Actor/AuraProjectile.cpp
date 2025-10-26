@@ -58,6 +58,7 @@ void AAuraProjectile::OnHit()
 	if (LoopingSoundComponent && LoopingSoundComponent->IsPlaying())
 	{
 		LoopingSoundComponent->Stop();
+		LoopingSoundComponent->DestroyComponent();
 	}
 	bHit = true;
 }
