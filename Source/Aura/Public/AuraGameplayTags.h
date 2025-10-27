@@ -53,6 +53,7 @@ namespace AuraGameplayTags
 	AURA_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Debuff_Frequency);
 	
 	AURA_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Event_Montage_FireBolt);
+	AURA_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Event_Montage_Electrocute);
 
 	/** Enemy Tags**/
 	AURA_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Event_Montage_Attack_1);

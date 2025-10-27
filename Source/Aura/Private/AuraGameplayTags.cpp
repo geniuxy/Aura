@@ -78,6 +78,9 @@ namespace AuraGameplayTags
 
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Event_Montage_FireBolt, "Event.Montage.FireBolt",
 	                               "火球术技能的动画事件标签，用于触发火球术的施放动画。");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Event_Montage_Electrocute, "Event.Montage.Electrocute",
+	                               "闪电术技能的动画事件标签，用于触发闪电术的施放动画。");
+		
 	/** Enemy Tags**/
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Event_Montage_Attack_1, "Event.Montage.Attack.1", "用于代表敌人的1号Montage。");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Event_Montage_Attack_2, "Event.Montage.Attack.2", "用于代表敌人的2号Montage。");

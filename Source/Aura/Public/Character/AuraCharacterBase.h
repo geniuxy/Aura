@@ -75,6 +75,9 @@ protected:
 
 	bool bDead = false;
 
+	UPROPERTY(BlueprintReadWrite, Category = "Combat")
+	bool bInShockLoop = false;
+
 	UPROPERTY()
 	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
 
