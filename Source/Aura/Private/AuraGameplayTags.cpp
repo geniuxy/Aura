@@ -16,6 +16,11 @@ namespace AuraGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(InputTag_3, "InputTag.3", "数字键 3");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(InputTag_4, "InputTag.4", "数字键 4");
 
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Player_Block_CursorTrace, "Player.Block.CursorTrace", "Tag用于表明禁止鼠标轨迹移动操作");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Player_Block_InputPressed, "Player.Block.InputPressed", "Tag用于表明禁止输入按下");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Player_Block_InputHeld, "Player.Block.InputHeld", "Tag用于表明禁止持续按下输入");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Player_Block_InputReleased, "Player.Block.InputReleased", "Tag用于表明禁止执行释放输入键的行为");
+
 	/** Game Data Tags**/
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attributes_Primary_Strength, "Attributes.Primary.Strength",
 	                               "角色的力量属性，影响物理攻击的伤害和角色的负重能力。");
@@ -65,12 +70,12 @@ namespace AuraGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Damage_Lightning, "Damage.Lightning", "闪电伤害");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Damage_Arcane, "Damage.Arcane", "奥术伤害");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Damage_Physical, "Damage.Physical", "物理伤害");
-	
+
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Debuff_Fire, "Debuff.Fire", "火焰伤害buff");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Debuff_Lightning, "Debuff.Lightning", "闪电伤害buff");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Debuff_Arcane, "Debuff.Arcane", "奥术伤害buff");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Debuff_Physical, "Debuff.Physical", "物理伤害buff");
-	
+
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Debuff_Chance, "Debuff.Chance", "debuff几率");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Debuff_Damage, "Debuff.Damage", "debuff造成伤害");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Debuff_Duration, "Debuff.Duration", "debuff持续时间");
@@ -80,7 +85,7 @@ namespace AuraGameplayTags
 	                               "火球术技能的动画事件标签，用于触发火球术的施放动画。");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Event_Montage_Electrocute, "Event.Montage.Electrocute",
 	                               "闪电术技能的动画事件标签，用于触发闪电术的施放动画。");
-		
+
 	/** Enemy Tags**/
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Event_Montage_Attack_1, "Event.Montage.Attack.1", "用于代表敌人的1号Montage。");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Event_Montage_Attack_2, "Event.Montage.Attack.2", "用于代表敌人的2号Montage。");
