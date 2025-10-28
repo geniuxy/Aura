@@ -132,4 +132,6 @@ namespace AuraGameplayTags
 	/** GameplayCue Tags **/
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(GameplayCue_Enemy_MeleeAttack_Impact, "GameplayCue.Enemy.MeleeAttack.Impact",
 	                               "敌人近战攻击相关的特效");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(GameplayCue_Aura_Lightning_ShockBurst, "GameplayCue.Aura.Lightning.ShockBurst",
+	                               "Aura闪电术的施法音效");
 }
