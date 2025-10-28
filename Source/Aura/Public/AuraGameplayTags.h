@@ -99,5 +99,6 @@ namespace AuraGameplayTags
 	/** GameplayCue Tags **/
 	AURA_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayCue_Enemy_MeleeAttack_Impact);
 	AURA_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayCue_Aura_Lightning_ShockBurst);
+	AURA_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayCue_Aura_Lightning_ShockLoop);
 	
 }

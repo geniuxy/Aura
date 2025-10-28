@@ -134,4 +134,6 @@ namespace AuraGameplayTags
 	                               "敌人近战攻击相关的特效");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(GameplayCue_Aura_Lightning_ShockBurst, "GameplayCue.Aura.Lightning.ShockBurst",
 	                               "Aura闪电术的施法音效");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(GameplayCue_Aura_Lightning_ShockLoop, "GameplayCue.Aura.Lightning.ShockLoop",
+	                               "Aura闪电术的持续施法音效");
 }
