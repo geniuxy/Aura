@@ -45,7 +45,7 @@ void UAuraBeamSpell::TraceFirstTarget(const FVector& BeamTargetLocation)
 				OwnerCharacter,
 				SocketLocation,
 				BeamTargetLocation,
-				10.f,
+				3.f,
 				TraceTypeQuery1,
 				false,
 				ActorsToIgnore,
