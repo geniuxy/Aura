@@ -15,6 +15,9 @@ class AURA_API UAuraBeamSpell : public UAuraDamageGameplayAbility
 	GENERATED_BODY()
 
 public:
+	virtual FString GetCurrentLevelDescription(int32 Level) override;
+	virtual FString GetNextLevelDescription(int32 Level) override;
+	
 	UFUNCTION(BlueprintCallable)
 	void StoreMouseDataInfo(const FHitResult& HitResult);
 
@@ -27,7 +30,14 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void StoreAdditionTargets(TArray<AActor*>& OutAdditionalTargets);
 
+	UFUNCTION(BlueprintImplementableEvent)
+	void PrimaryTargetDied(AActor* DeadActor);
+	
+	UFUNCTION(BlueprintImplementableEvent)
+	void AdditionalTargetDied(AActor* DeadActor);
 protected:
+	virtual FString BuildDescription(int32 Level, const FString& TitleTag) override;
+	
 	UPROPERTY(BlueprintReadWrite, Category="Beam")
 	FVector MouseHitLocation;
 
