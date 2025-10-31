@@ -92,7 +92,8 @@ namespace AuraGameplayTags
 	AURA_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_Status_Unlocked);
 	AURA_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_Status_Equipped);
 	
-	AURA_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Cooldown_Skill_FireBolt);
+	AURA_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Cooldown_Skill_Fire_FireBolt);
+	AURA_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Cooldown_Skill_Lightning_Electrocute);
 	
 	AURA_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Effect_HitReact);
 

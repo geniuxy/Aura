@@ -125,7 +125,9 @@ namespace AuraGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Ability_Status_Unlocked, "Ability.Status.Unlocked", "能力状态：已解锁");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Ability_Status_Equipped, "Ability.Status.Equipped", "能力状态：已装备");
 
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Cooldown_Skill_FireBolt, "Cooldown.Skill.FireBolt", "主角的火球技能的冷却时间");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Cooldown_Skill_Fire_FireBolt, "Cooldown.Skill.Fire.FireBolt", "主角的火球技能的冷却时间");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Cooldown_Skill_Lightning_Electrocute, "Cooldown.Skill.Lightning.Electrocute",
+	                               "主角的闪电术的冷却时间");
 
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Effect_HitReact, "Effect.HitReact", "用于对应的GameEffect来向Actor添加HitReact的Tag标签");
 
