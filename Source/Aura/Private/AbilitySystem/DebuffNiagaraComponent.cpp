@@ -24,7 +24,7 @@ void UDebuffNiagaraComponent::BeginPlay()
 	}
 	else if (CombatInterface)
 	{
-		CombatInterface->GetOnASCRegisteredDelegate().AddWeakLambda(this, [this](UAbilitySystemComponent* InASC)
+		CombatInterface->GetOnASCRegisteredDelegate()->AddWeakLambda(this, [this](UAbilitySystemComponent* InASC)
 		{
 			InASC->RegisterGameplayTagEvent(DebuffTag, EGameplayTagEventType::NewOrRemoved).AddUObject(
 				this, &UDebuffNiagaraComponent::DebuffTagChanged);
@@ -37,7 +37,7 @@ void UDebuffNiagaraComponent::BeginPlay()
 	}
 }
 
-void UDebuffNiagaraComponent::DebuffTagChanged(const FGameplayTag CallbakcTag, int32 NewCount)
+void UDebuffNiagaraComponent::DebuffTagChanged(const FGameplayTag CallbackTag, int32 NewCount)
 {
 	const bool bOwnerAlive =
 		IsValid(GetOwner()) &&
