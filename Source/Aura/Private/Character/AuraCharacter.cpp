@@ -154,6 +154,9 @@ void AAuraCharacter::InitAbilityActorInfo()
 	AbilitySystemComponent = AuraPlayerState->GetAbilitySystemComponent();
 	AttributeSet = AuraPlayerState->GetAttributeSet();
 	OnAscRegistered.Broadcast(AbilitySystemComponent);
+	AbilitySystemComponent
+		->RegisterGameplayTagEvent(AuraGameplayTags::Debuff_Stun, EGameplayTagEventType::NewOrRemoved).
+		AddUObject(this, &AAuraCharacter::StunTagChanged);
 
 	if (AAuraPlayerController* AuraPlayerController = Cast<AAuraPlayerController>(GetController()))
 	{

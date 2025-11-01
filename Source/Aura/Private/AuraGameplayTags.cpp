@@ -71,8 +71,8 @@ namespace AuraGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Damage_Arcane, "Damage.Arcane", "奥术伤害");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Damage_Physical, "Damage.Physical", "物理伤害");
 
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Debuff_Fire, "Debuff.Fire", "火焰伤害buff");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Debuff_Lightning, "Debuff.Lightning", "闪电伤害buff");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Debuff_Fire, "Debuff.Fire", "火焰伤害debuff");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Debuff_Stun, "Debuff.Stun", "眩晕debuff，目前仅由闪电术造成");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Debuff_Arcane, "Debuff.Arcane", "奥术伤害buff");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Debuff_Physical, "Debuff.Physical", "物理伤害buff");
 

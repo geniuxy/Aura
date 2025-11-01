@@ -59,8 +59,6 @@ void AAuraProjectile::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
 
-	DrawDebugCircle(GetWorld(), GetActorLocation(), 5.f, 12, FColor::White, false, 5.f);
-
 	LastFrameLocation = ThisFrameLocation;
 	ThisFrameLocation = GetActorLocation();
 	const double DistanceBetweenFrame = (ThisFrameLocation - LastFrameLocation).Length();

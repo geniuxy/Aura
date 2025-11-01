@@ -98,7 +98,13 @@ TMap<FGameplayTag, FGameplayTag> UAuraAbilitySystemLibrary::GetDamageToResistanc
 
 TMap<FGameplayTag, FGameplayTag> UAuraAbilitySystemLibrary::GetDamageToDebuffMap()
 {
-	return GetRelatedMap(TEXT("Damage."), TEXT("Debuff."));
+	TMap<FGameplayTag, FGameplayTag> RelatedMap;
+	RelatedMap.Add(AuraGameplayTags::Damage_Arcane, AuraGameplayTags::Debuff_Arcane);
+	RelatedMap.Add(AuraGameplayTags::Damage_Lightning, AuraGameplayTags::Debuff_Stun);
+	RelatedMap.Add(AuraGameplayTags::Damage_Fire, AuraGameplayTags::Debuff_Fire);
+	RelatedMap.Add(AuraGameplayTags::Damage_Physical, AuraGameplayTags::Debuff_Physical);
+
+	return RelatedMap;
 }
 
 FGameplayEffectContextHandle UAuraAbilitySystemLibrary::ApplyDamageEffect(const FDamageEffectParams& DamageEffectParams)

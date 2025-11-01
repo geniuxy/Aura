@@ -49,7 +49,7 @@ private:
 
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<USpringArmComponent> CameraBoom;
-
+	
 	virtual void InitAbilityActorInfo() override;
 
 	UFUNCTION(NetMulticast, Reliable)

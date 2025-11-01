@@ -9,6 +9,7 @@
 #include "AbilitySystem/DebuffNiagaraComponent.h"
 #include "Aura/Aura.h"
 #include "Components/CapsuleComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Net/UnrealNetwork.h"
 
@@ -36,6 +37,7 @@ void AAuraCharacterBase::GetLifetimeReplicatedProps(TArray<class FLifetimeProper
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
 	DOREPLIFETIME(AAuraCharacterBase, bInShockLoop);
+	DOREPLIFETIME(AAuraCharacterBase, bIsStunned);
 }
 
 UAbilitySystemComponent* AAuraCharacterBase::GetAbilitySystemComponent() const
@@ -72,6 +74,16 @@ void AAuraCharacterBase::BeginPlay()
 }
 
 void AAuraCharacterBase::InitAbilityActorInfo()
+{
+}
+
+void AAuraCharacterBase::StunTagChanged(const FGameplayTag CallbackTag, int32 NewCount)
+{
+	bIsStunned = NewCount > 0;
+	GetCharacterMovement()->MaxWalkSpeed = bIsStunned ? 0.f : BaseWalkSpeed;
+}
+
+void AAuraCharacterBase::OnRep_Stunned()
 {
 }
 

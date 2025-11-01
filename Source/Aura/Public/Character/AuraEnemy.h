@@ -50,9 +50,6 @@ public:
 	bool bHitReacting = false;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Combat")
-	float BaseWalkSpeed = 250.f;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Combat")
 	float LifeSpan = 5.f;
 
 protected:
@@ -61,6 +58,10 @@ protected:
 	virtual void InitAbilityActorInfo() override;
 
 	virtual void InitializeDefaultAttributes() const override;
+
+	virtual void StunTagChanged(const FGameplayTag CallbackTag, int32 NewCount) override;
+	
+	virtual void OnRep_Stunned() override;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Enemy Defaults")
 	int32 Level = 1;

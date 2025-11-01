@@ -49,16 +49,27 @@ public:
 	FOnASCRegistered OnAscRegistered;
 	FOnDeath OnDeathDelegate;
 
+	UFUNCTION(NetMulticast, Reliable)
+	virtual void MulticastHandleDeath(const FVector& DeathImpulse);
+	
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	TArray<FTaggedMontage> AttackMontages;
 
-	UFUNCTION(NetMulticast, Reliable)
-	virtual void MulticastHandleDeath(const FVector& DeathImpulse);
+	UPROPERTY(BlueprintReadWrite, Replicated, Category = "Combat")
+	bool bInShockLoop = false;
+
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing=OnRep_Stunned, Category = "Combat")
+	bool bIsStunned = false;
 
 protected:
 	virtual void BeginPlay() override;
 
 	virtual void InitAbilityActorInfo();
+
+	virtual void StunTagChanged(const FGameplayTag CallbackTag, int32 NewCount);
+	
+	UFUNCTION()
+	virtual void OnRep_Stunned();
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Combat")
 	TObjectPtr<USkeletalMeshComponent> Weapon;
@@ -76,9 +87,9 @@ protected:
 	FName TailSocketName;
 
 	bool bDead = false;
-
-	UPROPERTY(BlueprintReadWrite, Replicated, Category = "Combat")
-	bool bInShockLoop = false;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Combat")
+	float BaseWalkSpeed = 600.f;
 
 	UPROPERTY()
 	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
