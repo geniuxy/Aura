@@ -147,24 +147,28 @@ void UAuraAttributeSet::HandleIncomingDamage(FEffectProperties Props)
 		const bool bFatal = NewHealth <= 0.f;
 		if (!bFatal)
 		{
-			FGameplayTagContainer TagContainer;
-			TagContainer.AddTag(AuraGameplayTags::Ability_HitReact);
-			// 正在运行的实例
-			TArray<FGameplayAbilitySpecHandle> OutHandles;
-			Props.TargetASC->FindAllAbilitiesWithTags(OutHandles, TagContainer);
-			// 先结束正在运行的 HitReact
-			for (const FGameplayAbilitySpecHandle& Handle : OutHandles)
+			if (Props.TargetCharacter->Implements<UCombatInterface>() &&
+				!ICombatInterface::Execute_IsBeingShocked(Props.TargetCharacter))
 			{
-				if (const FGameplayAbilitySpec* Spec = Props.TargetASC->FindAbilitySpecFromHandle(Handle))
+				FGameplayTagContainer TagContainer;
+				TagContainer.AddTag(AuraGameplayTags::Ability_HitReact);
+				// 正在运行的实例
+				TArray<FGameplayAbilitySpecHandle> OutHandles;
+				Props.TargetASC->FindAllAbilitiesWithTags(OutHandles, TagContainer);
+				// 先结束正在运行的 HitReact
+				for (const FGameplayAbilitySpecHandle& Handle : OutHandles)
 				{
-					if (Spec->IsActive())
+					if (const FGameplayAbilitySpec* Spec = Props.TargetASC->FindAbilitySpecFromHandle(Handle))
 					{
-						Props.TargetASC->CancelAbilityHandle(Handle);
+						if (Spec->IsActive())
+						{
+							Props.TargetASC->CancelAbilityHandle(Handle);
+						}
 					}
 				}
+				// 再重新激活
+				Props.TargetASC->TryActivateAbilitiesByTag(TagContainer);
 			}
-			// 再重新激活
-			Props.TargetASC->TryActivateAbilitiesByTag(TagContainer);
 
 			// 施加KnockBack击退力
 			const FVector KnockBackForce = UAuraAbilitySystemLibrary::GetKnockBackForce(Props.EffectContextHandle);
