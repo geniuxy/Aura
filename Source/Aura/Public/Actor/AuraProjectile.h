@@ -32,6 +32,7 @@ public:
 protected:
 	virtual void BeginPlay() override;
 	virtual void Destroyed() override;
+	virtual void Tick(float DeltaSeconds) override;
 	void OnHit();
 
 	UFUNCTION()
@@ -42,6 +43,9 @@ private:
 	UPROPERTY(EditDefaultsOnly)
 	float LifeSpan = 15.f;
 
+	FVector LastFrameLocation;
+	FVector ThisFrameLocation;
+
 	bool bHit = false;
 
 	UPROPERTY(VisibleAnywhere)
@@ -49,6 +53,9 @@ private:
 
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<UNiagaraSystem> ImpactEffect;
+
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<UNiagaraSystem> SelfImpactEffect;
 
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<USoundBase> ImpactSound;

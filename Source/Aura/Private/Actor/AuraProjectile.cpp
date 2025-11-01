@@ -15,7 +15,8 @@
 
 AAuraProjectile::AAuraProjectile()
 {
-	PrimaryActorTick.bCanEverTick = false;
+	PrimaryActorTick.bCanEverTick = true;
+	SetActorTickInterval(0.2f);
 	bReplicates = true;
 
 	Sphere = CreateDefaultSubobject<USphereComponent>("Sphere");
@@ -40,6 +41,9 @@ void AAuraProjectile::BeginPlay()
 	Sphere->OnComponentBeginOverlap.AddDynamic(this, &AAuraProjectile::OnSphereOverlap);
 
 	LoopingSoundComponent = UGameplayStatics::SpawnSoundAttached(LoopingSound, GetRootComponent());
+
+	LastFrameLocation = FVector();
+	ThisFrameLocation = FVector();
 }
 
 void AAuraProjectile::Destroyed()
@@ -49,6 +53,28 @@ void AAuraProjectile::Destroyed()
 		OnHit();
 	}
 	Super::Destroyed();
+}
+
+void AAuraProjectile::Tick(float DeltaSeconds)
+{
+	Super::Tick(DeltaSeconds);
+
+	DrawDebugCircle(GetWorld(), GetActorLocation(), 5.f, 12, FColor::White, false, 5.f);
+
+	LastFrameLocation = ThisFrameLocation;
+	ThisFrameLocation = GetActorLocation();
+	const double DistanceBetweenFrame = (ThisFrameLocation - LastFrameLocation).Length();
+	if (DistanceBetweenFrame < 5.f)
+	{
+		UGameplayStatics::PlaySoundAtLocation(this, ImpactSound, GetActorLocation(), FRotator::ZeroRotator);
+		UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, SelfImpactEffect, GetActorLocation());
+		if (LoopingSoundComponent && LoopingSoundComponent->IsPlaying())
+		{
+			LoopingSoundComponent->Stop();
+			LoopingSoundComponent->DestroyComponent();
+		}
+		Destroy();
+	}
 }
 
 void AAuraProjectile::OnHit()
