@@ -259,6 +259,7 @@ void UAuraAttributeSet::Debuff(const FEffectProperties& Props)
 	InheritedTagContainer.Added.AddTag(DebuffTag);
 	if (DebuffTag.MatchesTagExact(AuraGameplayTags::Debuff_Stun))
 	{
+		InheritedTagContainer.Added.AddTag(AuraGameplayTags::Player_Block_CursorTrace);
 		InheritedTagContainer.Added.AddTag(AuraGameplayTags::Player_Block_InputHeld);
 		InheritedTagContainer.Added.AddTag(AuraGameplayTags::Player_Block_InputPressed);
 		InheritedTagContainer.Added.AddTag(AuraGameplayTags::Player_Block_InputReleased);

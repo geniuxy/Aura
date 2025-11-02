@@ -183,6 +183,7 @@ void AAuraEnemy::OnRep_Stunned()
 	if (UAuraAbilitySystemComponent* AuraASC = Cast<UAuraAbilitySystemComponent>(AbilitySystemComponent))
 	{
 		FGameplayTagContainer BlockedTags;
+		BlockedTags.AddTag(AuraGameplayTags::Player_Block_CursorTrace);
 		BlockedTags.AddTag(AuraGameplayTags::Player_Block_InputHeld);
 		BlockedTags.AddTag(AuraGameplayTags::Player_Block_InputPressed);
 		BlockedTags.AddTag(AuraGameplayTags::Player_Block_InputReleased);
