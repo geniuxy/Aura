@@ -124,6 +124,14 @@ namespace AuraGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Ability_Status_Eligible, "Ability.Status.Eligible", "能力状态：可解锁");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Ability_Status_Unlocked, "Ability.Status.Unlocked", "能力状态：已解锁");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Ability_Status_Equipped, "Ability.Status.Equipped", "能力状态：已装备");
+	
+	AURA_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_Passive_HaloOfProtection);
+	AURA_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_Passive_LifeSiphon);
+	AURA_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_Passive_ManaSiphon);
+	
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Ability_Passive_HaloOfProtection, "Ability.Passive.HaloOfProtection", "保护光环");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Ability_Passive_LifeSiphon, "Ability.Passive.LifeSiphon", "生命吸取");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Ability_Passive_ManaSiphon, "Ability.Passive.ManaSiphon", "法力光环");
 
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Cooldown_Skill_Fire_FireBolt, "Cooldown.Skill.Fire.FireBolt", "主角的火球技能的冷却时间");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Cooldown_Skill_Lightning_Electrocute, "Cooldown.Skill.Lightning.Electrocute",
