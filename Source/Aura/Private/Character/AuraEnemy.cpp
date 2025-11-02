@@ -177,25 +177,3 @@ void AAuraEnemy::StunTagChanged(const FGameplayTag CallbackTag, int32 NewCount)
 		AIController->GetBlackboardComponent()->SetValueAsBool(FName("Stunned"), bIsStunned);
 	}
 }
-
-void AAuraEnemy::OnRep_Stunned()
-{
-	if (UAuraAbilitySystemComponent* AuraASC = Cast<UAuraAbilitySystemComponent>(AbilitySystemComponent))
-	{
-		FGameplayTagContainer BlockedTags;
-		BlockedTags.AddTag(AuraGameplayTags::Player_Block_CursorTrace);
-		BlockedTags.AddTag(AuraGameplayTags::Player_Block_InputHeld);
-		BlockedTags.AddTag(AuraGameplayTags::Player_Block_InputPressed);
-		BlockedTags.AddTag(AuraGameplayTags::Player_Block_InputReleased);
-		if (bIsStunned)
-		{
-			AuraASC->AddLooseGameplayTags(BlockedTags);
-			StunDebuffComponent->Activate();
-		}
-		else
-		{
-			AuraASC->RemoveLooseGameplayTags(BlockedTags);
-			StunDebuffComponent->Deactivate();
-		}
-	}
-}

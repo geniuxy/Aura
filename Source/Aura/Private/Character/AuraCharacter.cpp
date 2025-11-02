@@ -146,28 +146,6 @@ int32 AAuraCharacter::GetLevel_Implementation()
 	return AuraPlayerState->GetPlayerLevel();
 }
 
-void AAuraCharacter::OnRep_Stunned()
-{
-	if (UAuraAbilitySystemComponent* AuraASC = Cast<UAuraAbilitySystemComponent>(AbilitySystemComponent))
-	{
-		FGameplayTagContainer BlockedTags;
-		BlockedTags.AddTag(AuraGameplayTags::Player_Block_CursorTrace);
-		BlockedTags.AddTag(AuraGameplayTags::Player_Block_InputHeld);
-		BlockedTags.AddTag(AuraGameplayTags::Player_Block_InputPressed);
-		BlockedTags.AddTag(AuraGameplayTags::Player_Block_InputReleased);
-		if (bIsStunned)
-		{
-			AuraASC->AddLooseGameplayTags(BlockedTags);
-			StunDebuffComponent->Activate();
-		}
-		else
-		{
-			AuraASC->RemoveLooseGameplayTags(BlockedTags);
-			StunDebuffComponent->Deactivate();
-		}
-	}
-}
-
 void AAuraCharacter::InitAbilityActorInfo()
 {
 	AAuraPlayerState* AuraPlayerState = GetPlayerState<AAuraPlayerState>();

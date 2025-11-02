@@ -53,7 +53,7 @@ public:
 
 	UFUNCTION(NetMulticast, Reliable)
 	virtual void MulticastHandleDeath(const FVector& DeathImpulse);
-	
+
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	TArray<FTaggedMontage> AttackMontages;
 
@@ -72,7 +72,7 @@ protected:
 	virtual void InitAbilityActorInfo();
 
 	virtual void StunTagChanged(const FGameplayTag CallbackTag, int32 NewCount);
-	
+
 	UFUNCTION()
 	virtual void OnRep_Stunned();
 
@@ -91,8 +91,20 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Combat")
 	FName TailSocketName;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat")
+	UNiagaraSystem* BloodEffect;
+
+	/* Death */
+
 	bool bDead = false;
-	
+
+	void BlockInputOnDeathOrStun();
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat")
+	USoundBase* DeathSound;
+
+	/*********/
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Combat")
 	float BaseWalkSpeed = 600.f;
 
@@ -135,15 +147,13 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TObjectPtr<UMaterialInstance> WeaponDissolveMaterialInstance;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat")
-	UNiagaraSystem* BloodEffect;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat")
-	USoundBase* DeathSound;
+	/*********/
 
 	/* Minions */
 
 	int32 MinionCount = 0;
+
+	/*********/
 
 	/* Debuff */
 
@@ -152,6 +162,8 @@ protected:
 
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<UDebuffNiagaraComponent> StunDebuffComponent;
+
+	/*********/
 
 private:
 	UPROPERTY(EditAnywhere, Category = "Abilities")

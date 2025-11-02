@@ -60,8 +60,6 @@ protected:
 	virtual void InitializeDefaultAttributes() const override;
 
 	virtual void StunTagChanged(const FGameplayTag CallbackTag, int32 NewCount) override;
-	
-	virtual void OnRep_Stunned() override;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Enemy Defaults")
 	int32 Level = 1;

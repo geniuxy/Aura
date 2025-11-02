@@ -50,6 +50,25 @@ UAbilitySystemComponent* AAuraCharacterBase::GetAbilitySystemComponent() const
 	return AbilitySystemComponent;
 }
 
+void AAuraCharacterBase::BlockInputOnDeathOrStun()
+{
+	if (UAuraAbilitySystemComponent* AuraASC = Cast<UAuraAbilitySystemComponent>(AbilitySystemComponent))
+	{
+		FGameplayTagContainer BlockedTags;
+		BlockedTags.AddTag(AuraGameplayTags::Player_Block_InputHeld);
+		BlockedTags.AddTag(AuraGameplayTags::Player_Block_InputPressed);
+		BlockedTags.AddTag(AuraGameplayTags::Player_Block_InputReleased);
+		if (bIsStunned)
+		{
+			AuraASC->AddLooseGameplayTags(BlockedTags);
+		}
+		else
+		{
+			AuraASC->RemoveLooseGameplayTags(BlockedTags);
+		}
+	}
+}
+
 void AAuraCharacterBase::MulticastHandleDeath_Implementation(const FVector& DeathImpulse)
 {
 	UGameplayStatics::PlaySoundAtLocation(this, DeathSound, GetActorLocation(), GetActorRotation());
@@ -73,6 +92,8 @@ void AAuraCharacterBase::MulticastHandleDeath_Implementation(const FVector& Deat
 	StunDebuffComponent->Deactivate();
 	BurnDebuffComponent->Deactivate();
 	OnDeathDelegate.Broadcast(this);
+
+	BlockInputOnDeathOrStun();
 }
 
 void AAuraCharacterBase::BeginPlay()
@@ -92,6 +113,15 @@ void AAuraCharacterBase::StunTagChanged(const FGameplayTag CallbackTag, int32 Ne
 
 void AAuraCharacterBase::OnRep_Stunned()
 {
+	BlockInputOnDeathOrStun();
+	if (bIsStunned)
+	{
+		StunDebuffComponent->Activate();
+	}
+	else
+	{
+		StunDebuffComponent->Deactivate();
+	}
 }
 
 void AAuraCharacterBase::Die(const FVector& DeathImpulse)
