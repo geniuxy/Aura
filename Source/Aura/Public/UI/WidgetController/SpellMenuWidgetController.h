@@ -9,7 +9,7 @@
 struct FGameplayTag;
 class UAuraUserWidget;
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FSpellGlobeSelectedSignature, UAuraUserWidget*, SpellGlobe);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSpellEquippedSignature, const FGameplayTag&, AbilityTag);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSpellEquippedSignature, const FGameplayTag&, InTag);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_FourParams(
 	FOnSpellGlobeSelectedSignature,
 	bool, bSpendPointsButtonEnabled,
@@ -57,6 +57,9 @@ public:
 
 	UPROPERTY(BlueprintAssignable, Category="GAS|Spells")
 	FOnSpellEquippedSignature OnSpellEquippedDelegate;
+
+	UPROPERTY(BlueprintAssignable, Category="GAS|Spells")
+	FOnSpellEquippedSignature OnEquippedRowUpdatedDelegate;
 
 	UFUNCTION(BlueprintCallable, Category = "GAS|Spells")
 	void SelectSpellGlobe(UAuraUserWidget* SpellGlobe);

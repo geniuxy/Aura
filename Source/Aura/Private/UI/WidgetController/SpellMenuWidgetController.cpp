@@ -192,6 +192,7 @@ void USpellMenuWidgetController::OnAbilityEquipped(const FGameplayTag& AbilityTa
 	AbilityInfoDelegate.Broadcast(Info);
 
 	OnSpellEquippedDelegate.Broadcast(AbilityTag);
+	OnEquippedRowUpdatedDelegate.Broadcast(InputTag);
 	GlobeDeselect();
 	EquippedGlobeDeselect();
 }
