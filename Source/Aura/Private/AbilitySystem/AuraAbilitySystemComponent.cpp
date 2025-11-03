@@ -375,20 +375,6 @@ void UAuraAbilitySystemComponent::ServerEquipAbility_Implementation(const FGamep
 			}
 			AssignInputTagToAbility(*AbilitySpec, InputTag);
 			MarkAbilitySpecDirty(*AbilitySpec);
-			/*
-			// Remove this InputTag (slot) from any Ability that has it.
-			ClearAbilityOfCurrentEquippedSpell(InputTag);
-			// Clear this ability's slot, just in case, it's a different slot
-			ClearEquippedSpell(AbilitySpec);
-			// Now, assign this ability to this slot
-			AbilitySpec->DynamicAbilityTags.AddTag(InputTag);
-			if (AbilityStatus.MatchesTagExact(AuraGameplayTags::Ability_Status_Unlocked))
-			{
-				AbilitySpec->DynamicAbilityTags.RemoveTag(AuraGameplayTags::Ability_Status_Unlocked);
-				AbilitySpec->DynamicAbilityTags.AddTag(AuraGameplayTags::Ability_Status_Equipped);
-			}
-			MarkAbilitySpecDirty(*AbilitySpec);
-			*/
 		}
 		ClientEquipAbility(AbilityTag, InputTag, PrevInputTag);
 	}
