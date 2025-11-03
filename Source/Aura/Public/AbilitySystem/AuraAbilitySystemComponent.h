@@ -41,11 +41,19 @@ public:
 	void AbilityInputTagHeld(const FGameplayTag& InputTag);
 
 	void ForEachAbility(const FForEachAbility& Delegate);
+
 	static FGameplayTag GetAbilityTagFromSpec(const FGameplayAbilitySpec& AbilitySpec);
 	static FGameplayTag GetInputTagFromSpec(const FGameplayAbilitySpec& AbilitySpec);
 	static FGameplayTag GetStatusFromSpec(const FGameplayAbilitySpec& AbilitySpec);
-
+	FGameplayAbilitySpec* GetSpecFromInputTag(const FGameplayTag& InputTag);
 	FGameplayAbilitySpec* GetSpecFromAbilityTag(const FGameplayTag& AbilityTag);
+	bool IsSlotOfInputTagEmpty(const FGameplayTag& InputTag);
+	bool IsPassiveAbility(const FGameplayAbilitySpec& Spec);
+	static bool AbilityHasEquipped(const FGameplayAbilitySpec* AbilitySpec, const FGameplayTag& InputTag);
+	static bool AbilityHasAnyInputTag(const FGameplayAbilitySpec* AbilitySpec);
+	static void AssignInputTagToAbility(FGameplayAbilitySpec& AbilitySpec, FGameplayTag InputTag);
+	void ClearAbilityOfCurrentEquippedSpell(FGameplayTag InputTag);
+	static void ClearEquippedSpell(FGameplayAbilitySpec* AbilitySpec);
 
 	bool GetDescriptionsByAbilityTag(
 		const FGameplayTag& AbilityTag,
@@ -68,10 +76,6 @@ public:
 
 	UFUNCTION(Client, Reliable)
 	void ClientEquipAbility(FGameplayTag AbilityTag, FGameplayTag InputTag, FGameplayTag PrevInputTag);
-
-	void ClearAbilityOfCurrentEquippedSpell(FGameplayTag InputTag);
-	void ClearEquippedSpell(FGameplayAbilitySpec* AbilitySpec);
-	static bool AbilityHasEquipped(FGameplayAbilitySpec* AbilitySpec, const FGameplayTag& InputTag);
 
 protected:
 	virtual void OnRep_ActivateAbilities() override;
