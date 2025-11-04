@@ -16,7 +16,7 @@
 
 AAuraCharacterBase::AAuraCharacterBase()
 {
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 
 	BurnDebuffComponent = CreateDefaultSubobject<UDebuffNiagaraComponent>("BurnDebuffComponent");
 	BurnDebuffComponent->SetupAttachment(GetRootComponent());
@@ -38,18 +38,14 @@ AAuraCharacterBase::AAuraCharacterBase()
 
 	PassiveEffectAttachComponent = CreateDefaultSubobject<USceneComponent>("PassiveEffectAttachComponent");
 	PassiveEffectAttachComponent->SetupAttachment(GetRootComponent());
+	PassiveEffectAttachComponent->SetUsingAbsoluteRotation(true);
+	PassiveEffectAttachComponent->SetWorldRotation(FRotator::ZeroRotator);
 	HaloOfProtectionNiagaraComponent = CreateDefaultSubobject<UPassiveNiagaraComponent>("HaloOfProtectionComponent");
 	HaloOfProtectionNiagaraComponent->SetupAttachment(PassiveEffectAttachComponent);
 	LifeSiphonNiagaraComponent = CreateDefaultSubobject<UPassiveNiagaraComponent>("LifeSiphonNiagaraComponent");
 	LifeSiphonNiagaraComponent->SetupAttachment(PassiveEffectAttachComponent);
 	ManaSiphonNiagaraComponent = CreateDefaultSubobject<UPassiveNiagaraComponent>("ManaSiphonNiagaraComponent");
 	ManaSiphonNiagaraComponent->SetupAttachment(PassiveEffectAttachComponent);
-}
-
-void AAuraCharacterBase::Tick(float DeltaSeconds)
-{
-	Super::Tick(DeltaSeconds);
-	PassiveEffectAttachComponent->SetWorldRotation(FRotator::ZeroRotator);
 }
 
 void AAuraCharacterBase::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const
