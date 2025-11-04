@@ -359,6 +359,7 @@ void UAuraAbilitySystemComponent::ServerEquipAbility_Implementation(const FGamep
 					// Handle activation/deactivation for passive abilities
 					if (IsPassiveAbility(*SpecWithInputTag))
 					{
+						MulticastActivatePassiveEffect(GetAbilityTagFromSpec(*SpecWithInputTag), false);
 						DeactivatePassiveAbilityDelegate.Broadcast(GetAbilityTagFromSpec(*SpecWithInputTag));
 					}
 
@@ -371,6 +372,7 @@ void UAuraAbilitySystemComponent::ServerEquipAbility_Implementation(const FGamep
 				if (IsPassiveAbility(*AbilitySpec))
 				{
 					TryActivateAbility(AbilitySpec->Handle);
+					MulticastActivatePassiveEffect(AbilityTag, true);
 				}
 			}
 			AssignInputTagToAbility(*AbilitySpec, InputTag);
@@ -384,6 +386,12 @@ void UAuraAbilitySystemComponent::ClientEquipAbility_Implementation(FGameplayTag
                                                                     FGameplayTag PrevInputTag)
 {
 	AbilityEquippedDelegate.Broadcast(AbilityTag, InputTag, PrevInputTag);
+}
+
+void UAuraAbilitySystemComponent::MulticastActivatePassiveEffect_Implementation(const FGameplayTag& AbilityTag,
+	bool bActivate)
+{
+	OnPassiveActivateDelegate.Broadcast(AbilityTag, bActivate);
 }
 
 void UAuraAbilitySystemComponent::OnRep_ActivateAbilities()

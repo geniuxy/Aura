@@ -14,6 +14,7 @@ DECLARE_MULTICAST_DELEGATE_FourParams(FAbilityStatusChanged, const FGameplayTag&
 DECLARE_MULTICAST_DELEGATE_ThreeParams(FAbilityEquipped, const FGameplayTag& /*AbilityTag*/,
                                        const FGameplayTag& /*InputTag*/, const FGameplayTag& /*PrevInputTag*/)
 DECLARE_MULTICAST_DELEGATE_OneParam(FDeactivatePassiveAbility, const FGameplayTag& /*AbilityTag*/)
+DECLARE_MULTICAST_DELEGATE_TwoParams(FOnPassiveActivate, const FGameplayTag& /*AbilityTag*/, bool /*bActivate*/)
 
 /**
  * 
@@ -31,6 +32,7 @@ public:
 	FAbilityStatusChanged AbilityStatusChangedDelegate;
 	FAbilityEquipped AbilityEquippedDelegate;
 	FDeactivatePassiveAbility DeactivatePassiveAbilityDelegate;
+	FOnPassiveActivate OnPassiveActivateDelegate;
 
 	void AddAbilities(const TArray<TSubclassOf<UGameplayAbility>>& StartupAbilities);
 	void AddPassiveAbilities(const TArray<TSubclassOf<UGameplayAbility>>& StartupPassiveAbilities);
@@ -76,6 +78,9 @@ public:
 
 	UFUNCTION(Client, Reliable)
 	void ClientEquipAbility(FGameplayTag AbilityTag, FGameplayTag InputTag, FGameplayTag PrevInputTag);
+
+	UFUNCTION(NetMulticast, Unreliable)
+	void MulticastActivatePassiveEffect(const FGameplayTag& AbilityTag, bool bActivate);
 
 protected:
 	virtual void OnRep_ActivateAbilities() override;
