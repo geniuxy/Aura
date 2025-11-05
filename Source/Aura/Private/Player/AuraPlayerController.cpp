@@ -38,9 +38,10 @@ void AAuraPlayerController::PlayerTick(float DeltaTime)
 
 void AAuraPlayerController::ShowMagicCircle()
 {
-	if (!IsValid(MagicCircle))
+	if (!IsValid(MagicCircle) && CursorHit.bBlockingHit)
 	{
-		MagicCircle = GetWorld()->SpawnActor<AMagicCircle>(MagicCircleClass);
+		MagicCircle =
+			GetWorld()->SpawnActor<AMagicCircle>(MagicCircleClass, CursorHit.ImpactPoint, FRotator::ZeroRotator);
 	}
 }
 
