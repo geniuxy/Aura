@@ -34,7 +34,7 @@ public:
 	void ShowDamageNumber(float Damage, ACharacter* TargetCharacter, bool bBlock, bool bCritical);
 
 	UFUNCTION(BlueprintCallable)
-	void ShowMagicCircle();
+	void ShowMagicCircle(UMaterialInterface* DecalMaterial = nullptr);
 
 	UFUNCTION(BlueprintCallable)
 	void HideMagicCircle();

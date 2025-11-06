@@ -14,6 +14,7 @@
 #include "NiagaraFunctionLibrary.h"
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
 #include "Actor/MagicCircle.h"
+#include "Components/DecalComponent.h"
 #include "Components/SplineComponent.h"
 #include "GameFramework/Character.h"
 #include "Input/AuraInputComponent.h"
@@ -36,12 +37,24 @@ void AAuraPlayerController::PlayerTick(float DeltaTime)
 	UpdateMagicCircleLocation();
 }
 
-void AAuraPlayerController::ShowMagicCircle()
+void AAuraPlayerController::ShowMagicCircle(UMaterialInterface* DecalMaterial)
 {
-	if (!IsValid(MagicCircle) && CursorHit.bBlockingHit)
+	if (!IsValid(MagicCircle))
 	{
-		MagicCircle =
-			GetWorld()->SpawnActor<AMagicCircle>(MagicCircleClass, CursorHit.ImpactPoint, FRotator::ZeroRotator);
+		if (CursorHit.bBlockingHit)
+		{
+			MagicCircle =
+				GetWorld()->SpawnActor<AMagicCircle>(MagicCircleClass, CursorHit.ImpactPoint, FRotator::ZeroRotator);
+		}
+		else
+		{
+			MagicCircle = GetWorld()->SpawnActor<AMagicCircle>(MagicCircleClass);
+		}
+
+		if (DecalMaterial)
+		{
+			MagicCircle->GetMagicCircleDecal()->SetMaterial(0, DecalMaterial);
+		}
 	}
 }
 

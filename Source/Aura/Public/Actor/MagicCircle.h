@@ -21,4 +21,7 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TObjectPtr<UDecalComponent> MagicCircleDecal;
+
+public:
+	FORCEINLINE UDecalComponent* GetMagicCircleDecal() const { return MagicCircleDecal; }
 };

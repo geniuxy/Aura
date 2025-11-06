@@ -34,6 +34,8 @@ public:
 	virtual void AddToPlayerLevel_Implementation(int32 InLevel) override;
 	virtual void AddToAttributePoints_Implementation(int InAttributePoints) override;
 	virtual void AddToSpellPoints_Implementation(int InSpellPoints) override;
+	virtual void ShowMagicCircle_Implementation(UMaterialInterface* DecalMaterial = nullptr) override;
+	virtual void HideMagicCircle_Implementation() override;
 	/** End Player Interfaces */
 
 	/** Combat Interfaces */
