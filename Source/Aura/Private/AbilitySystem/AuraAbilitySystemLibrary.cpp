@@ -107,6 +107,27 @@ TMap<FGameplayTag, FGameplayTag> UAuraAbilitySystemLibrary::GetDamageToDebuffMap
 	return RelatedMap;
 }
 
+FGameplayTagContainer UAuraAbilitySystemLibrary::GetAllGameplayTagWithPrefix(const FString& Prefix)
+{
+	FGameplayTagContainer OutContainer;
+	const UGameplayTagsManager& Manager = UGameplayTagsManager::Get();
+	FGameplayTagContainer AllTagsContainer;
+	Manager.RequestAllGameplayTags(AllTagsContainer, false);
+
+	for (const FGameplayTag& Tag : AllTagsContainer)
+	{
+		const FString TagStr = Tag.ToString();
+		if (!TagStr.StartsWith(Prefix))
+		{
+			continue;
+		}
+
+		OutContainer.AddTag(Tag);
+	}
+
+	return OutContainer;
+}
+
 FGameplayEffectContextHandle UAuraAbilitySystemLibrary::ApplyDamageEffect(const FDamageEffectParams& DamageEffectParams)
 {
 	const AActor* SourceAvatarActor = DamageEffectParams.SourceAbilitySystemComponent->GetAvatarActor();

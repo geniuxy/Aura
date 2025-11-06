@@ -41,6 +41,7 @@ public:
 	void AbilityInputTagPressed(const FGameplayTag& InputTag);
 	void AbilityInputTagReleased(const FGameplayTag& InputTag);
 	void AbilityInputTagHeld(const FGameplayTag& InputTag);
+	void CancelAllSkillAbility(); // 取消所有正在施法的技能ability
 
 	void ForEachAbility(const FForEachAbility& Delegate);
 

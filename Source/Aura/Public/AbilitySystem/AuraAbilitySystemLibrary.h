@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayTagContainer.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "AuraAbilitySystemLibrary.generated.h"
 
@@ -151,6 +152,8 @@ public:
 
 	static TMap<FGameplayTag, FGameplayTag> GetDamageToResistanceMap();
 	static TMap<FGameplayTag, FGameplayTag> GetDamageToDebuffMap();
+
+	static FGameplayTagContainer GetAllGameplayTagWithPrefix(const FString& Prefix);
 
 private:
 	static void ApplyAttributesEffectSpec(TSubclassOf<UGameplayEffect> AppliedGameplayEffect, int32 Level,

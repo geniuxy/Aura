@@ -103,6 +103,22 @@ void UAuraAbilitySystemComponent::AbilityInputTagHeld(const FGameplayTag& InputT
 	}
 }
 
+void UAuraAbilitySystemComponent::CancelAllSkillAbility()
+{
+	FGameplayTagContainer TagContainer =
+			UAuraAbilitySystemLibrary::GetAllGameplayTagWithPrefix(TEXT("Ability.Skill"));
+	const TArray<FGameplayTag>& AbilityTags = TagContainer.GetGameplayTagArray();
+
+	for (const FGameplayTag& AbilityTag : AbilityTags)
+	{
+		FGameplayAbilitySpec* AbilitySpec = GetSpecFromAbilityTag(AbilityTag);
+		if (AbilitySpec && AbilitySpec->IsActive())
+		{
+			CancelAbilityHandle(AbilitySpec->Handle);
+		}
+	}
+}
+
 void UAuraAbilitySystemComponent::ForEachAbility(const FForEachAbility& Delegate)
 {
 	// 在作用域内对当前对象的“能力列表”加锁，防止并发修改。
