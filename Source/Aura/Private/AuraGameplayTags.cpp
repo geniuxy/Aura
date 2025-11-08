@@ -148,4 +148,6 @@ namespace AuraGameplayTags
 	                               "Aura闪电术的施法音效");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(GameplayCue_Aura_Lightning_ShockLoop, "GameplayCue.Aura.Lightning.ShockLoop",
 	                               "Aura闪电术的持续施法音效");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(GameplayCue_Aura_Arcane_Shards, "GameplayCue.Aura.Arcane.Shards",
+	                               "Aura的奥术碎片技能");
 }
