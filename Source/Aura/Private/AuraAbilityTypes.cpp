@@ -65,31 +65,35 @@ bool FAuraGameplayEffectContext::NetSerialize(FArchive& Ar, UPackageMap* Map, bo
 		{
 			RepBits |= 1 << 14;
 		}
-		if (!KnockBackForce.IsZero())
+		if (KnockBackChance > 0.f)
 		{
 			RepBits |= 1 << 15;
+		}
+		if (!KnockBackForce.IsZero())
+		{
+			RepBits |= 1 << 16;
 		}
 
 		if (bIsRadialDamage)
 		{
-			RepBits |= 1 << 16;
+			RepBits |= 1 << 17;
 
 			if (RadialDamageInnerRadius > 0.f)
 			{
-				RepBits |= 1 << 17;
+				RepBits |= 1 << 18;
 			}
 			if (RadialDamageOuterRadius > 0.f)
 			{
-				RepBits |= 1 << 18;
+				RepBits |= 1 << 19;
 			}
 			if (!RadialDamageOrigin.IsZero())
 			{
-				RepBits |= 1 << 19;
+				RepBits |= 1 << 20;
 			}
 		}
 	}
 
-	Ar.SerializeBits(&RepBits, 19);
+	Ar.SerializeBits(&RepBits, 20);
 
 	if (RepBits & (1 << 0))
 	{
@@ -172,21 +176,25 @@ bool FAuraGameplayEffectContext::NetSerialize(FArchive& Ar, UPackageMap* Map, bo
 	}
 	if (RepBits & (1 << 15))
 	{
-		KnockBackForce.NetSerialize(Ar, Map, bOutSuccess);
+		Ar << KnockBackChance;
 	}
 	if (RepBits & (1 << 16))
 	{
+		KnockBackForce.NetSerialize(Ar, Map, bOutSuccess);
+	}
+	if (RepBits & (1 << 17))
+	{
 		Ar << bIsRadialDamage;
 		
-		if (RepBits & (1 << 17))
+		if (RepBits & (1 << 18))
 		{
 			Ar << RadialDamageInnerRadius;
 		}
-		if (RepBits & (1 << 18))
+		if (RepBits & (1 << 19))
 		{
 			Ar << RadialDamageOuterRadius;
 		}
-		if (RepBits & (1 << 19))
+		if (RepBits & (1 << 20))
 		{
 			RadialDamageOrigin.NetSerialize(Ar, Map, bOutSuccess);
 		}

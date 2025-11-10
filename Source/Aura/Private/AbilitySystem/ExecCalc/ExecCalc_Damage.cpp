@@ -230,6 +230,10 @@ float UExecCalc_Damage::CalcInitialDamage(const FGameplayEffectSpec& Spec,
 
 			// 原始伤害
 			float RawDamage = Spec.GetSetByCallerMagnitude(DamageTypeTag, false, 0.f);
+			if (RawDamage <= 0.f)
+			{
+				continue;
+			}
 
 			// 抗性值
 			float Resistance =

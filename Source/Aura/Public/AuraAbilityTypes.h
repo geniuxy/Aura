@@ -5,7 +5,7 @@
 
 class UGameplayEffect;
 
-USTRUCT(BlueprintType)
+USTRUCT(BlueprintType, meta = (DisplayName = "Damage Effect Params"))
 struct FDamageEffectParams
 {
 	GENERATED_BODY()
@@ -89,6 +89,7 @@ public:
 	float GetDebuffFrequency() const { return DebuffFrequency; }
 	TSharedPtr<FGameplayTag> GetDamageType() const { return DamageType; }
 	FVector GetDeathImpulse() const { return DeathImpulse; }
+	float GetKnockBackChance() const { return KnockBackChance; }
 	FVector GetKnockBackForce() const { return KnockBackForce; }
 	bool IsRadialDamage() const { return bIsRadialDamage; }
 	float GetRadialDamageInnerRadius() const { return RadialDamageInnerRadius; }
@@ -103,10 +104,20 @@ public:
 	void SetDebuffFrequency(float InFrequency) { DebuffFrequency = InFrequency; }
 	void SetDamageType(TSharedPtr<FGameplayTag> InDamageType) { DamageType = InDamageType; }
 	void SetDeathImpulse(const FVector& InImpulse) { DeathImpulse = InImpulse; }
+	void SetKnockBackChance(float InKnockBackChance) { KnockBackChance = InKnockBackChance; }
 	void SetKnockBackForce(const FVector& InKnockBackForce) { KnockBackForce = InKnockBackForce; }
 	void SetIsRadialDamage(bool bInIsRadialDamage) { bIsRadialDamage = bInIsRadialDamage; }
-	void SetRadialDamageInnerRadius(float InRadialDamageInnerRadius) { RadialDamageInnerRadius = InRadialDamageInnerRadius; }
-	void SetRadialDamageOuterRadius(float InRadialDamageOuterRadius) { RadialDamageOuterRadius = InRadialDamageOuterRadius; }
+
+	void SetRadialDamageInnerRadius(float InRadialDamageInnerRadius)
+	{
+		RadialDamageInnerRadius = InRadialDamageInnerRadius;
+	}
+
+	void SetRadialDamageOuterRadius(float InRadialDamageOuterRadius)
+	{
+		RadialDamageOuterRadius = InRadialDamageOuterRadius;
+	}
+
 	void SetRadialDamageOrigin(const FVector& InRadialDamageOrigin) { RadialDamageOrigin = InRadialDamageOrigin; }
 
 	/** Returns the actual struct used for serialization, subclasses must override this! */
@@ -154,6 +165,9 @@ protected:
 
 	UPROPERTY()
 	FVector DeathImpulse = FVector::ZeroVector;
+
+	UPROPERTY()
+	float KnockBackChance = 0.f;
 
 	UPROPERTY()
 	FVector KnockBackForce = FVector::ZeroVector;

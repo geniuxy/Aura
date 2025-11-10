@@ -171,8 +171,10 @@ void UAuraAttributeSet::HandleIncomingDamage(FEffectProperties Props)
 			}
 
 			// 施加KnockBack击退力
+			const float KnockBackChance = UAuraAbilitySystemLibrary::GetKnockBackChance(Props.EffectContextHandle);
 			const FVector KnockBackForce = UAuraAbilitySystemLibrary::GetKnockBackForce(Props.EffectContextHandle);
-			if (!KnockBackForce.IsNearlyZero(1.f))
+			const bool bKnockBack = FMath::RandRange(1, 100) < KnockBackChance;
+			if (bKnockBack && !KnockBackForce.IsNearlyZero(1.f))
 			{
 				Props.TargetCharacter->LaunchCharacter(KnockBackForce, true, true);
 			}
