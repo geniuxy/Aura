@@ -17,14 +17,41 @@ class AURA_API UExecCalc_Damage : public UGameplayEffectExecutionCalculation
 public:
 	UExecCalc_Damage();
 
-	virtual void Execute_Implementation(const FGameplayEffectCustomExecutionParameters& ExecutionParams,
-	                                    FGameplayEffectCustomExecutionOutput& OutExecutionOutput) const override;
+	virtual void Execute_Implementation(
+		const FGameplayEffectCustomExecutionParameters& ExecutionParams,
+		FGameplayEffectCustomExecutionOutput& OutExecutionOutput
+	) const override;
 
 private:
-	void DetermineDebuff(const FGameplayEffectSpec& Spec,
-	                     const FGameplayEffectCustomExecutionParameters& ExecParams,
-	                     const FAggregatorEvaluateParameters& EvalParams) const;
-	static float CalcInitialDamage(const FGameplayEffectSpec& Spec,
-	                               const FGameplayEffectCustomExecutionParameters& ExecParams,
-	                               const FAggregatorEvaluateParameters& EvalParams);
+	void DetermineDebuff(
+		const FGameplayEffectSpec& Spec,
+		const FGameplayEffectCustomExecutionParameters& ExecParams,
+		const FAggregatorEvaluateParameters& EvalParams
+	) const;
+
+	float CalcInitialDamage(
+		const FGameplayEffectSpec& Spec,
+		const FGameplayEffectCustomExecutionParameters& ExecParams,
+		const FAggregatorEvaluateParameters& EvalParams
+	) const;
+
+	void PrepareExecutionContext(const FGameplayEffectCustomExecutionParameters& ExecutionParams) const;
+
+	float ApplyArmor(float Damage, float TargetArmor, float SourceArmorPen) const;
+
+	float ApplyCritical(float Damage, float SourceCritChance, float SourceCritDamage,
+	                    float TargetCritResist, FGameplayEffectContextHandle ContextHandle) const;
+
+	float ApplyBlock(float Damage, float TargetBlockChance, FGameplayEffectContextHandle ContextHandle) const;
+
+	UPROPERTY()
+	mutable UAbilitySystemComponent* SourceASC = nullptr;
+	UPROPERTY()
+	mutable UAbilitySystemComponent* TargetASC = nullptr;
+	UPROPERTY()
+	mutable TObjectPtr<AActor> SourceAvatar = nullptr;
+	UPROPERTY()
+	mutable TObjectPtr<AActor> TargetAvatar = nullptr;
+	mutable int32 SourceLevel = 1;
+	mutable int32 TargetLevel = 1;
 };
