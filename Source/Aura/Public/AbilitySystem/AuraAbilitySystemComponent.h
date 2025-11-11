@@ -7,6 +7,7 @@
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FEffectAssetsTagDelegate, const FGameplayTagContainer&);
 DECLARE_MULTICAST_DELEGATE(FAbilitiesGiven);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FAbilitiesCancel);
 DECLARE_DELEGATE_OneParam(FForEachAbility, const FGameplayAbilitySpec&);
 DECLARE_MULTICAST_DELEGATE_FourParams(FAbilityStatusChanged, const FGameplayTag& /* AbilityTag */,
                                       const FGameplayTag& /* AbilityType */, const FGameplayTag& /* StatusTag */,
@@ -33,6 +34,9 @@ public:
 	FAbilityEquipped AbilityEquippedDelegate;
 	FDeactivatePassiveAbility DeactivatePassiveAbilityDelegate;
 	FOnPassiveActivate OnPassiveActivateDelegate;
+	
+	UPROPERTY(BlueprintAssignable, Category="Abilities")
+	FAbilitiesCancel AbilitiesCancelDelegate;
 
 	void AddAbilities(const TArray<TSubclassOf<UGameplayAbility>>& StartupAbilities);
 	void AddPassiveAbilities(const TArray<TSubclassOf<UGameplayAbility>>& StartupPassiveAbilities);
