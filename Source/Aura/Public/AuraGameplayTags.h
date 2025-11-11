@@ -100,6 +100,7 @@ namespace AuraGameplayTags
 	
 	AURA_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Cooldown_Skill_Fire_FireBolt);
 	AURA_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Cooldown_Skill_Lightning_Electrocute);
+	AURA_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Cooldown_Skill_Arcane_ArcaneShards);
 	
 	AURA_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Effect_HitReact);
 
