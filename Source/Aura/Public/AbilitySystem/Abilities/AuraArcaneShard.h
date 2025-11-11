@@ -13,7 +13,17 @@ UCLASS()
 class AURA_API UAuraArcaneShard : public UAuraDamageGameplayAbility
 {
 	GENERATED_BODY()
+
 public:
 	virtual FString GetCurrentLevelDescription(int32 Level) override;
 	virtual FString GetNextLevelDescription(int32 Level) override;
+
+protected:
+	virtual FString BuildDescription(int32 Level, const FString& TitleTag) override;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="ArcaneShard")
+	int32 MaxNumShards = 11;
+
+	UPROPERTY(BlueprintReadWrite, Category="ArcaneShard")
+	int32 NumShards = 1;
 };

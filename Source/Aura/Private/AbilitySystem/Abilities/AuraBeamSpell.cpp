@@ -136,7 +136,7 @@ FString UAuraBeamSpell::BuildDescription(int32 Level, const FString& TitleTag)
 		// Cooldown
 		"<Small>冷却时间: </><Cooldown>%.1f</>\n\n"
 
-		// Number of FireBolts
+		// Number of Lightning Hurt Enemies
 		"<Default>发射1束闪电，并弹射至周围%d位敌人并造成</>"
 
 		// Damage
