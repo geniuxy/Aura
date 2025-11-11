@@ -235,13 +235,6 @@ float UExecCalc_Damage::CalcInitialDamage(const FGameplayEffectSpec& Spec,
 				continue;
 			}
 
-			// 抗性值
-			float Resistance =
-				DamageCalcUtil::GetCapturedMagnitude(ExecParams, TagsToCaptureDefs[*ResistanceTag], EvalParams);
-
-			// 应用抗性
-			RawDamage *= (100.f - FMath::Clamp(Resistance, 0.f, 100.f)) / 100.f;
-
 			// 范围伤害技能计算伤害
 			if (UAuraAbilitySystemLibrary::IsRadialDamage(ContextHandle))
 			{
@@ -278,6 +271,13 @@ float UExecCalc_Damage::CalcInitialDamage(const FGameplayEffectSpec& Spec,
 					SourceAvatar,
 					nullptr);
 			}
+
+			// 抗性值
+			float Resistance =
+				DamageCalcUtil::GetCapturedMagnitude(ExecParams, TagsToCaptureDefs[*ResistanceTag], EvalParams);
+
+			// 应用抗性
+			RawDamage *= (100.f - FMath::Clamp(Resistance, 0.f, 100.f)) / 100.f;
 
 			FinalDamage += RawDamage;
 		}
