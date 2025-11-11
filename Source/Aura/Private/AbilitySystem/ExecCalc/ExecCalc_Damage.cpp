@@ -256,7 +256,13 @@ float UExecCalc_Damage::CalcInitialDamage(const FGameplayEffectSpec& Spec,
 				{
 					CombatInterface->GetOnDamageSignature()->AddLambda([&](float DamageAmount)
 					{
+						// 先执行ApplyRadialDamageWithFalloff
+						// 再执行TakeDamage(只是用来承接了一下ApplyRadialDamageWithFalloff计算出来的伤害)
+						// 然后是RawDamage = DamageAmount;
+						// 最后才是FinalDamage += RawDamage;
+						// CalcInitialDamage就只执行了一次
 						RawDamage = DamageAmount;
+						CombatInterface->GetOnDamageSignature()->Clear();
 					});
 				}
 				UGameplayStatics::ApplyRadialDamageWithFalloff(
