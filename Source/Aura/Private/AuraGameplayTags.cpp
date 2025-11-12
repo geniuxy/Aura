@@ -116,6 +116,7 @@ namespace AuraGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Ability_Attack_Ranged, "Ability.Attack.Ranged", "用于Activate对应的远距离攻击的GameAbility");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Ability_Summon, "Ability.Summon", "用于Activate对应的召唤流的GameAbility");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Ability_Skill_Fire_FireBolt, "Ability.Skill.Fire.FireBolt", "主角的火球技能");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Ability_Skill_Fire_FireBlast, "Ability.Skill.Fire.FireBlast", "主角的火球爆破技能");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Ability_Skill_Lightning_Electrocute, "Ability.Skill.Lightning.Electrocute",
 	                               "主角的闪电技能");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Ability_Skill_Arcane_ArcaneShards, "Ability.Skill.Arcane.ArcaneShards",

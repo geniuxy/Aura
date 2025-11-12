@@ -106,7 +106,7 @@ void UAuraAbilitySystemComponent::AbilityInputTagHeld(const FGameplayTag& InputT
 void UAuraAbilitySystemComponent::CancelAllSkillAbility()
 {
 	FGameplayTagContainer TagContainer =
-			UAuraAbilitySystemLibrary::GetAllGameplayTagWithPrefix(TEXT("Ability.Skill"));
+		UAuraAbilitySystemLibrary::GetAllGameplayTagWithPrefix(TEXT("Ability.Skill"));
 	const TArray<FGameplayTag>& AbilityTags = TagContainer.GetGameplayTagArray();
 
 	for (const FGameplayTag& AbilityTag : AbilityTags)
@@ -222,6 +222,24 @@ bool UAuraAbilitySystemComponent::IsPassiveAbility(const FGameplayAbilitySpec& S
 	return AbilityType.MatchesTagExact(AuraGameplayTags::Ability_Type_Passive);
 }
 
+bool UAuraAbilitySystemComponent::CanAbilityBeLearned(const FGameplayAbilitySpec& InAbilitySpec)
+{
+	if (InAbilitySpec.Ability->GetAbilityLevel() != 1)
+	{
+		return false;
+	}
+	FScopedAbilityListLock ActiveScopeLock(*this);
+	for (FGameplayAbilitySpec& AbilitySpec : GetActivatableAbilities())
+	{
+		if (AbilitySpec.Ability == InAbilitySpec.Ability &&
+			AbilitySpec.DynamicAbilityTags.HasTagExact(AuraGameplayTags::Ability_Status_Eligible))
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
 bool UAuraAbilitySystemComponent::AbilityHasEquipped(const FGameplayAbilitySpec* AbilitySpec,
                                                      const FGameplayTag& InputTag)
 {
@@ -267,6 +285,12 @@ bool UAuraAbilitySystemComponent::GetDescriptionsByAbilityTag(
 	{
 		if (UAuraGameplayAbility* AuraAbility = Cast<UAuraGameplayAbility>(AbilitySpec->Ability))
 		{
+			if (CanAbilityBeLearned(*AbilitySpec))
+			{
+				OutDescription = AuraAbility->GetCurrentLevelDescription(AbilitySpec->Level - 1);
+				OutNextLevelDescription = AuraAbility->GetNextLevelDescription(AbilitySpec->Level);
+				return true;
+			}
 			OutDescription = AuraAbility->GetCurrentLevelDescription(AbilitySpec->Level);
 			OutNextLevelDescription = AuraAbility->GetNextLevelDescription(AbilitySpec->Level + 1);
 			return true;

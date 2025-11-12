@@ -83,6 +83,7 @@ namespace AuraGameplayTags
 	AURA_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_Attack_Ranged);
 	AURA_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_Summon);
 	AURA_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_Skill_Fire_FireBolt);
+	AURA_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_Skill_Fire_FireBlast);
 	AURA_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_Skill_Lightning_Electrocute);
 	AURA_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_Skill_Arcane_ArcaneShards);
 	
@@ -99,6 +100,7 @@ namespace AuraGameplayTags
 	AURA_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_Passive_ManaSiphon);
 	
 	AURA_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Cooldown_Skill_Fire_FireBolt);
+	AURA_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Cooldown_Skill_Fire_FireBlast);
 	AURA_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Cooldown_Skill_Lightning_Electrocute);
 	AURA_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Cooldown_Skill_Arcane_ArcaneShards);
 	

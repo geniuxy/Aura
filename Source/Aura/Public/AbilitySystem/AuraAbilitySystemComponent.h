@@ -56,6 +56,7 @@ public:
 	FGameplayAbilitySpec* GetSpecFromAbilityTag(const FGameplayTag& AbilityTag);
 	bool IsSlotOfInputTagEmpty(const FGameplayTag& InputTag);
 	bool IsPassiveAbility(const FGameplayAbilitySpec& Spec);
+	bool CanAbilityBeLearned(const FGameplayAbilitySpec& InAbilitySpec);
 	static bool AbilityHasEquipped(const FGameplayAbilitySpec* AbilitySpec, const FGameplayTag& InputTag);
 	static bool AbilityHasAnyInputTag(const FGameplayAbilitySpec* AbilitySpec);
 	static void AssignInputTagToAbility(FGameplayAbilitySpec& AbilitySpec, FGameplayTag InputTag);

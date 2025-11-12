@@ -1,18 +1,18 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "AbilitySystem/Abilities/AuraArcaneShard.h"
+#include "AbilitySystem/Abilities/AuraFireBlast.h"
 
-FString UAuraArcaneShard::GetCurrentLevelDescription(int32 Level)
+FString UAuraFireBlast::GetCurrentLevelDescription(int32 Level)
 {
 	if (Level == 0)
 	{
-		return BuildDescription(Level + 1, TEXT("奥术碎片(可学习)"));
+		return BuildDescription(Level + 1, TEXT("火焰爆破(可学习)"));
 	}
-	return BuildDescription(Level, TEXT("奥术碎片"));
+	return BuildDescription(Level, TEXT("火焰爆破"));
 }
 
-FString UAuraArcaneShard::GetNextLevelDescription(int32 Level)
+FString UAuraFireBlast::GetNextLevelDescription(int32 Level)
 {
 	if (Level == 1)
 	{
@@ -21,12 +21,11 @@ FString UAuraArcaneShard::GetNextLevelDescription(int32 Level)
 	return BuildDescription(Level, TEXT("下一等级:"));
 }
 
-FString UAuraArcaneShard::BuildDescription(int32 Level, const FString& TitleTag)
+FString UAuraFireBlast::BuildDescription(int32 Level, const FString& TitleTag)
 {
 	const int32 ScalableDamage = Damage.GetValueAtLevel(Level);
 	const float ManaCost = FMath::Abs(GetManaCost(Level));
 	const float Cooldown = GetCooldown(Level);
-	NumShards = FMath::Min(Level, MaxNumShards);
 
 	return FString::Printf(TEXT(
 		// Title
@@ -39,10 +38,10 @@ FString UAuraArcaneShard::BuildDescription(int32 Level, const FString& TitleTag)
 		// Cooldown
 		"<Small>冷却时间: </><Cooldown>%.1f</>\n\n"
 
-		// Number of Arcane Shards
-		"<Default>释放%d个奥术碎片，分别造成</>"
+		// Number of FireBalls
+		"<Default>向四周发射%d枚火球,每个火球都会返回时爆炸并造成</>"
 
 		// Damage
-		"<Damage>%d</><Default>范围伤害</>"
-	), *TitleTag, Level, ManaCost, Cooldown, NumShards, ScalableDamage);
+		"<Damage>%d</><Default>火焰伤害，并有几率点燃敌人</>"
+	), *TitleTag, Level, ManaCost, Cooldown, NumFireBalls, ScalableDamage);
 }

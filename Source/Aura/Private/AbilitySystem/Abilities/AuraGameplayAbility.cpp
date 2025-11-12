@@ -5,18 +5,17 @@
 
 FString UAuraGameplayAbility::GetCurrentLevelDescription(int32 Level)
 {
-	return FString::Printf(
-		TEXT("<Default>%s, </><Level>%d</>"), L"默认技能介绍", Level);
+	return FString::Printf(TEXT("<Default>默认技能介绍, </><Level>%d</>"), Level);
 }
 
 FString UAuraGameplayAbility::GetNextLevelDescription(int32 Level)
 {
-	return FString::Printf(TEXT("<Default>下一等级: </><Level>%d</> \n<Default>可提升技能伤害 </>"), Level);
+	return FString::Printf(TEXT("<Default> </>"));
 }
 
 FString UAuraGameplayAbility::GetLockedDescription(int32 Level)
 {
-	return FString::Printf(TEXT("<Default>Spell Locked Until Level: %d</>"), Level);
+	return FString::Printf(TEXT("<Default>人物等级%d时，可学习该技能</>"), Level);
 }
 
 FString UAuraGameplayAbility::BuildDescription(int32 Level, const FString& TitleTag)

@@ -255,7 +255,10 @@ float UExecCalc_Damage::CalcInitialDamage(const FGameplayEffectSpec& Spec,
 						// 最后才是FinalDamage += RawDamage;
 						// CalcInitialDamage就只执行了一次
 						RawDamage = DamageAmount;
-						CombatInterface->GetOnDamageSignature()->Clear();
+						if (CombatInterface->GetOnDamageSignature())
+						{
+							CombatInterface->GetOnDamageSignature()->Clear();
+						}
 					});
 				}
 				UGameplayStatics::ApplyRadialDamageWithFalloff(

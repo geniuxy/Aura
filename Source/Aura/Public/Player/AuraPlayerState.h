@@ -56,10 +56,10 @@ private:
 	UPROPERTY(VisibleAnywhere, ReplicatedUsing=OnRep_XP)
 	int32 XP = 0;
 
-	UPROPERTY(VisibleAnywhere, ReplicatedUsing=OnRep_AttributePoints)
+	UPROPERTY(EditDefaultsOnly, ReplicatedUsing=OnRep_AttributePoints)
 	int32 AttributePoints = 0;
 
-	UPROPERTY(VisibleAnywhere, ReplicatedUsing=OnRep_SpellPoints)
+	UPROPERTY(EditDefaultsOnly, ReplicatedUsing=OnRep_SpellPoints)
 	int32 SpellPoints = 0;
 
 	UFUNCTION()

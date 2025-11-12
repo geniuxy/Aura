@@ -11,11 +11,19 @@
 
 FString UAuraFireBolt::GetCurrentLevelDescription(int32 Level)
 {
+	if (Level == 0)
+	{
+		return BuildDescription(Level + 1, TEXT("火球术(可学习)"));
+	}
 	return BuildDescription(Level, TEXT("火球术"));
 }
 
 FString UAuraFireBolt::GetNextLevelDescription(int32 Level)
 {
+	if (Level == 1)
+	{
+		return Super::GetNextLevelDescription(Level);
+	}
 	return BuildDescription(Level, TEXT("下一等级:"));
 }
 
