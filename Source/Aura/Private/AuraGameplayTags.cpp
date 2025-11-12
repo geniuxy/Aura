@@ -139,6 +139,7 @@ namespace AuraGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Ability_Passive_ManaSiphon, "Ability.Passive.ManaSiphon", "法力光环");
 
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Cooldown_Skill_Fire_FireBolt, "Cooldown.Skill.Fire.FireBolt", "主角的火球技能的冷却时间");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Cooldown_Skill_Fire_FireBlast, "Cooldown.Skill.Fire.FireBlast", "主角的火球爆破技能的冷却时间");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Cooldown_Skill_Lightning_Electrocute, "Cooldown.Skill.Lightning.Electrocute",
 	                               "主角的闪电术的冷却时间");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Cooldown_Skill_Arcane_ArcaneShards, "Cooldown.Skill.Arcane.ArcaneShards",

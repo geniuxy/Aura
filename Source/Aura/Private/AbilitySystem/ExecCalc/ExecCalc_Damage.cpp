@@ -247,18 +247,22 @@ float UExecCalc_Damage::CalcInitialDamage(const FGameplayEffectSpec& Spec,
 
 				if (ICombatInterface* CombatInterface = Cast<ICombatInterface>(TargetAvatar))
 				{
+					// 这里弱指针是为了触发Lambda里面内容时，敌人已死亡导致野指针访问
+					TWeakObjectPtr<AActor> WeakTargetAvatar = TargetAvatar;
 					CombatInterface->GetOnDamageSignature()->AddLambda([&](float DamageAmount)
 					{
+						AActor* Target = WeakTargetAvatar.Get();
+						if (!Target)
+						{
+							return;
+						}
 						// 先执行ApplyRadialDamageWithFalloff
 						// 再执行TakeDamage(只是用来承接了一下ApplyRadialDamageWithFalloff计算出来的伤害)
 						// 然后是RawDamage = DamageAmount;
 						// 最后才是FinalDamage += RawDamage;
 						// CalcInitialDamage就只执行了一次
 						RawDamage = DamageAmount;
-						if (CombatInterface->GetOnDamageSignature())
-						{
-							CombatInterface->GetOnDamageSignature()->Clear();
-						}
+						CombatInterface->GetOnDamageSignature()->Clear();
 					});
 				}
 				UGameplayStatics::ApplyRadialDamageWithFalloff(
