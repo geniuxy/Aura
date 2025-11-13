@@ -21,6 +21,11 @@ FString UAuraFireBlast::GetNextLevelDescription(int32 Level)
 	return BuildDescription(Level, TEXT("下一等级:"));
 }
 
+TArray<AAuraFireBall*> UAuraFireBlast::SpawnFireBalls()
+{
+	return TArray<AAuraFireBall*>();
+}
+
 FString UAuraFireBlast::BuildDescription(int32 Level, const FString& TitleTag)
 {
 	const int32 ScalableDamage = Damage.GetValueAtLevel(Level);

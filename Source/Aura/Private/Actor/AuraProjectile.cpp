@@ -88,9 +88,13 @@ void AAuraProjectile::OnHit()
 	bHit = true;
 }
 
-void AAuraProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
-                                      UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep,
-                                      const FHitResult& SweepResult)
+void AAuraProjectile::OnSphereOverlap(
+	UPrimitiveComponent* OverlappedComponent,
+	AActor* OtherActor,
+	UPrimitiveComponent* OtherComp,
+	int32 OtherBodyIndex,
+	bool bFromSweep,
+	const FHitResult& SweepResult)
 {
 	// 子弹打到自己发射者直接return
 	// DamageEffectSpecHandle.Data.IsValid()是为了保证DamageEffectSpecHandle.Data.Get()不是空指针
@@ -118,12 +122,12 @@ void AAuraProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, 
 			{
 				FRotator Rotation = GetActorRotation();
 				Rotation.Pitch = 45.f;
-				
+
 				const FVector KnockBackDirection = Rotation.Vector();
 				const FVector KnockBackForce = KnockBackDirection * DamageEffectParams.KnockBackForceMagnitude;
 				DamageEffectParams.KnockBackForce = KnockBackForce;
 			}
-			
+
 			DamageEffectParams.TargetAbilitySystemComponent = TargetASC;
 			UAuraAbilitySystemLibrary::ApplyDamageEffect(DamageEffectParams);
 		}
