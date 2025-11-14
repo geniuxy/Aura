@@ -16,7 +16,7 @@
 AAuraProjectile::AAuraProjectile()
 {
 	PrimaryActorTick.bCanEverTick = true;
-	SetActorTickInterval(0.2f);
+	SetActorTickInterval(0.5f);
 	bReplicates = true;
 
 	Sphere = CreateDefaultSubobject<USphereComponent>("Sphere");
@@ -96,16 +96,7 @@ void AAuraProjectile::OnSphereOverlap(
 	bool bFromSweep,
 	const FHitResult& SweepResult)
 {
-	// 子弹打到自己发射者直接return
-	// DamageEffectSpecHandle.Data.IsValid()是为了保证DamageEffectSpecHandle.Data.Get()不是空指针
-	// Client会打到自己..
-	// if (DamageEffectSpecHandle.Data.IsValid() &&
-	// 	DamageEffectSpecHandle.Data.Get()->GetContext().GetEffectCauser() == OtherActor)
-	if (!IsValid(DamageEffectParams.SourceAbilitySystemComponent)) return;
-	AActor* SourceAvatarActor = DamageEffectParams.SourceAbilitySystemComponent->GetAvatarActor();
-	if (SourceAvatarActor == OtherActor) return;
-	// 子弹不会打到友军
-	if (!UAuraAbilitySystemLibrary::IsNotFriend(SourceAvatarActor, OtherActor)) return;
+	if (!IsValidOverlap(OtherActor)) return;
 	// bHit不会在不同端之间复制，每个段的bHit值独立
 	// 第一次命中时，无论服务器还是客户端，先把声光表现一次性播完
 	if (!bHit) OnHit();
@@ -138,4 +129,20 @@ void AAuraProjectile::OnSphereOverlap(
 	{
 		bHit = true; // 告诉本地：特效已播，后面 Destroyed() 不再补播
 	}
+}
+
+bool AAuraProjectile::IsValidOverlap(AActor* OtherActor)
+{
+	// 子弹打到自己发射者直接return
+	// DamageEffectSpecHandle.Data.IsValid()是为了保证DamageEffectSpecHandle.Data.Get()不是空指针
+	// Client会打到自己..
+	// if (DamageEffectSpecHandle.Data.IsValid() &&
+	// 	DamageEffectSpecHandle.Data.Get()->GetContext().GetEffectCauser() == OtherActor)
+	if (!IsValid(DamageEffectParams.SourceAbilitySystemComponent)) return false;
+	AActor* SourceAvatarActor = DamageEffectParams.SourceAbilitySystemComponent->GetAvatarActor();
+	if (SourceAvatarActor == OtherActor) return false;
+	// 子弹不会打到友军
+	if (!UAuraAbilitySystemLibrary::IsNotFriend(SourceAvatarActor, OtherActor)) return false;
+
+	return true;
 }
