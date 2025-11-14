@@ -33,6 +33,8 @@ protected:
 	virtual void BeginPlay() override;
 	virtual void Destroyed() override;
 	virtual void Tick(float DeltaSeconds) override;
+
+	UFUNCTION(BlueprintCallable)
 	void OnHit();
 
 	UFUNCTION()
@@ -45,6 +47,9 @@ protected:
 		const FHitResult& SweepResult
 	);
 
+	bool IsValidOverlap(AActor* OtherActor);
+	bool bHit = false;
+
 private:
 	UPROPERTY(EditDefaultsOnly)
 	float LifeSpan = 15.f;
@@ -52,7 +57,6 @@ private:
 	FVector LastFrameLocation;
 	FVector ThisFrameLocation;
 
-	bool bHit = false;
 
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<USphereComponent> Sphere;
