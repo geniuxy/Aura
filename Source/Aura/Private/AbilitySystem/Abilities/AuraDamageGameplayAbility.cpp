@@ -5,6 +5,7 @@
 
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemComponent.h"
+#include "AbilitySystem/AuraAbilitySystemLibrary.h"
 
 void UAuraDamageGameplayAbility::CauseDamage(AActor* TargetActor)
 {
@@ -35,7 +36,13 @@ FDamageEffectParams UAuraDamageGameplayAbility::MakeDamageEffectParamsFromClassD
 	Params.KnockBackChance = KnockBackChance;
 	if (IsValid(TargetActor))
 	{
-		UpdateLaunchDirectionOfParams(Params, TargetActor, GetAvatarActorFromActorInfo()->GetActorLocation(), Params);
+		UAuraAbilitySystemLibrary::UpdateLaunchDirectionOfParams(
+			Params,
+			TargetActor,
+			GetAvatarActorFromActorInfo()->GetActorLocation(),
+			DeathImpulseMagnitude,
+			KnockBackForceMagnitude
+		);
 	}
 	if (bIsRadialDamage)
 	{
@@ -43,26 +50,16 @@ FDamageEffectParams UAuraDamageGameplayAbility::MakeDamageEffectParamsFromClassD
 		Params.RadialDamageOrigin = RadialDamageOrigin;
 		Params.RadialDamageInnerRadius = RadialDamageInnerRadius;
 		Params.RadialDamageOuterRadius = RadialDamageOuterRadius;
-		UpdateLaunchDirectionOfParams(Params, TargetActor, RadialDamageOrigin, Params);
+		if (IsValid(TargetActor))
+		{
+			UAuraAbilitySystemLibrary::UpdateLaunchDirectionOfParams(
+				Params,
+				TargetActor,
+				RadialDamageOrigin,
+				DeathImpulseMagnitude,
+				KnockBackForceMagnitude
+			);
+		}
 	}
 	return Params;
-}
-
-void UAuraDamageGameplayAbility::UpdateLaunchDirectionOfParams(
-	const FDamageEffectParams& InParams,
-	const AActor* TargetActor,
-	const FVector& SourceLocation,
-	FDamageEffectParams& OutParams,
-	const bool bOverridePitch,
-	const float InPitch) const
-{
-	OutParams = InParams;
-	FRotator Rotation = (TargetActor->GetActorLocation() - SourceLocation).Rotation();
-	if (bOverridePitch)
-	{
-		Rotation.Pitch = InPitch;
-	}
-	const FVector ToTarget = Rotation.Vector();
-	OutParams.DeathImpulse = ToTarget * DeathImpulseMagnitude;
-	OutParams.KnockBackForce = ToTarget * KnockBackForceMagnitude;
 }

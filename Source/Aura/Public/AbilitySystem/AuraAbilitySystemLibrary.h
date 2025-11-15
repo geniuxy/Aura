@@ -102,7 +102,7 @@ public:
 
 	UFUNCTION(BlueprintPure, Category = "AuraAbilitySystemLibrary|GameplayEffects")
 	static float GetKnockBackChance(const FGameplayEffectContextHandle& EffectContextHandle);
-	
+
 	UFUNCTION(BlueprintPure, Category = "AuraAbilitySystemLibrary|GameplayEffects")
 	static FVector GetKnockBackForce(const FGameplayEffectContextHandle& EffectContextHandle);
 
@@ -172,6 +172,17 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|GameplayEffects")
 	static void SetRadialDamageOrigin(UPARAM(ref) FGameplayEffectContextHandle& EffectContextHandle,
 	                                  const FVector& InOrigin);
+
+	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|GameplayEffects")
+	static void UpdateLaunchDirectionOfParams(
+		UPARAM(ref) FDamageEffectParams& InParams,
+		const AActor* TargetActor,
+		const FVector& SourceLocation,
+		const float DeathImpulseMagnitude,
+		const float KnockBackForceMagnitude,
+		const bool bOverridePitch = true,
+		const float InPitch = 45.f
+	);
 
 	/*
 	 * Gameplay Mechanics

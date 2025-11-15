@@ -44,10 +44,10 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Damage")
 	float DebuffDuration = 5.f;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Damage")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Damage")
 	float DeathImpulseMagnitude = 12000.f;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Damage")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Damage")
 	float KnockBackForceMagnitude = 100.f;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Damage")
@@ -64,14 +64,4 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Damage")
 	FVector RadialDamageOrigin = FVector::ZeroVector;
-
-	UFUNCTION(BlueprintCallable)
-	void UpdateLaunchDirectionOfParams(
-		const FDamageEffectParams& InParams,
-		const AActor* TargetActor,
-		const FVector& SourceLocation,
-		FDamageEffectParams& OutParams,
-		bool bOverridePitch = true,
-		float InPitch = 45.f
-	) const;
 };

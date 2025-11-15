@@ -540,6 +540,25 @@ void UAuraAbilitySystemLibrary::SetRadialDamageOrigin(
 	}
 }
 
+void UAuraAbilitySystemLibrary::UpdateLaunchDirectionOfParams(
+	FDamageEffectParams& InParams,
+	const AActor* TargetActor,
+	const FVector& SourceLocation,
+	const float DeathImpulseMagnitude,
+	const float KnockBackForceMagnitude,
+	const bool bOverridePitch,
+	const float InPitch)
+{
+	FRotator Rotation = (TargetActor->GetActorLocation() - SourceLocation).Rotation();
+	if (bOverridePitch)
+	{
+		Rotation.Pitch = InPitch;
+	}
+	const FVector ToTarget = Rotation.Vector();
+	InParams.DeathImpulse = ToTarget * DeathImpulseMagnitude;
+	InParams.KnockBackForce = ToTarget * KnockBackForceMagnitude;
+}
+
 void UAuraAbilitySystemLibrary::GetLivePlayerWithinRadius(
 	const UObject* WorldContextObject,
 	TArray<AActor*>& OutOverlappingActors,
