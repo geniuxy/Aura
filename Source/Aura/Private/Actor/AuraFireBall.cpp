@@ -4,12 +4,36 @@
 #include "Actor/AuraFireBall.h"
 
 #include "AbilitySystemBlueprintLibrary.h"
+#include "AuraGameplayTags.h"
+#include "AbilitySystem/AuraAbilitySystemGlobals.h"
 #include "AbilitySystem/AuraAbilitySystemLibrary.h"
+#include "GameplayCueManager.h"
+#include "Components/AudioComponent.h"
 
 void AAuraFireBall::BeginPlay()
 {
 	Super::BeginPlay();
 	StartOutgoingTimeline();
+}
+
+void AAuraFireBall::OnHit()
+{
+	if (GetOwner())
+	{
+		FGameplayCueParameters CueParams;
+		CueParams.Location = GetActorLocation();
+		UGameplayCueManager::ExecuteGameplayCue_NonReplicated(
+			GetOwner(),
+			AuraGameplayTags::GameplayCue_Aura_Fire_FireBlast,
+			CueParams
+		);
+	}
+	if (LoopingSoundComponent && LoopingSoundComponent->IsPlaying())
+	{
+		LoopingSoundComponent->Stop();
+		LoopingSoundComponent->DestroyComponent();
+	}
+	bHit = true;
 }
 
 void AAuraFireBall::OnSphereOverlap(

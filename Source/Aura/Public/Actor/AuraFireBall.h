@@ -23,6 +23,8 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
+
+	virtual void OnHit() override;
 	
 	virtual void OnSphereOverlap(
 		UPrimitiveComponent* OverlappedComponent,

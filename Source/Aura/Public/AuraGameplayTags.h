@@ -111,5 +111,6 @@ namespace AuraGameplayTags
 	AURA_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayCue_Aura_Lightning_ShockBurst);
 	AURA_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayCue_Aura_Lightning_ShockLoop);
 	AURA_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayCue_Aura_Arcane_Shards);
+	AURA_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayCue_Aura_Fire_FireBlast);
 	
 }

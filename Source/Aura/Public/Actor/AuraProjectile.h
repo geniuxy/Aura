@@ -33,10 +33,7 @@ protected:
 	virtual void BeginPlay() override;
 	virtual void Destroyed() override;
 	virtual void Tick(float DeltaSeconds) override;
-
-	UFUNCTION(BlueprintCallable)
-	void OnHit();
-
+	
 	UFUNCTION()
 	virtual void OnSphereOverlap(
 		UPrimitiveComponent* OverlappedComponent,
@@ -48,8 +45,14 @@ protected:
 	);
 
 	bool IsValidOverlap(AActor* OtherActor);
+	
 	bool bHit = false;
+	
+	UFUNCTION(BlueprintCallable)
+	virtual void OnHit();
 
+	UPROPERTY()
+	TObjectPtr<UAudioComponent> LoopingSoundComponent;
 private:
 	UPROPERTY(EditDefaultsOnly)
 	float LifeSpan = 15.f;
@@ -73,6 +76,4 @@ private:
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<USoundBase> LoopingSound;
 
-	UPROPERTY()
-	TObjectPtr<UAudioComponent> LoopingSoundComponent;
 };
