@@ -4,13 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "LoadScreenUserWdiget.generated.h"
+#include "LoadScreenUserWidget.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class AURA_API ULoadScreenUserWdiget : public UUserWidget
+class AURA_API ULoadScreenUserWidget : public UUserWidget
 {
 	GENERATED_BODY()
 };
