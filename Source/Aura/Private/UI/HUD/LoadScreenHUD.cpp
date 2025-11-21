@@ -1,9 +1,10 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "HUD/LoadScreenHUD.h"
+#include "UI/HUD/LoadScreenHUD.h"
 
 #include "Blueprint/UserWidget.h"
+#include "Kismet/GameplayStatics.h"
 #include "UI/ViewModel/MVVM_LoadScreen.h"
 #include "UI/Widget/LoadScreenUserWidget.h"
 
@@ -17,5 +18,17 @@ void ALoadScreenHUD::BeginPlay()
 
 	LoadScreenWidget = CreateWidget<ULoadScreenUserWidget>(GetWorld(), LoadScreenWidgetClass);
 	LoadScreenWidget->AddToViewport();
+	if (APlayerController* PC = UGameplayStatics::GetPlayerController(this, 0))
+	{
+		PC->bShowMouseCursor = true;
+		PC->DefaultMouseCursor = EMouseCursor::Default;
+
+		FInputModeGameAndUI InputModeData;
+		InputModeData.SetLockMouseToViewportBehavior(EMouseLockMode::LockOnCapture);
+		InputModeData.SetHideCursorDuringCapture(false);
+		PC->SetInputMode(InputModeData);
+	}
 	LoadScreenWidget->BlueprintInitializeWidget();
+
+	LoadScreenViewModel->LoadData();
 }
