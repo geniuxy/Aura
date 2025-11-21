@@ -23,9 +23,8 @@ void ALoadScreenHUD::BeginPlay()
 		PC->bShowMouseCursor = true;
 		PC->DefaultMouseCursor = EMouseCursor::Default;
 
-		FInputModeGameAndUI InputModeData;
-		InputModeData.SetLockMouseToViewportBehavior(EMouseLockMode::LockOnCapture);
-		InputModeData.SetHideCursorDuringCapture(false);
+		FInputModeUIOnly InputModeData;
+		InputModeData.SetLockMouseToViewportBehavior(EMouseLockMode::LockAlways);
 		PC->SetInputMode(InputModeData);
 	}
 	LoadScreenWidget->BlueprintInitializeWidget();
