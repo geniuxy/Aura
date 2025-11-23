@@ -35,6 +35,9 @@ public:
 
 	UPROPERTY()
 	FString MapName = FString("Default Name");
+
+	UPROPERTY()
+	FName PlayerStartTag;
 	
 	UPROPERTY()
 	TEnumAsByte<ESaveSlotStatus> SaveSlotStatus = Vacant;
