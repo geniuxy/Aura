@@ -46,6 +46,9 @@ public:
 	UPROPERTY(EditDefaultsOnly)
 	TMap<FString, TSoftObjectPtr<UWorld>> Maps;
 
+	UPROPERTY(EditDefaultsOnly)
+	FName DefaultPlayerStartTag;
+
 protected:
 	virtual void BeginPlay() override;
 };
