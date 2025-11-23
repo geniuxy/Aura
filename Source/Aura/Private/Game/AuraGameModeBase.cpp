@@ -47,6 +47,15 @@ void AAuraGameModeBase::SaveSlotData(UMVVM_LoadSlot* LoadSlot, int32 SlotIndex)
 	UGameplayStatics::SaveGameToSlot(LoadScreenSaveGame, LoadSlot->GetLoadSlotName(), SlotIndex);
 }
 
+void AAuraGameModeBase::SaveGameData(ULoadScreenSaveGame* SaveData)
+{
+	UAuraGameInstance* AuraGameInstance = Cast<UAuraGameInstance>(GetGameInstance());
+	int32 CurGameSaveSlotIndex = AuraGameInstance->LoadSlotIndex;
+	FString CurGameSaveSlotName = AuraGameInstance->LoadSlotName;
+
+	UGameplayStatics::SaveGameToSlot(SaveData, CurGameSaveSlotName, CurGameSaveSlotIndex);
+}
+
 ULoadScreenSaveGame* AAuraGameModeBase::GetSaveSlotData(const FString& SlotName, int32 SlotIndex) const
 {
 	USaveGame* SaveGameObject = nullptr;
@@ -68,6 +77,15 @@ void AAuraGameModeBase::DeleteSlot(const FString& SlotName, int32 SlotIndex)
 	{
 		UGameplayStatics::DeleteGameInSlot(SlotName, SlotIndex);
 	}
+}
+
+ULoadScreenSaveGame* AAuraGameModeBase::GetCurGameSaveData() const
+{
+	UAuraGameInstance* AuraGameInstance = Cast<UAuraGameInstance>(GetGameInstance());
+	int32 CurGameSaveSlotIndex = AuraGameInstance->LoadSlotIndex;
+	FString CurGameSaveSlotName = AuraGameInstance->LoadSlotName;
+
+	return GetSaveSlotData(CurGameSaveSlotName, CurGameSaveSlotIndex);
 }
 
 void AAuraGameModeBase::TravelToMap(UMVVM_LoadSlot* Slot)

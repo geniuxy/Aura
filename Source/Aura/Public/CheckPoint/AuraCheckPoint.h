@@ -37,7 +37,6 @@ protected:
 	void Glow();
 
 private:
-
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<UStaticMeshComponent> CheckpointMesh;
 

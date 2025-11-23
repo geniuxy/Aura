@@ -39,6 +39,7 @@ void AAuraCheckPoint::OnSphereOverlap(
 {
 	if (OtherActor->Implements<UPlayerInterface>())
 	{
+		IPlayerInterface::Execute_SaveProgress(OtherActor, PlayerStartTag);
 		Sphere->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 		Glow();
 	}
