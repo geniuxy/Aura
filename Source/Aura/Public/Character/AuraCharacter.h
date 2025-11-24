@@ -36,7 +36,7 @@ public:
 	virtual void AddToSpellPoints_Implementation(int InSpellPoints) override;
 	virtual void ShowMagicCircle_Implementation(UMaterialInterface* DecalMaterial = nullptr) override;
 	virtual void HideMagicCircle_Implementation() override;
-	virtual void SaveProgress_Implementation(const FName& CheckpointTag) override;
+	virtual void SaveProgress_Implementation() override;
 	/** End Player Interfaces */
 
 	/** Combat Interfaces */
@@ -45,6 +45,20 @@ public:
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TObjectPtr<UNiagaraComponent> LevelUpNiagaraComponent;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Attributes")
+	TSubclassOf<UGameplayEffect> DefaultPrimaryAttributes;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Attributes")
+	TSubclassOf<UGameplayEffect> PrimaryAttributes_SetByCaller; // 用于后续加载存档时，初始化主角基本属性值
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Attributes")
+	TSubclassOf<UGameplayEffect> DefaultSecondaryAttributes;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Attributes")
+	TSubclassOf<UGameplayEffect> DefaultVitalAttributes;
+
+	virtual void InitializeDefaultAttributes() const override;
 
 	void LoadInSaveData();
 

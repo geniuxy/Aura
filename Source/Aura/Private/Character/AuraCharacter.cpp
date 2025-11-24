@@ -11,8 +11,10 @@
 #include "Player/AuraPlayerController.h"
 #include "Player/AuraPlayerState.h"
 #include "NiagaraComponent.h"
+#include "AbilitySystem/AuraAbilitySystemLibrary.h"
 #include "AbilitySystem/AuraAttributeSet.h"
 #include "Camera/CameraComponent.h"
+#include "Game/AuraGameInstance.h"
 #include "Game/AuraGameModeBase.h"
 #include "Game/LoadScreenSaveGame.h"
 #include "GameFramework/SpringArmComponent.h"
@@ -51,7 +53,7 @@ void AAuraCharacter::PossessedBy(AController* NewController)
 
 	// Init ability actor info for the Server
 	InitAbilityActorInfo();
-	
+
 	LoadInSaveData();
 }
 
@@ -161,15 +163,15 @@ void AAuraCharacter::HideMagicCircle_Implementation()
 	}
 }
 
-void AAuraCharacter::SaveProgress_Implementation(const FName& CheckpointTag)
+void AAuraCharacter::SaveProgress_Implementation()
 {
-	AAuraGameModeBase* AuraGameMode = Cast<AAuraGameModeBase>(UGameplayStatics::GetGameMode(this));
-	if (AuraGameMode)
+	if (AAuraGameModeBase* AuraGameMode = Cast<AAuraGameModeBase>(UGameplayStatics::GetGameMode(this)))
 	{
 		ULoadScreenSaveGame* SaveData = AuraGameMode->GetCurGameSaveData();
 		if (!SaveData) return;
 
-		SaveData->PlayerStartTag = CheckpointTag;
+		UAuraGameInstance* AuraGameInstance = Cast<UAuraGameInstance>(AuraGameMode->GetGameInstance());
+		SaveData->PlayerStartTag = AuraGameInstance->PlayerStartTag;
 		if (AAuraPlayerState* AuraPlayerState = GetPlayerState<AAuraPlayerState>())
 		{
 			SaveData->PlayerLevel = AuraPlayerState->GetPlayerLevel();
@@ -183,7 +185,7 @@ void AAuraCharacter::SaveProgress_Implementation(const FName& CheckpointTag)
 		SaveData->Vigor = UAuraAttributeSet::GetVigorAttribute().GetNumericValue(GetAttributeSet());
 
 		SaveData->bFirstTimeLoadIn = false;
-		
+
 		AuraGameMode->SaveGameData(SaveData);
 	}
 }
@@ -195,10 +197,16 @@ int32 AAuraCharacter::GetLevel_Implementation()
 	return AuraPlayerState->GetPlayerLevel();
 }
 
+void AAuraCharacter::InitializeDefaultAttributes() const
+{
+	ApplyEffectToSelf(DefaultPrimaryAttributes, 1.f);
+	ApplyEffectToSelf(DefaultSecondaryAttributes, 1.f);
+	ApplyEffectToSelf(DefaultVitalAttributes, 1.f);
+}
+
 void AAuraCharacter::LoadInSaveData()
 {
-	AAuraGameModeBase* AuraGameMode = Cast<AAuraGameModeBase>(UGameplayStatics::GetGameMode(this));
-	if (AuraGameMode)
+	if (AAuraGameModeBase* AuraGameMode = Cast<AAuraGameModeBase>(UGameplayStatics::GetGameMode(this)))
 	{
 		ULoadScreenSaveGame* SaveData = AuraGameMode->GetCurGameSaveData();
 		if (!SaveData) return;
@@ -218,8 +226,9 @@ void AAuraCharacter::LoadInSaveData()
 				AuraPlayerState->SetSpellPoints(SaveData->SpellPoints);
 			}
 
+			UAuraAbilitySystemLibrary::InitializeAttributesFromSaveData(this, AbilitySystemComponent, SaveData);
+
 			//TODO: Load in Abilities from disk
-			
 		}
 	}
 }

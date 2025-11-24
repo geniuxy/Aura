@@ -4,7 +4,10 @@
 #include "CheckPoint/AuraCheckPoint.h"
 
 #include "Components/SphereComponent.h"
+#include "Game/AuraGameInstance.h"
+#include "Game/AuraGameModeBase.h"
 #include "Interaction/PlayerInterface.h"
+#include "Kismet/GameplayStatics.h"
 
 AAuraCheckPoint::AAuraCheckPoint(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
@@ -39,7 +42,12 @@ void AAuraCheckPoint::OnSphereOverlap(
 {
 	if (OtherActor->Implements<UPlayerInterface>())
 	{
-		IPlayerInterface::Execute_SaveProgress(OtherActor, PlayerStartTag);
+		// 更新GameInstance中的起始点信息
+		AAuraGameModeBase* AuraGameMode = Cast<AAuraGameModeBase>(UGameplayStatics::GetGameMode(this));
+		UAuraGameInstance* AuraGameInstance = Cast<UAuraGameInstance>(AuraGameMode->GetGameInstance());
+		AuraGameInstance->PlayerStartTag = PlayerStartTag; // 右边这个是指CheckPoint的StartTag标签
+		
+		IPlayerInterface::Execute_SaveProgress(OtherActor);
 		Sphere->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 		Glow();
 	}

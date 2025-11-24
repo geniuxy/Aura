@@ -123,21 +123,9 @@ protected:
 	UPROPERTY()
 	TObjectPtr<UAttributeSet> AttributeSet;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Attributes")
-	TSubclassOf<UGameplayEffect> DefaultPrimaryAttributes;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Attributes")
-	TSubclassOf<UGameplayEffect> PrimaryAttributes_SetByCaller; // 用于后续加载存档时，初始化主角基本属性值
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Attributes")
-	TSubclassOf<UGameplayEffect> DefaultSecondaryAttributes;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Attributes")
-	TSubclassOf<UGameplayEffect> DefaultVitalAttributes;
-
 	void ApplyEffectToSelf(const TSubclassOf<UGameplayEffect>& GameplayEffectClass, float Level) const;
+	
 	virtual void InitializeDefaultAttributes() const;
-
 	void AddCharacterAbilities();
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Enemy Defaults")

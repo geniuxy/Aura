@@ -324,6 +324,7 @@ void UAuraAbilitySystemComponent::ServerUpgradeAttribute_Implementation(const FG
 	if (GetAvatarActor()->Implements<UPlayerInterface>())
 	{
 		IPlayerInterface::Execute_AddToAttributePoints(GetAvatarActor(), -1);
+		IPlayerInterface::Execute_SaveProgress(GetAvatarActor());
 	}
 }
 
@@ -353,6 +354,7 @@ void UAuraAbilitySystemComponent::ServerSpendSpellPoint_Implementation(const FGa
 		if (GetAvatarActor()->Implements<UPlayerInterface>())
 		{
 			IPlayerInterface::Execute_AddToSpellPoints(GetAvatarActor(), -1);
+			IPlayerInterface::Execute_SaveProgress(GetAvatarActor());
 		}
 
 		FGameplayTag StatusTag = GetStatusFromSpec(*AbilitySpec);
