@@ -127,6 +127,9 @@ protected:
 	TSubclassOf<UGameplayEffect> DefaultPrimaryAttributes;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Attributes")
+	TSubclassOf<UGameplayEffect> PrimaryAttributes_SetByCaller; // 用于后续加载存档时，初始化主角基本属性值
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Attributes")
 	TSubclassOf<UGameplayEffect> DefaultSecondaryAttributes;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Attributes")
