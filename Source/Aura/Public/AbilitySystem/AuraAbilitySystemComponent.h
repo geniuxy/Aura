@@ -5,6 +5,7 @@
 #include "UI/WidgetController/SpellMenuWidgetController.h"
 #include "AuraAbilitySystemComponent.generated.h"
 
+class ULoadScreenSaveGame;
 DECLARE_MULTICAST_DELEGATE_OneParam(FEffectAssetsTagDelegate, const FGameplayTagContainer&);
 DECLARE_MULTICAST_DELEGATE(FAbilitiesGiven);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FAbilitiesCancel);
@@ -38,6 +39,7 @@ public:
 	UPROPERTY(BlueprintAssignable, Category="Abilities")
 	FAbilitiesCancel AbilitiesCancelDelegate;
 
+	void AddAbilitiesFromSaveData(ULoadScreenSaveGame* SaveData);
 	void AddAbilities(const TArray<TSubclassOf<UGameplayAbility>>& StartupAbilities);
 	void AddPassiveAbilities(const TArray<TSubclassOf<UGameplayAbility>>& StartupPassiveAbilities);
 	bool bStartupAbilitiesGiven = false;
@@ -52,6 +54,7 @@ public:
 	static FGameplayTag GetAbilityTagFromSpec(const FGameplayAbilitySpec& AbilitySpec);
 	static FGameplayTag GetInputTagFromSpec(const FGameplayAbilitySpec& AbilitySpec);
 	static FGameplayTag GetStatusFromSpec(const FGameplayAbilitySpec& AbilitySpec);
+	FGameplayTag GetStatusFromAbilityTag(const FGameplayTag& AbilityTag);
 	FGameplayAbilitySpec* GetSpecFromInputTag(const FGameplayTag& InputTag);
 	FGameplayAbilitySpec* GetSpecFromAbilityTag(const FGameplayTag& AbilityTag);
 	bool IsSlotOfInputTagEmpty(const FGameplayTag& InputTag);

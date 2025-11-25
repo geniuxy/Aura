@@ -208,6 +208,7 @@ void AAuraCharacter::SaveProgress_Implementation()
 
 			SaveData->SavedAbilities.AddUnique(SavedAbility);
 		});
+		AuraASC->ForEachAbility(SaveAbilityDelegate);
 
 		AuraGameMode->SaveGameData(SaveData);
 	}
@@ -251,7 +252,11 @@ void AAuraCharacter::LoadInSaveData()
 
 			UAuraAbilitySystemLibrary::InitializeAttributesFromSaveData(this, AbilitySystemComponent, SaveData);
 
-			//TODO: Load in Abilities from disk
+			// Load in Abilities from disk
+			if (UAuraAbilitySystemComponent* AuraASC = Cast<UAuraAbilitySystemComponent>(AbilitySystemComponent))
+			{
+				AuraASC->AddAbilitiesFromSaveData(SaveData);
+			}
 		}
 	}
 }
