@@ -34,7 +34,8 @@ public:
 	static void DeleteSlot(const FString& SlotName, int32 SlotIndex);
 	ULoadScreenSaveGame* GetCurGameSaveData() const;
 
-	void SaveWorldState(UWorld* World);
+	void SaveWorldState(UWorld* World) const;
+	void LoadWorldState(UWorld* World) const;
 
 	void TravelToMap(UMVVM_LoadSlot* Slot);
 

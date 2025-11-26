@@ -25,6 +25,14 @@ AAuraCheckPoint::AAuraCheckPoint(const FObjectInitializer& ObjectInitializer) : 
 	Sphere->SetCollisionResponseToChannel(ECC_Pawn, ECR_Overlap);
 }
 
+void AAuraCheckPoint::LoadActor_Implementation()
+{
+	if (bReached)
+	{
+		Glow();
+	}
+}
+
 void AAuraCheckPoint::BeginPlay()
 {
 	Super::BeginPlay();
@@ -40,6 +48,11 @@ void AAuraCheckPoint::OnSphereOverlap(
 	bool bFromSweep,
 	const FHitResult& SweepResult)
 {
+	if (bReached)
+	{
+		Sphere->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		return;
+	}
 	if (OtherActor->Implements<UPlayerInterface>())
 	{
 		// 更新这个CheckPoint的状态
