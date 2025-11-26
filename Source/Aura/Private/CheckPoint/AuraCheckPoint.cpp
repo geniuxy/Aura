@@ -42,11 +42,20 @@ void AAuraCheckPoint::OnSphereOverlap(
 {
 	if (OtherActor->Implements<UPlayerInterface>())
 	{
-		// 更新GameInstance中的起始点信息
+		// 更新这个CheckPoint的状态
+		bReached = true;
 		AAuraGameModeBase* AuraGameMode = Cast<AAuraGameModeBase>(UGameplayStatics::GetGameMode(this));
+		if (AuraGameMode)
+		{
+			AuraGameMode->SaveWorldState(GetWorld());
+		}
+		// 更新GameInstance中的起始点信息
 		UAuraGameInstance* AuraGameInstance = Cast<UAuraGameInstance>(AuraGameMode->GetGameInstance());
-		AuraGameInstance->PlayerStartTag = PlayerStartTag; // 右边这个是指CheckPoint的StartTag标签
-		
+		if (AuraGameInstance)
+		{
+			AuraGameInstance->PlayerStartTag = PlayerStartTag; // 右边这个是指CheckPoint的StartTag标签
+		}
+
 		IPlayerInterface::Execute_SaveProgress(OtherActor);
 		Sphere->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 		Glow();
@@ -55,7 +64,8 @@ void AAuraCheckPoint::OnSphereOverlap(
 
 void AAuraCheckPoint::Glow()
 {
-	UMaterialInstanceDynamic* DynamicMaterialInstace = UMaterialInstanceDynamic::Create(CheckpointMesh->GetMaterial(0), this);
+	UMaterialInstanceDynamic* DynamicMaterialInstace = UMaterialInstanceDynamic::Create(
+		CheckpointMesh->GetMaterial(0), this);
 	CheckpointMesh->SetMaterial(0, DynamicMaterialInstace);
 	StartDissolveTimeline(DynamicMaterialInstace);
 }
