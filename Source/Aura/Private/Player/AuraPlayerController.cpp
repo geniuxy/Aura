@@ -5,7 +5,6 @@
 
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AuraGameplayTags.h"
-#include "DebugHelper.h"
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
 #include "GameplayTagContainer.h"
@@ -19,7 +18,7 @@
 #include "Components/SplineComponent.h"
 #include "GameFramework/Character.h"
 #include "Input/AuraInputComponent.h"
-#include "Interaction/EnemyInterface.h"
+#include "Interaction/HighLightInterface.h"
 #include "UI/WidgetComponent/DamageTextComponent.h"
 
 AAuraPlayerController::AAuraPlayerController()

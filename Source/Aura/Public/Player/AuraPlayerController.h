@@ -6,6 +6,7 @@
 #include "GameFramework/PlayerController.h"
 #include "AuraPlayerController.generated.h"
 
+class IHighLightInterface;
 class AMagicCircle;
 class UNiagaraSystem;
 class UDamageTextComponent;
@@ -14,7 +15,6 @@ class UAuraAbilitySystemComponent;
 class UAuraInputComponent;
 struct FGameplayTag;
 class UAuraInputConfig;
-class IEnemyInterface;
 struct FInputActionValue;
 class UInputAction;
 class UInputMappingContext;
@@ -52,8 +52,8 @@ private:
 	/* Cursor Actors */
 	void CursorTrace();
 	FHitResult CursorHit;
-	TScriptInterface<IEnemyInterface> LastActor;
-	TScriptInterface<IEnemyInterface> ThisActor;
+	TScriptInterface<IHighLightInterface> LastActor;
+	TScriptInterface<IHighLightInterface> ThisActor;
 	/* End Cursor Actors */
 
 	/* Input Config */
