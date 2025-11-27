@@ -95,13 +95,13 @@ void AAuraCharacterBase::MulticastHandleDeath_Implementation(const FVector& Deat
 	UGameplayStatics::PlaySoundAtLocation(this, DeathSound, GetActorLocation(), GetActorRotation());
 
 	Weapon->SetIsReplicated(true); // 加上这一行可以解决死亡后武器抖动的问题
-	Weapon->SetSimulatePhysics(true);
+	Weapon->SetSimulatePhysics(true); // 交由物理线程处理(就像个死掉的玩偶)
 	Weapon->SetEnableGravity(true);
 	Weapon->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
 	Weapon->SetCollisionResponseToChannel(ECC_WorldStatic, ECR_Block);
 	Weapon->AddImpulse(DeathImpulse * 0.1f, NAME_None, true);
 
-	GetMesh()->SetSimulatePhysics(true);
+	GetMesh()->SetSimulatePhysics(true); // 交由物理线程处理(就像个死掉的玩偶)
 	GetMesh()->SetEnableGravity(true);
 	GetMesh()->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
 	GetMesh()->SetCollisionResponseToChannel(ECC_WorldStatic, ECR_Block);
