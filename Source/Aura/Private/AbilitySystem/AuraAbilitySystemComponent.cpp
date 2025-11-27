@@ -392,7 +392,6 @@ void UAuraAbilitySystemComponent::ServerSpendSpellPoint_Implementation(const FGa
 		if (GetAvatarActor()->Implements<UPlayerInterface>())
 		{
 			IPlayerInterface::Execute_AddToSpellPoints(GetAvatarActor(), -1);
-			IPlayerInterface::Execute_SaveProgress(GetAvatarActor());
 		}
 
 		FGameplayTag StatusTag = GetStatusFromSpec(*AbilitySpec);
@@ -408,6 +407,11 @@ void UAuraAbilitySystemComponent::ServerSpendSpellPoint_Implementation(const FGa
 			AbilitySpec->Level += 1;
 		}
 		MarkAbilitySpecDirty(*AbilitySpec);
+
+		if (GetAvatarActor()->Implements<UPlayerInterface>())
+		{
+			IPlayerInterface::Execute_SaveProgress(GetAvatarActor());
+		}
 		ClientUpdateAbilityStatus(AbilityTag, AbilityType, StatusTag, AbilitySpec->Level);
 	}
 }

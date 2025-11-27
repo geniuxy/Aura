@@ -112,7 +112,7 @@ void AAuraProjectile::OnSphereOverlap(
 			if (bKnockBack)
 			{
 				FRotator Rotation = GetActorRotation();
-				Rotation.Pitch = 45.f;
+				Rotation.Pitch = 10.f;
 
 				const FVector KnockBackDirection = Rotation.Vector();
 				const FVector KnockBackForce = KnockBackDirection * DamageEffectParams.KnockBackForceMagnitude;
