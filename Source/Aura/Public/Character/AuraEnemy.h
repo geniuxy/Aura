@@ -14,7 +14,7 @@ class AAuraAIController;
 class UWidgetComponent;
 
 UCLASS()
-class AURA_API AAuraEnemy : public AAuraCharacterBase, public IEnemyInterface, public IHighLightInterface
+class AURA_API AAuraEnemy : public AAuraCharacterBase, public IEnemyInterface, public IHighlightInterface
 {
 	GENERATED_BODY()
 
@@ -24,8 +24,8 @@ public:
 	virtual void PossessedBy(AController* NewController) override;
 
 	/** HighLight Interfaces */
-	virtual void HighlightActor() override;
-	virtual void UnHighlightActor() override;
+	virtual void HighlightActor_Implementation() override;
+	virtual void UnHighlightActor_Implementation() override;
 	/** End HighLight Interfaces */
 	
 	/** Enemy Interfaces */
