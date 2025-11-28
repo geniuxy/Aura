@@ -19,6 +19,8 @@
 AAuraEnemy::AAuraEnemy()
 {
 	GetMesh()->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
+	GetMesh()->SetCustomDepthStencilValue(CUSTOM_DEPTH_RED);
+	Weapon->SetCustomDepthStencilValue(CUSTOM_DEPTH_RED);
 
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationRoll = false;
@@ -33,7 +35,7 @@ AAuraEnemy::AAuraEnemy()
 
 	HealthBar = CreateDefaultSubobject<UWidgetComponent>("HealthBar");
 	HealthBar->SetupAttachment(GetRootComponent());
-
+	
 	BaseWalkSpeed = 250.f;
 }
 
@@ -54,15 +56,18 @@ void AAuraEnemy::PossessedBy(AController* NewController)
 void AAuraEnemy::HighlightActor_Implementation()
 {
 	GetMesh()->SetRenderCustomDepth(true);
-	GetMesh()->SetCustomDepthStencilValue(CUSTOM_DEPTH_RED);
 	Weapon->SetRenderCustomDepth(true);
-	Weapon->SetCustomDepthStencilValue(CUSTOM_DEPTH_RED);
 }
 
 void AAuraEnemy::UnHighlightActor_Implementation()
 {
 	GetMesh()->SetRenderCustomDepth(false);
 	Weapon->SetRenderCustomDepth(false);
+}
+
+void AAuraEnemy::SetMoveToLocation_Implementation(FVector& OutDestination)
+{
+	// 不执行任何操作
 }
 
 int32 AAuraEnemy::GetLevel_Implementation()
@@ -152,8 +157,8 @@ void AAuraEnemy::InitAbilityActorInfo()
 		->RegisterGameplayTagEvent(AuraGameplayTags::Debuff_Stun, EGameplayTagEventType::NewOrRemoved).
 		AddUObject(this, &AAuraEnemy::StunTagChanged);
 	AbilitySystemComponent
-			->RegisterGameplayTagEvent(AuraGameplayTags::Effect_HitReact, EGameplayTagEventType::NewOrRemoved).
-			AddUObject(this, &AAuraEnemy::HitReactTagChanged);
+		->RegisterGameplayTagEvent(AuraGameplayTags::Effect_HitReact, EGameplayTagEventType::NewOrRemoved).
+		AddUObject(this, &AAuraEnemy::HitReactTagChanged);
 
 	if (HasAuthority())
 	{
