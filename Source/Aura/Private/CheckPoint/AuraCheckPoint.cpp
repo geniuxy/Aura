@@ -80,5 +80,5 @@ void AAuraCheckPoint::Glow()
 	UMaterialInstanceDynamic* DynamicMaterialInstace = UMaterialInstanceDynamic::Create(
 		CheckpointMesh->GetMaterial(0), this);
 	CheckpointMesh->SetMaterial(0, DynamicMaterialInstace);
-	StartDissolveTimeline(DynamicMaterialInstace);
+	StartGlowTimeline(DynamicMaterialInstace);
 }

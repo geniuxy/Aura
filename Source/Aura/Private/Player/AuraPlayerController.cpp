@@ -18,6 +18,7 @@
 #include "Components/SplineComponent.h"
 #include "GameFramework/Character.h"
 #include "Input/AuraInputComponent.h"
+#include "Interaction/EnemyInterface.h"
 #include "Interaction/HighlightInterface.h"
 #include "UI/WidgetComponent/DamageTextComponent.h"
 
@@ -181,7 +182,7 @@ void AAuraPlayerController::AbilityInputTagPressed(FGameplayTag InputTag)
 	{
 		if (IsValid(ThisActor))
 		{
-			TargetStatus = ThisActor->Implements<UHighlightInterface>()
+			TargetStatus = ThisActor->Implements<UEnemyInterface>()
 				               ? ETargetStatus::TargetingEnemy
 				               : ETargetStatus::TargetingNonEnemy;
 			bAutoRunning = false;
