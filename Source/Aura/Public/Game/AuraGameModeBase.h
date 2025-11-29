@@ -51,6 +51,8 @@ public:
 	UPROPERTY(EditDefaultsOnly)
 	TMap<FString, TSoftObjectPtr<UWorld>> Maps;
 
+	FString GetMapNameFromMapAssetName(const TSoftObjectPtr<UWorld>& InMap) const;
+
 	UPROPERTY(EditDefaultsOnly)
 	FName DefaultPlayerStartTag;
 

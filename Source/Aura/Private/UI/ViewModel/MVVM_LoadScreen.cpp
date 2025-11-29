@@ -88,6 +88,7 @@ void UMVVM_LoadScreen::PlayButtonPressed()
 	AAuraGameModeBase* AuraGameMode = Cast<AAuraGameModeBase>(UGameplayStatics::GetGameMode(this));
 	UAuraGameInstance* AuraGameInstance = Cast<UAuraGameInstance>(AuraGameMode->GetGameInstance());
 	AuraGameInstance->PlayerStartTag = SelectedSlot->PlayerStartTag;
+	AuraGameInstance->CurMapName = SelectedSlot->GetMapName();
 	AuraGameInstance->LoadSlotIndex = SelectedSlot->SlotIndex;
 	AuraGameInstance->LoadSlotName = SelectedSlot->GetLoadSlotName();
 	

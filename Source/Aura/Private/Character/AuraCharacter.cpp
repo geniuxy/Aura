@@ -182,6 +182,7 @@ void AAuraCharacter::SaveProgress_Implementation()
 
 		UAuraGameInstance* AuraGameInstance = Cast<UAuraGameInstance>(AuraGameMode->GetGameInstance());
 		SaveData->PlayerStartTag = AuraGameInstance->PlayerStartTag;
+		SaveData->MapName = AuraGameInstance->CurMapName;
 		if (AAuraPlayerState* AuraPlayerState = GetPlayerState<AAuraPlayerState>())
 		{
 			SaveData->PlayerLevel = AuraPlayerState->GetPlayerLevel();

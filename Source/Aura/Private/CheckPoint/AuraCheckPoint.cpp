@@ -85,12 +85,12 @@ void AAuraCheckPoint::OnSphereOverlap(
 		if (AuraGameMode)
 		{
 			AuraGameMode->SaveWorldState(GetWorld());
-		}
-		// 更新GameInstance中的起始点信息
-		UAuraGameInstance* AuraGameInstance = Cast<UAuraGameInstance>(AuraGameMode->GetGameInstance());
-		if (AuraGameInstance)
-		{
-			AuraGameInstance->PlayerStartTag = PlayerStartTag; // 右边这个是指CheckPoint的StartTag标签
+			// 更新GameInstance中的起始点信息
+			if (UAuraGameInstance* AuraGameInstance = Cast<UAuraGameInstance>(AuraGameMode->GetGameInstance()))
+			{
+				AuraGameInstance->CurMapName = AuraGameMode->GetMapNameFromMapAssetName(CurMap);
+				AuraGameInstance->PlayerStartTag = PlayerStartTag; // 右边这个是指CheckPoint的StartTag标签
+			}
 		}
 
 		IPlayerInterface::Execute_SaveProgress(OtherActor);

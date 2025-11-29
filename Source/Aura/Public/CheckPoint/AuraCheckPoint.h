@@ -38,6 +38,9 @@ public:
 	UPROPERTY(EditAnywhere)
 	bool bBindOverlapCallback = true;
 
+	UPROPERTY(EditAnywhere)
+	TSoftObjectPtr<UWorld> CurMap;
+
 protected:
 	virtual void BeginPlay() override;
 
@@ -66,7 +69,6 @@ protected:
 	UPROPERTY(EditDefaultsOnly)
 	int32 CustomDepthStencil = CUSTOM_DEPTH_TAN;
 
-private:
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TObjectPtr<USphereComponent> Sphere;
 };

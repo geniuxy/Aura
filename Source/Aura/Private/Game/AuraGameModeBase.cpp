@@ -193,6 +193,18 @@ void AAuraGameModeBase::TravelToMap(UMVVM_LoadSlot* Slot)
 	UGameplayStatics::OpenLevelBySoftObjectPtr(Slot, Maps.FindChecked(Slot->GetMapName()));
 }
 
+FString AAuraGameModeBase::GetMapNameFromMapAssetName(const TSoftObjectPtr<UWorld>& InMap) const
+{
+	for (auto& Map : Maps)
+	{
+		if (Map.Value.ToSoftObjectPath().GetAssetName() == InMap.ToSoftObjectPath().GetAssetName())
+		{
+			return Map.Key;
+		}
+	}
+	return FString();
+}
+
 void AAuraGameModeBase::BeginPlay()
 {
 	Super::BeginPlay();

@@ -19,6 +19,9 @@ public:
 	FName PlayerStartTag = FName();
 
 	UPROPERTY()
+	FString CurMapName = FString();
+
+	UPROPERTY()
 	FString LoadSlotName = FString();
 
 	UPROPERTY()
