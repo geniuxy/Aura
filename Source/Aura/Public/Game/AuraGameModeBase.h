@@ -56,6 +56,8 @@ public:
 	UPROPERTY(EditDefaultsOnly)
 	FName DefaultPlayerStartTag;
 
+	void PlayerDied(ACharacter* DeadCharacter);
+
 protected:
 	virtual void BeginPlay() override;
 };

@@ -7,6 +7,7 @@
 #include "EngineUtils.h"
 #include "Game/AuraGameInstance.h"
 #include "Game/LoadScreenSaveGame.h"
+#include "GameFramework/Character.h"
 #include "GameFramework/PlayerStart.h"
 #include "Interaction/SaveInterface.h"
 #include "Kismet/GameplayStatics.h"
@@ -203,6 +204,14 @@ FString AAuraGameModeBase::GetMapNameFromMapAssetName(const TSoftObjectPtr<UWorl
 		}
 	}
 	return FString();
+}
+
+void AAuraGameModeBase::PlayerDied(ACharacter* DeadCharacter)
+{
+	ULoadScreenSaveGame* SaveGame = GetCurGameSaveData();
+	if (!IsValid(SaveGame)) return;
+
+	UGameplayStatics::OpenLevelBySoftObjectPtr(DeadCharacter, Maps.FindChecked(SaveGame->MapName));
 }
 
 void AAuraGameModeBase::BeginPlay()
