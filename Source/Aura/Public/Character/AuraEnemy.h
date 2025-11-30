@@ -28,7 +28,7 @@ public:
 	virtual void UnHighlightActor_Implementation() override;
 	virtual void SetMoveToLocation_Implementation(FVector& OutDestination) override;
 	/** End HighLight Interfaces */
-	
+
 	/** Enemy Interfaces */
 	virtual void SetCombatTarget_Implementation(AActor* InCombatTarget) override;
 	virtual AActor* GetCombatTarget_Implementation() const override;
@@ -45,7 +45,7 @@ public:
 
 	UPROPERTY(BlueprintAssignable, Category="GAS|Attributes")
 	FOnAttributeChangedDelegate OnHealthChanged;
-	
+
 	UPROPERTY(BlueprintAssignable, Category="GAS|Attributes")
 	FOnAttributeChangedDelegate OnMaxHealthChanged;
 
@@ -77,4 +77,7 @@ protected:
 
 	UPROPERTY()
 	TObjectPtr<AAuraAIController> AIController;
+
+public:
+	void SetLevel(int32 InLevel) { Level = InLevel; }
 };

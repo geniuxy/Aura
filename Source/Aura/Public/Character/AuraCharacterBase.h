@@ -124,7 +124,7 @@ protected:
 	TObjectPtr<UAttributeSet> AttributeSet;
 
 	void ApplyEffectToSelf(const TSubclassOf<UGameplayEffect>& GameplayEffectClass, float Level) const;
-	
+
 	virtual void InitializeDefaultAttributes() const;
 	void AddCharacterAbilities();
 
@@ -190,4 +190,7 @@ private:
 	TObjectPtr<USceneComponent> PassiveEffectAttachComponent;
 
 	/***************************/
+
+public:
+	void SetCharacterClass(ECharacterClass InClass) { CharacterClass = InClass; }
 };
