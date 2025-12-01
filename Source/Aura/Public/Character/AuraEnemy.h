@@ -78,6 +78,14 @@ protected:
 	UPROPERTY()
 	TObjectPtr<AAuraAIController> AIController;
 
+	/* Spawn Loot */
+	void SpawnLoot();
+
+	FTimerHandle SpawnLootTimer;
+
+	UPROPERTY()
+	int32 CurSpawnCount = 0;
+	/* End Spawn Loot */
 public:
-	void SetLevel(int32 InLevel) { Level = InLevel; }
+	FORCEINLINE void SetLevel(int32 InLevel) { Level = InLevel; }
 };

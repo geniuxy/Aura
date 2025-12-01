@@ -3,11 +3,13 @@
 
 #include "Character/AuraEnemy.h"
 
+#include "AbilitySystemBlueprintLibrary.h"
 #include "AuraGameplayTags.h"
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
 #include "AbilitySystem/AuraAttributeSet.h"
 #include "AbilitySystem/AuraAbilitySystemLibrary.h"
-#include "AbilitySystem/DebuffNiagaraComponent.h"
+#include "AbilitySystem/Data/LootTiers.h"
+#include "Actor/AuraEffectActor.h"
 #include "AI/AuraAIController.h"
 #include "Aura/Aura.h"
 #include "BehaviorTree/BehaviorTree.h"
@@ -35,7 +37,7 @@ AAuraEnemy::AAuraEnemy()
 
 	HealthBar = CreateDefaultSubobject<UWidgetComponent>("HealthBar");
 	HealthBar->SetupAttachment(GetRootComponent());
-	
+
 	BaseWalkSpeed = 250.f;
 }
 
@@ -83,6 +85,9 @@ void AAuraEnemy::Die(const FVector& DeathImpulse)
 	{
 		AIController->GetBlackboardComponent()->SetValueAsBool(FName("Dead"), true);
 	}
+
+	SpawnLoot();
+
 	Super::Die(DeathImpulse);
 }
 
@@ -180,5 +185,49 @@ void AAuraEnemy::StunTagChanged(const FGameplayTag CallbackTag, int32 NewCount)
 	if (AIController && AIController->GetBlackboardComponent())
 	{
 		AIController->GetBlackboardComponent()->SetValueAsBool(FName("Stunned"), bIsStunned);
+	}
+}
+
+void AAuraEnemy::SpawnLoot()
+{
+	if (ULootTiers* LootTiers = UAuraAbilitySystemLibrary::GetLootTiers(this))
+	{
+		TArray<FLootItem> LootItems = LootTiers->GetLootItems();
+		TArray<FRotator> SpawnRotators = UAuraAbilitySystemLibrary::EvenlySpacedRotators(
+			GetActorForwardVector(), FVector::UpVector, 360.f, LootItems.Num()
+		);
+
+		FTimerDelegate SpawnLootDelegate;
+		SpawnLootDelegate.BindLambda([this, SpawnRotators, LootItems]()
+		{
+			FVector SpawnLocation =
+				SpawnRotators[CurSpawnCount].Vector() * FMath::RandRange(25, 150) + GetActorLocation();
+			FTransform SpawnTransform;
+			SpawnTransform.SetLocation(SpawnLocation);
+			SpawnTransform.SetRotation(SpawnRotators[CurSpawnCount].Quaternion());
+
+			AAuraEffectActor* EffectActor = GetWorld()->SpawnActorDeferred<AAuraEffectActor>(
+				LootItems[CurSpawnCount].LootClass,
+				SpawnTransform,
+				nullptr,
+				nullptr,
+				ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn
+			);
+
+			if (LootItems[CurSpawnCount].bLootLevelOverride)
+			{
+				EffectActor->SetActorLevel(Level);
+			}
+
+			EffectActor->FinishSpawning(SpawnTransform);
+
+			CurSpawnCount++;
+			if (!LootItems.IsValidIndex(CurSpawnCount))
+			{
+				GetWorld()->GetTimerManager().ClearTimer(SpawnLootTimer);
+			}
+		});
+		CurSpawnCount = 0;
+		GetWorldTimerManager().SetTimer(SpawnLootTimer, SpawnLootDelegate, 0.1f, true);
 	}
 }

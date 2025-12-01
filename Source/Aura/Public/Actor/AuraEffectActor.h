@@ -50,7 +50,7 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Applied Effect")
 	bool bApplyEffectToEnemies = false;
-	
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Applied Effect")
 	TSubclassOf<UGameplayEffect> InstantGameplayEffect;
 
@@ -76,4 +76,7 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Applied Effects")
 	float ActorLevel = 1.f;
+
+public:
+	void SetActorLevel(float InLevel) { ActorLevel = InLevel; }
 };
