@@ -5,6 +5,7 @@
 
 #include "AbilitySystemComponent.h"
 #include "AbilitySystemBlueprintLibrary.h"
+#include "DebugHelper.h"
 #include "Kismet/KismetMathLibrary.h"
 
 AAuraEffectActor::AAuraEffectActor()
@@ -12,11 +13,18 @@ AAuraEffectActor::AAuraEffectActor()
 	PrimaryActorTick.bCanEverTick = true;
 
 	SetRootComponent(CreateDefaultSubobject<USceneComponent>("SceneRoot"));
+
+	SpawnTimeline = CreateDefaultSubobject<UTimelineComponent>("SpawnTimeline");
 }
 
 void AAuraEffectActor::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
+
+	if (SpawnTimeline)
+	{
+		SpawnTimeline->TickComponent(DeltaSeconds, LEVELTICK_All, nullptr);
+	}
 
 	RunningTime += DeltaSeconds;
 	const float SinePeriod = 2 * PI / SinePeriodConstant;
@@ -36,14 +44,32 @@ void AAuraEffectActor::BeginPlay()
 	CalculatedLocation = InitialLocation;
 	CalculatedRotation = GetActorRotation();
 
-	StartSinusoidalMovement();
-	StartRotation();
+	if (SpawnJumpHeightCurve)
+	{
+		UCurveFloat* PrivateHeightCurve =
+			DuplicateObject<UCurveFloat>(SpawnJumpHeightCurve, this, TEXT("PrivateHeightCurve"));
+		SpawnJumpHeightUpdate.BindUFunction(this, "OnHeightUpdate");
+		SpawnTimeline->AddInterpFloat(PrivateHeightCurve, SpawnJumpHeightUpdate);
+	}
+
+	if (SpawnScaleCurve)
+	{
+		UCurveFloat* PrivateScaleCurve =
+			DuplicateObject<UCurveFloat>(SpawnScaleCurve, this, TEXT("PrivateScaleCurve"));
+		SpawnScaleUpdate.BindUFunction(this, "OnScaleUpdate");
+		SpawnTimeline->AddInterpFloat(PrivateScaleCurve, SpawnScaleUpdate);
+	}
+
+	SpawnJumpFinish.BindUFunction(this, "OnSpawnFinished");
+	SpawnTimeline->SetTimelineFinishedFunc(SpawnJumpFinish);
+	SpawnTimeline->SetLooping(false);
+	SpawnTimeline->PlayFromStart();
 }
 
 void AAuraEffectActor::ApplyEffectToTarget(AActor* TargetActor, TSubclassOf<UGameplayEffect> GameplayEffectClass)
 {
 	if (!bApplyEffectToEnemies && TargetActor->ActorHasTag(FName("Enemy"))) return;
-	
+
 	UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(TargetActor);
 	if (!TargetASC) return;
 
@@ -70,7 +96,7 @@ void AAuraEffectActor::ApplyEffectToTarget(AActor* TargetActor, TSubclassOf<UGam
 void AAuraEffectActor::OnOverlap(AActor* TargetActor)
 {
 	if (!bApplyEffectToEnemies && TargetActor->ActorHasTag(FName("Enemy"))) return;
-	
+
 	if (InstantEffectApplicationPolicy == EEffectApplicationPolicy::ApplyOnOverlap)
 	{
 		ApplyEffectToTarget(TargetActor, InstantGameplayEffect);
@@ -88,7 +114,7 @@ void AAuraEffectActor::OnOverlap(AActor* TargetActor)
 void AAuraEffectActor::OnEndOverlap(AActor* TargetActor)
 {
 	if (!bApplyEffectToEnemies && TargetActor->ActorHasTag(FName("Enemy"))) return;
-	
+
 	if (InstantEffectApplicationPolicy == EEffectApplicationPolicy::ApplyOnEndOverlap)
 	{
 		ApplyEffectToTarget(TargetActor, InstantGameplayEffect);
@@ -105,7 +131,7 @@ void AAuraEffectActor::OnEndOverlap(AActor* TargetActor)
 	{
 		UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(TargetActor);
 		if (!IsValid(TargetASC)) return;
-		
+
 		TArray<FActiveGameplayEffectHandle> HandlesToRemove;
 		for (TTuple<FActiveGameplayEffectHandle, UAbilitySystemComponent*> ActiveHandlePair : ActiveEffectHandles)
 		{
@@ -134,6 +160,22 @@ void AAuraEffectActor::StartRotation()
 {
 	bRotates = true;
 	CalculatedRotation = GetActorRotation();
+}
+
+void AAuraEffectActor::OnScaleUpdate(float InScale)
+{
+	SetActorScale3D(FVector(InScale));
+}
+
+void AAuraEffectActor::OnHeightUpdate(float JumpHeight)
+{
+	CalculatedLocation = FVector(InitialLocation.X, InitialLocation.Y, InitialLocation.Z + JumpHeight * 8.f);
+}
+
+void AAuraEffectActor::OnSpawnFinished()
+{
+	StartSinusoidalMovement();
+	StartRotation();
 }
 
 void AAuraEffectActor::ItemMovement(float DeltaTime)

@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "ActiveGameplayEffectHandle.h"
+#include "Components/TimelineComponent.h"
 #include "GameFramework/Actor.h"
 #include "AuraEffectActor.generated.h"
 
@@ -110,6 +111,31 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pickup Movement")
 	FVector InitialLocation;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Spawn")
+	UTimelineComponent* SpawnTimeline;
+
+	UPROPERTY(EditAnywhere, Category = "Spawn")
+	UCurveFloat* SpawnJumpHeightCurve;
+
+	UPROPERTY(EditAnywhere, Category = "Spawn")
+	UCurveFloat* SpawnScaleCurve;
+
+	UPROPERTY(BlueprintReadOnly, Category = "Spawn")
+	float CurrentHeight = 0.f;
+
+	FOnTimelineFloat SpawnScaleUpdate;
+	FOnTimelineFloat SpawnJumpHeightUpdate;
+	FOnTimelineEvent SpawnJumpFinish;
+
+	UFUNCTION()
+	void OnScaleUpdate(float InScale);
+
+	UFUNCTION()
+	void OnHeightUpdate(float JumpHeight);
+
+	UFUNCTION()
+	void OnSpawnFinished();
 
 	/* End Sine Movement */
 
